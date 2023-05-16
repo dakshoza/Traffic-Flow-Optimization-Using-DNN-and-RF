@@ -1,51 +1,27 @@
 import pygame
-import random
+from Car import Car as Vehicle
 pygame.init()
 window = pygame.display.set_mode((960,540))
-
-class car:
-    def __init__(self,spawnLocation):
-        
-        #Generating Car Path
-        self.carPath = []
-        self.carPath.append(random.randint(0,2))
-        self.carPath.append(random.randint(0,1))
-        self.carPath.append(random.randint(0,2))
-                        
-        
-        #Car Spawn
-        if spawnLocation == 1:
-                self.x = -20
-                self.y = 248
-        elif spawnLocation ==2:
-                self.x = 228
-                self.y = -20
-        elif spawnLocation ==3:
-                self.x = 760
-                self.y = -20
-        elif spawnLocation ==4:
-                self.x = 228
-                self.y = -20
-        elif spawnLocation ==5:
-                # self.x = 228
-                self.y = 560
-        elif spawnLocation ==6:
-                self.x = 228
-                self.y = 560
-                del self.carPath[0]
-        elif spawnLocation ==7:
-                self.x = 182
-                self.y = 560
-        
+CarSprite = pygame.image.load("./Assets/CarSprites/CarSprite1.png")        
 
 running = True
-background = pygame.image.load('BG1.png')
+background = pygame.image.load('./Assets/BG1.png')
+car1 = Vehicle(7)
+car1.x -= 15
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            wait = True
+            while wait:
+                if event.type == pygame.KEYUP:
+                    wait = False
     window.fill((81,81,81))
     window.blit(background,(0,0))
-
+    
+    car1.y -= 1.5
+    # print(f"({car1.x}, {car1.y})")
+    # window.blit(CarSprite, (car1.x, car1.y))
 
     pygame.display.update()
