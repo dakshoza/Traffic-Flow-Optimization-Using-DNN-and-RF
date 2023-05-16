@@ -48,16 +48,27 @@ class Car:
         self.hitbox = [self.x,self.y, 20, 33] #top left x, top left y, width, height
 
     def drawCar(self, window):
-        window.blit(self.sprite, (self.x, self.y))
+           if self.orientation == "btt":
+                window.blit(self.sprite, (self.x, self.y))
+           elif self.orientation == "ttb":
+                window.blit(pygame.transform.rotate(self.sprite, 180), (self.x, self.y))
+           elif self.orientation == "ltr":
+                window.blit(pygame.transform.rotate(self.sprite, 90), (self.x, self.y))
+           elif self.orientation == "rtl":
+                window.blit(pygame.transform.rotate(self.sprite, 270), (self.x, self.y))
 
     def changeOri(self, newOri):
            if newOri == "btt":
+                  self.orientation = "btt"
                   self.hitbox = [self.x, self.y, 20, 33]
            elif newOri == "ttb":
+                  self.orientation = "ttb"
                   self.hitbox = [self.x, self.y, 20, -33]                  
            elif newOri == "ltr":
+                  self.orientation = "ltr"
                   self.hitbox = [self.x, self.y, 33, 20]                  
            elif newOri == "rtl":
+                  self.orientation = "rtl"
                   self.hitbox = [self.x, self.y, -33, 20]                  
                   
         

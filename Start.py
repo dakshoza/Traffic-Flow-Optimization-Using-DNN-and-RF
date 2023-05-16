@@ -2,10 +2,10 @@ import pygame
 from Car import Car as Vehicle
 from Intersections import *
 pygame.init()
-window = pygame.display.set_mode((960,540))        
+window = pygame.display.set_mode((1920,1080))        
 
 running = True
-background = pygame.image.load('./Assets/BG1.png')
+background = pygame.image.load('./Assets/Background.png')
 car1 = Vehicle(7)
 
 while running:
@@ -34,7 +34,7 @@ while running:
     #     # checking x coordinates
     #     if i.hitbox[0] + i.hitbox[2] 
     if car1.y <= 282:
-        car1.orientation = "rtl"
+        car1.changeOri("ltr")
 
     print(car1.orientation)
     pygame.display.update()
