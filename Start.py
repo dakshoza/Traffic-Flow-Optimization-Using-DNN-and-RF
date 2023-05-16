@@ -1,14 +1,15 @@
 import pygame
 from Car import Car as Vehicle
+from Intersections import *
 pygame.init()
-window = pygame.display.set_mode((960,540))
-CarSprite = pygame.image.load("./Assets/CarSprites/CarSprite1.png")        
+window = pygame.display.set_mode((960,540))        
 
 running = True
 background = pygame.image.load('./Assets/BG1.png')
 car1 = Vehicle(7)
-car1.x -= 15
+
 while running:
+    #event checking
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -17,11 +18,23 @@ while running:
             while wait:
                 if event.type == pygame.KEYUP:
                     wait = False
+    # window color
     window.fill((81,81,81))
     window.blit(background,(0,0))
-    
-    car1.y -= 1.5
-    # print(f"({car1.x}, {car1.y})")
-    # window.blit(CarSprite, (car1.x, car1.y))
 
+    #Car movement and hitboxes
+    car1.moveCar()
+    car1.drawCar(window)
+    car1.drawHitbox(window)
+    for i in Intersections:
+        pygame.draw.rect(window, (255, 255, 0), i.hitbox, 3)
+
+    #collision detection
+    # for i in Intersections:
+    #     # checking x coordinates
+    #     if i.hitbox[0] + i.hitbox[2] 
+    if car1.y <= 282:
+        car1.orientation = "rtl"
+
+    print(car1.orientation)
     pygame.display.update()
