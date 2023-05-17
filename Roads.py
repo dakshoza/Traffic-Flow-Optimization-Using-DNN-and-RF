@@ -2,6 +2,8 @@ import pygame
 class Road:
     def __init__(self, x, y, width, height):
         self.boundaries = (x, y, width, height)
+        self.laneWidth = (width-4)/2
+        self.freeSpace = (self.laneWidth-30)/2
     def drawHitBox(self, window):
         pygame.draw.rect(window,(0,0,255),self.boundaries,2)
 road1 = Road(0, 325, 251, 87)
