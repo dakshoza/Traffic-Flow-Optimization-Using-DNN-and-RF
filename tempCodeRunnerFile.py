@@ -1,4 +1,2 @@
-  
-# for i in range(0,7):
-#     tempCar = Vehicle()
-#     cars.append(tempCar)  
+        if not all(currentCar.hitbox.x < 1150 and currentCar.hitbox.x > -100 and currentCar.hitbox.y > -100 and currentCar.hitbox.y < 940):
+    

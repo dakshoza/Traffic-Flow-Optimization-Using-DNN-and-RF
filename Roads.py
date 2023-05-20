@@ -14,59 +14,46 @@ class Road:
 
     def blitCoordinate(self,spawnLocation, carPath):
         if carPath[0] == 1:
-            return self.blitCoordinate(spawnLocation, [random.choice([0,2])])
+            x = self.blitCoordinate(spawnLocation, [random.choice([0,2])])
         elif spawnLocation == 1 or spawnLocation == 2 or spawnLocation == 3:
             if self.boundaries[2] < self.boundaries[3] : # that makes this a vertical road, 
                 if carPath[0] == 0:
                     x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
-                    return x
                 else:
                     x = int(self.boundaries[0] + self.freeSpace)
-                    return x
                         
             elif self.boundaries[2] >= self.boundaries[3]: 
                 if carPath[0] == 0:
                     x = int(self.boundaries[1] + self.freeSpace)
-                    return x
                 else:
                     x = int(self.boundaries[1] +self.laneWidth + 4 + self.freeSpace)
-                    return x
         else:
             if self.boundaries[2] < self.boundaries[3] : # that makes this a vertical road, 
                 if carPath[0] == 0:
                     x = int(self.boundaries[0] + self.freeSpace)
-                    return x
                 else:
                     x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
-                    return x
                         
             elif self.boundaries[2] >= self.boundaries[3]: 
                 if carPath[0] == 0:
                     x = int(self.boundaries[1] +self.laneWidth + 4 + self.freeSpace)
-                    return x
                 else:
                     x = int(self.boundaries[1] + self.freeSpace)
-                    return x
+        return x
             
             
-road1 = Road(0, 325, 251, 87)
-road2 = Road(251, 0, 86,325)
-road3 = Road(356,0,87,325)
-road4 = Road(1058,0,86,325)
-road5 = Road(1163, 0, 87, 325)
-road6 = Road(1250,325,250,87)
-road7 = Road(1250,431,250,85)
-road8 = Road(1163,517,87,327)
-road9 = Road(1058,517,85,327)
-road10 = Road(767,517,87,327)
-road11 = Road(662,517,86,327)
-road12 = Road(355,517,88,327)
-road13 = Road(251,517,86,327)
-road14 = Road(0,431,251,86)
-road15 = Road(443,325,219,87)
-road16 = Road(443,431,219,87)
-road17 = Road(854,325,204,87)
-road18 = Road(854,431,204,86)
+road1 = Road(767,517,87,327)
+road2 = Road(662,517,86,327)
+road3 = Road(355,517,88,327)
+road4 = Road(251,517,86,327)
+road5 = Road(0,431,251,86)
+road6 = Road(0, 325, 251, 87)
+road7 = Road(251, 0, 86,325)
+road8 = Road(356,0,87,325)
+road9 = Road(443,325,219,87)
+road10 = Road(443,431,219,87)
+road11 = Road(854,325,196,87)
+road12 = Road(854,431,196,86)
 
 allRoads = [road1, 
             road2,road3,
@@ -74,7 +61,4 @@ allRoads = [road1,
             road6,road7,
             road8,road9,
             road10,road11,
-            road12,road13,
-            road14,
-            road15,road16,
-            road17,road18]
+            road12]

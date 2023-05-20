@@ -2,13 +2,13 @@ import pygame
 from Car import Car as Vehicle
 # from Roads import *
 pygame.init()
-window = pygame.display.set_mode((1500,844))        
+window = pygame.display.set_mode((1050,844))        
 
 running = True 
-background = pygame.image.load('./Assets/Background1500.png')
+background = pygame.image.load('Assets\Road Work Ahead1050.png')
 cars = []
-car1 = Vehicle()
-cars.append(car1)
+# car1 = Vehicle()
+# cars.append(car1)
 # def generateCar(numberOfCars):
 #     global cars
 #     totalCars = len(cars)+ numberOfCars
@@ -25,9 +25,9 @@ cars.append(car1)
 # uncomment the next 3 lines if you want multiple cars spawning (there's still no turning)
 # the cars also overlap when they spawn sometimes but I have an idea of how to fix that im doing that rn
     
-# for i in range(0,7):
-#     tempCar = Vehicle()
-#     cars.append(tempCar)    
+for i in range(0,3):
+    tempCar = Vehicle()
+    cars.append(tempCar)
     
 while running:
     #event checking
@@ -38,16 +38,23 @@ while running:
     window.fill((81,81,81))
     window.blit(background,(0,0))
 
-    # Hitboxes
-    for i in cars:
-        if i.x < 1600 and i.x > -100 and i.y > -100 and i.y < 940:
-            i.moveCar()
-            i.drawCar(window)
-            i.drawHitbox(window)
-        else:
-            cars.remove(i)
-            # generateCar(1)
+    carHitboxes = [car.hitbox for car in cars]
+
+    # Car Movement and collision check
+    for i,currentCar in enumerate(cars):
+        carHitboxes[i] = pygame.Rect(0,0,0,0)
+        if currentCar.hitbox.collidelist(carHitboxes) > 0:
+            print("collision")
+        carHitboxes[i] = currentCar.hitbox
         
+        currentCar.moveCar()
+        currentCar.drawCar(window)
+        currentCar.drawHitbox(window)
+            # generateCar(1)
+    
+    for currentCar in cars:    
+        if not all([currentCar.hitbox.x < 12    50 , currentCar.hitbox.x > -200 , currentCar.hitbox.y > -200 , currentCar.hitbox.y < 1040]):
+            cars.remove(currentCar)
     # for road in allRoads:
     #     road.drawHitBox(window)
 
