@@ -1,16 +1,54 @@
 import pygame
+import random
 class Road:
     def __init__(self, x, y, width, height):
         self.boundaries = (x, y, width, height)
         if width < height: 
-            self.laneWidth = round((width-4)/2)
+            self.laneWidth = int(round((width-4)/2))
         else: 
-            self.laneWidth = round((height - 4)/2)
+            self.laneWidth = int(round((height - 4)/2))
         self.freeSpace = int((self.laneWidth-30)/2)
         
     def drawHitBox(self, window):
         pygame.draw.rect(window,(0,0,255),self.boundaries,2)
 
+    def blitCoordinate(self,spawnLocation, carPath):
+        if carPath[0] == 1:
+            return self.blitCoordinate(spawnLocation, [random.choice([0,2])])
+        elif spawnLocation == 1 or spawnLocation == 2 or spawnLocation == 3:
+            if self.boundaries[2] < self.boundaries[3] : # that makes this a vertical road, 
+                if carPath[0] == 0:
+                    x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
+                    return x
+                else:
+                    x = int(self.boundaries[0] + self.freeSpace)
+                    return x
+                        
+            elif self.boundaries[2] >= self.boundaries[3]: 
+                if carPath[0] == 0:
+                    x = int(self.boundaries[1] + self.freeSpace)
+                    return x
+                else:
+                    x = int(self.boundaries[1] +self.laneWidth + 4 + self.freeSpace)
+                    return x
+        else:
+            if self.boundaries[2] < self.boundaries[3] : # that makes this a vertical road, 
+                if carPath[0] == 0:
+                    x = int(self.boundaries[0] + self.freeSpace)
+                    return x
+                else:
+                    x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
+                    return x
+                        
+            elif self.boundaries[2] >= self.boundaries[3]: 
+                if carPath[0] == 0:
+                    x = int(self.boundaries[1] +self.laneWidth + 4 + self.freeSpace)
+                    return x
+                else:
+                    x = int(self.boundaries[1] + self.freeSpace)
+                    return x
+            
+            
 road1 = Road(0, 325, 251, 87)
 road2 = Road(251, 0, 86,325)
 road3 = Road(356,0,87,325)
