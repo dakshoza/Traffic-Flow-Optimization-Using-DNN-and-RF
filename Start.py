@@ -7,8 +7,8 @@ window = pygame.display.set_mode((1500,844))
 running = True 
 background = pygame.image.load('./Assets/Background1500.png')
 cars = []
-# car1 = Vehicle()
-# cars.append(car1)
+car1 = Vehicle()
+cars.append(car1)
 # def generateCar(numberOfCars):
 #     global cars
 #     totalCars = len(cars)+ numberOfCars
@@ -18,10 +18,16 @@ cars = []
 #             if tempCar.x != car.x and tempCar.y != car.y:
 #                 cars.append(tempCar)
 # generateCar(5)
+ 
+ 
+
+# -----DAKSH---------
+# uncomment the next 3 lines if you want multiple cars spawning (there's still no turning)
+# the cars also overlap when they spawn sometimes but I have an idea of how to fix that im doing that rn
     
-for i in range(0,7):
-    tempCar = Vehicle()
-    cars.append(tempCar)    
+# for i in range(0,7):
+#     tempCar = Vehicle()
+#     cars.append(tempCar)    
     
 while running:
     #event checking
