@@ -24,11 +24,14 @@ cars = []
 # -----DAKSH---------
 # uncomment the next 3 lines if you want multiple cars spawning (there's still no turning)
 # the cars also overlap when they spawn sometimes but I have an idea of how to fix that im doing that rn
-    
-for i in range(0,3):
-    tempCar = Vehicle()
-    cars.append(tempCar)
-    
+def genCar(num):    
+    global cars
+    for i in range(0,num):
+        tempCar = Vehicle()
+        cars.append(tempCar)
+
+genCar(4)
+
 while running:
     #event checking
     for event in pygame.event.get():
@@ -53,8 +56,10 @@ while running:
             # generateCar(1)
     
     for currentCar in cars:    
-        if not all([currentCar.hitbox.x < 12    50 , currentCar.hitbox.x > -200 , currentCar.hitbox.y > -200 , currentCar.hitbox.y < 1040]):
+        if not all([currentCar.hitbox.x < 1250 , currentCar.hitbox.x > -200 , currentCar.hitbox.y > -200 , currentCar.hitbox.y < 1040]):
             cars.remove(currentCar)
+            genCar(2)
+            
     # for road in allRoads:
     #     road.drawHitBox(window)
 
