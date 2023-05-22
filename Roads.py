@@ -2,7 +2,7 @@ import pygame
 import random
 class Road:
     def __init__(self, x, y, width, height):
-        self.boundaries = (x, y, width, height)
+        self.boundaries = pygame.Rect(x, y, width, height)
         if width < height: 
             self.laneWidth = int(round((width-4)/2))
         else: 
@@ -16,7 +16,7 @@ class Road:
         if carPath[0] == 1:
             x = self.blitCoordinate(spawnLocation, [random.choice([0,2])])
         elif spawnLocation == 1 or spawnLocation == 2 or spawnLocation == 3:
-            if self.boundaries[2] < self.boundaries[3] : # that makes this a vertical road, 
+            if self.boundaries[2] < self.boundaries[3] : 
                 if carPath[0] == 0:
                     x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
                 else:
@@ -28,7 +28,7 @@ class Road:
                 else:
                     x = int(self.boundaries[1] +self.laneWidth + 4 + self.freeSpace)
         else:
-            if self.boundaries[2] < self.boundaries[3] : # that makes this a vertical road, 
+            if self.boundaries[2] < self.boundaries[3] :
                 if carPath[0] == 0:
                     x = int(self.boundaries[0] + self.freeSpace)
                 else:

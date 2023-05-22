@@ -4,7 +4,9 @@ from Roads import *
 from Intersections import Intersection
 class Car:
 	def __init__(self):
-		self.speed = 2
+		self.speed = 3
+		self.onRoad = None
+		self.distanceIntoIntersection = None
 
 		# Car sprite and Car Length
 		sprite = random.randint(1,6)
@@ -41,13 +43,10 @@ class Car:
 		self.carPath.append(random.randint(0,2))
 
 		#Car Spawn
-		self.setSpawn(random.randint(1,5))
-		# self.hitbox = (self.x, self.y, 30, self.carLength)
+		self.setSpawn(3)
 
 
 	def setSpawn(self, spawnLocation):
-		#Spawn Location, orientation, x, y, car.rotate, hitbox, 
-		print(f"{spawnLocation} - SpawnLocation")
 		if spawnLocation == 1:
 			self.orientation = "up"
 			self.updateHitbox()
@@ -82,6 +81,7 @@ class Car:
 			self.updateHitbox()
 			self.hitbox.x = road12.boundaries[0] +  road9.boundaries[2] + self.carLength
 			self.hitbox.y = road12.blitCoordinate(spawnLocation, self.carPath)
+		print("done")
 
 
 	def drawCar(self, window):
@@ -93,6 +93,8 @@ class Car:
 
 
 	def moveCar(self):
+		self.checkIntersection()
+		# self.turn()
 		if self.orientation == "up":
 			self.hitbox.y -= self.speed
 		elif self.orientation == "down":
@@ -102,11 +104,35 @@ class Car:
 		elif self.orientation == "left":
 			self.hitbox.x -= self.speed
 
-	def drawHitbox(self, window):
-		pygame.draw.rect(window, (255, 0, 0), self.hitbox, 2)
+
+	def checkIntersection(self):
+		collisionFound = False
+		for road in allRoads:
+			if road.boundaries.collidepoint(self.hitbox.x, self.hitbox.y):
+				self.onRoad = road
+				collisionFound = True
+
+		# at this point, the car is on a road or not, if not then it can be in an intersection, if its in an intersection then,
+
+		if self.onRoad == 'intersection':
+			self.distanceIntoIntersection += self.speed
+	# so now the possibilities are its either not hit a road yet or its on a road, if its on a road we don't have to do anything, if it isn't on a road we don't have to do anything. so now to write the turning code					
+		leftLane1 = road1.freeSpace
+		leftLane2 =  road1.laneWidth +  road1.freeSpace + 4
+		rightLane1 =  road1.freeSpace
+		rightLane2 = road1.laneWidth +  road1.freeSpace + 4
+
+		# if self.distanceIntoIntersection != 0:
+		# 	if self.carPath[0] == 1:
+				 
+
+			
+
+	# def drawHitbox(self, window):
+	# 	pygame.draw.rect(window, (255, 0, 0), self.hitbox, 2)
 
 	def updateHitbox(self):
 		self.hitbox = self.sprite.get_rect()
     
-	def turn(self):
+	def turn(self,execution = 0):
 		print("placeholder")
