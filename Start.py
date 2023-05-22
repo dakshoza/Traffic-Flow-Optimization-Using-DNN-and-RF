@@ -38,7 +38,7 @@ while running:
         currentCar.drawHitbox(window)
     
     for currentCar in cars:    
-        if not all([currentCar.hitbox.x < 1250 , currentCar.hitbox.x > -200 , currentCar.hitbox.y > -200 , currentCar.hitbox.y < 1040]):
+        if not all([currentCar.hitbox.x < 1110 , currentCar.hitbox.x > -60 , currentCar.hitbox.y > -60 , currentCar.hitbox.y < 904]):
             cars.remove(currentCar)
             genCar(2)
             

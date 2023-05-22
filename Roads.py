@@ -8,6 +8,7 @@ class Road:
         else: 
             self.laneWidth = int(round((height - 4)/2))
         self.freeSpace = int((self.laneWidth-30)/2)
+        self.carList = []
         
     def drawHitBox(self, window):
         pygame.draw.rect(window,(0,0,255),self.boundaries,2)

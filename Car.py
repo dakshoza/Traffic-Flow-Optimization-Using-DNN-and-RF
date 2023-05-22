@@ -5,33 +5,26 @@ from Intersections import Intersection
 class Car:
 	def __init__(self):
 		self.speed = 3
-		self.onRoad = None
 		self.distanceIntoIntersection = None
 
 		# Car sprite and Car Length
 		sprite = random.randint(1,6)
 		if sprite == 1:
 			sprite = pygame.image.load("./Assets/CarSprites/CarSprite1.png")
-			self.carLength = 49
 			self.sprite = sprite
 		elif sprite == 2:
 			sprite = pygame.image.load("./Assets/CarSprites/CarSprite2.png")
-			self.carLength = 51
 			self.sprite = sprite
 		elif sprite == 3:
 			sprite = pygame.image.load("./Assets/CarSprites/CarSprite3.png")
-			self.carLength = 48
 			self.sprite = sprite
 		elif sprite == 4:
-			self.carLength = 54
 			sprite = pygame.image.load("./Assets/CarSprites/CarSprite4.png")
 			self.sprite = sprite
 		elif sprite == 5:
-			self.carLength = 52
 			sprite = pygame.image.load("./Assets/CarSprites/CarSprite5.png")
 			self.sprite = sprite
 		elif sprite == 6:
-			self.carLength = 52
 			sprite = pygame.image.load("./Assets/CarSprites/CarSprite6.png")
 			self.sprite = sprite
 
@@ -48,7 +41,6 @@ class Car:
 
 	def setSpawn(self, spawnLocation):
 		if spawnLocation == 1:
-			self.orientation = "up"
 			self.updateHitbox()
 			self.hitbox.y = road2.boundaries[0] + road2.boundaries[3]
 			self.hitbox.x = road2.blitCoordinate(spawnLocation, self.carPath)
@@ -56,30 +48,26 @@ class Car:
 				self.carPath = random.choice([0,2])
    
 		elif spawnLocation == 2:
-			self.orientation = "up"
 			self.updateHitbox()
 			self.hitbox.y = road4.boundaries[1] + road4.boundaries[3]
 			self.hitbox.x = road4.blitCoordinate(spawnLocation, self.carPath)
    
 		elif spawnLocation == 3:
-			self.orientation = "right"
 			self.sprite = pygame.transform.rotate(self.sprite,270)
 			self.updateHitbox()
-			self.hitbox.x = road6.boundaries[0] - self.carLength
+			self.hitbox.x = road6.boundaries[0] - 52
 			self.hitbox.y = road6.blitCoordinate(spawnLocation, self.carPath)
 
 		elif spawnLocation == 4:
-			self.orientation = "down"
 			self.sprite = pygame.transform.rotate(self.sprite,180)
 			self.updateHitbox()
-			self.hitbox.y = road8.boundaries[1] - self.carLength
+			self.hitbox.y = road8.boundaries[1] - 52
 			self.hitbox.x = road8.blitCoordinate(spawnLocation, self.carPath)
    
 		else:
-			self.orientation = "left"
 			self.sprite = pygame.transform.rotate(self.sprite,90)
 			self.updateHitbox()
-			self.hitbox.x = road12.boundaries[0] +  road9.boundaries[2] + self.carLength
+			self.hitbox.x = road12.boundaries[0] +  road9.boundaries[2] + 52
 			self.hitbox.y = road12.blitCoordinate(spawnLocation, self.carPath)
 		print("done")
 
@@ -109,7 +97,7 @@ class Car:
 		collisionFound = False
 		for road in allRoads:
 			if road.boundaries.collidepoint(self.hitbox.x, self.hitbox.y):
-				self.onRoad = road
+				road.carList.append(self)
 				collisionFound = True
 
 		# at this point, the car is on a road or not, if not then it can be in an intersection, if its in an intersection then,
