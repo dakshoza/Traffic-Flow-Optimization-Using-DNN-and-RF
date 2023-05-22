@@ -12,17 +12,16 @@ def genCar(num):
         tempCar = Vehicle()
         cars.append(tempCar)
 
-genCar(4)
+genCar(2)
 
 while running:
+    window.blit(background,(0,0))
     #event checking
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
             
     # window color
-    window.fill((81,81,81))
-    window.blit(background,(0,0))
 
     carHitboxes = [car.hitbox for car in cars]
 
@@ -35,10 +34,10 @@ while running:
             
         currentCar.moveCar()
         currentCar.drawCar(window)
-        currentCar.drawHitbox(window)
+        #currentCar.drawHitbox(window)
     
     for currentCar in cars:    
-        if not all([currentCar.hitbox.x < 1110 , currentCar.hitbox.x > -60 , currentCar.hitbox.y > -60 , currentCar.hitbox.y < 904]):
+        if not all([currentCar.hitbox.x < 1200 , currentCar.hitbox.x > -60 , currentCar.hitbox.y > -60 , currentCar.hitbox.y < 904]):
             cars.remove(currentCar)
             genCar(2)
             
