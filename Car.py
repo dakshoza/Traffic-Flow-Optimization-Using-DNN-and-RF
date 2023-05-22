@@ -4,7 +4,7 @@ from Roads import *
 from Intersections import *
 class Car:
 	def __init__(self):
-		self.speed = 3
+		self.speed = 1
 		self.distanceIntoIntersection = None
 
 		# Car sprite and Car Length
@@ -128,5 +128,5 @@ class Car:
 	def updateHitbox(self):
 		self.hitbox = self.sprite.get_rect()
     
-	def turn(self,execution = 0):
-		print("placeholder")
+#	def turn(self,execution = 0):
+#		print("placeholder")
