@@ -1,5 +1,6 @@
 import pygame
 from Car import Car as Vehicle
+from Intersections import I1,I2 
 pygame.init()
 window = pygame.display.set_mode((1050,844))        
 
@@ -16,6 +17,9 @@ genCar(2)
 
 while running:
     window.blit(background,(0,0))
+
+    pygame.draw.rect(window, (255, 0, 0), I1.hitbox, 2)
+    pygame.draw.rect(window, (255, 0, 0), I2.hitbox, 2)
     #event checking
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -27,7 +31,7 @@ while running:
 
     # Car Movement and collision check
     for i,currentCar in enumerate(cars):
-        carHitboxes[i] = pygame.Rect(0,0,0,0)
+        #carHitboxes[i] = pygame.Rect(0,0,0,0)
         # if currentCar.hitbox.collidelist(carHitboxes) > 0:
         #     print("collision")
         # carHitboxes[i] = currentCar.hitbox
@@ -37,10 +41,13 @@ while running:
         #currentCar.drawHitbox(window)
     
     for currentCar in cars:    
-        if not all([currentCar.hitbox.x < 1200 , currentCar.hitbox.x > -60 , currentCar.hitbox.y > -60 , currentCar.hitbox.y < 904]):
+        if not all([currentCar.hitbox.x < 1200 , currentCar.hitbox.x > -60 , currentCar.hitbox.y > -100 , currentCar.hitbox.y < 950]):
             cars.remove(currentCar)
             genCar(2)
-            
-    print(len(cars))
+
+    I1.carCollision(carHitboxes)
+    I2.carCollision(carHitboxes)
+
+    #print(len(cars))
 
     pygame.display.update()

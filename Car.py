@@ -1,7 +1,7 @@
 import random
 import pygame
 from Roads import *
-from Intersections import Intersection
+from Intersections import *
 class Car:
 	def __init__(self):
 		self.speed = 3
@@ -29,6 +29,7 @@ class Car:
 			self.sprite = sprite
 
 		self.hitbox = sprite.get_rect()
+
 		#Generating Car Path
 		# 0 - first exit, 1 - second exit, 2 - third exit
 		self.carPath = []
@@ -36,7 +37,7 @@ class Car:
 		self.carPath.append(random.randint(0,2))
 
 		#Car Spawn
-		self.setSpawn(5)
+		self.setSpawn(3)
 
 
 	def setSpawn(self, spawnLocation):
@@ -87,7 +88,7 @@ class Car:
 
 
 	def moveCar(self):
-		self.checkIntersection()
+		#self.checkIntersection()
 		# self.turn()
 		if self.orientation == "up":
 			self.hitbox.y -= self.speed
@@ -98,13 +99,13 @@ class Car:
 		elif self.orientation == "left":
 			self.hitbox.x -= self.speed
 
-	def checkIntersection(self):
+	'''def checkIntersection(self):
 		collisionFound = False
 		for road in allRoads:
 			if road.boundaries.collidepoint(self.hitbox.x, self.hitbox.y):
 				road.carList.append(self)
 				collisionFound = True
-
+	
 		# at this point, the car is on a road or not, if not then it can be in an intersection, if its in an intersection then,
 
 		#if self.onRoad == 'intersection':
@@ -117,7 +118,7 @@ class Car:
 
 		# if self.distanceIntoIntersection != 0:
 		# 	if self.carPath[0] == 1:
-				 
+				'''
 
 			
 
