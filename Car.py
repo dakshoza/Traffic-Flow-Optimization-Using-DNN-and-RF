@@ -4,7 +4,7 @@ from Roads import *
 from Intersections import *
 class Car:
 	def __init__(self):
-		self.speed = 2
+		self.speed = 3
 		self.distanceIntoIntersection = 0
 		self.turnI1 = False
 		self.turnI2 = False
@@ -41,7 +41,7 @@ class Car:
 
 		self.spawnLocation = random.randint(1,5)
 		self.setSpawn(self.spawnLocation)
-		#self.setSpawn()
+		#self.setSpawn(4)
 
 
 	def setSpawn(self, spawnLocation):
@@ -151,6 +151,7 @@ class Car:
 						self.turnCar()
 						self.turn1Executed = True
 						self.turnI1 = True
+						self.distanceIntoIntersection = 0
 						print(f"Car Path: {self.carPath} Current Turn: {self.currentTurn} Selected Lane: {selectedLane}")
 		# else:
 		# 	print("NOT COLIDE")
@@ -173,6 +174,7 @@ class Car:
 						self.turnCar()
 						self.turn2Executed = True
 						self.turnI2 = True
+						self.distanceIntoIntersection = 0
 						print(f"Car Path: {self.carPath} Current Turn: {self.currentTurn} Selected Lane: {selectedLane}")
 		#else:
 			#print("NOT COLIDE")	
