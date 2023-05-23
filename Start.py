@@ -45,9 +45,6 @@ while running:
             cars.remove(currentCar)
             genCar(2)
 
-    I1.carCollisionWithIntersection(cars)
-    I2.carCollisionWithIntersection(cars)
-
     #print(len(cars))
 
     pygame.display.update()

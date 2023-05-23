@@ -4,9 +4,12 @@ from Roads import *
 from Intersections import *
 class Car:
 	def __init__(self):
-		self.speed = 1
-		self.distanceIntoIntersection = None
-
+		self.speed = 3
+		self.distanceIntoIntersection = 0
+		self.turnI1 = False
+		self.turnI2 = False
+		self.turn1Executed = False
+		self.turn2Executed = False
 		# Car sprite and Car Length
 		sprite = random.randint(1,6)
 		if sprite == 1:
@@ -36,32 +39,37 @@ class Car:
 		self.carPath.append(random.randint(0,2))
 		self.carPath.append(random.randint(0,2))
 
-		#Car Spawn
-		self.setSpawn(3)
+		self.spawnLocation = random.randint(1,5)
+		self.setSpawn(self.spawnLocation)
 
 
 	def setSpawn(self, spawnLocation):
 		if spawnLocation == 1:
 			self.orientation = "up"
 			self.updateHitbox()
-			self.hitbox.y = road2.boundaries[0] + road2.boundaries[3]
+			self.hitbox.y = road2.boundaries[1] + road2.boundaries[3]
 			self.hitbox.x = road2.blitCoordinate(spawnLocation, self.carPath)
 			if self.carPath[0] == 1:
-				self.carPath = random.choice([0,2])
+				self.carPath[0] = random.choice([0,2])
    
 		elif spawnLocation == 2:
 			self.orientation = "up"
 			self.updateHitbox()
 			self.hitbox.y = road4.boundaries[1] + road4.boundaries[3]
 			self.hitbox.x = road4.blitCoordinate(spawnLocation, self.carPath)
+			if self.carPath[1] == 0:
+				self.carPath[1] = random.choice([1,2])
+   
    
 		elif spawnLocation == 3:
 			self.orientation = "right"
 			self.sprite = pygame.transform.rotate(self.sprite,270)
 			self.updateHitbox()
-
 			self.hitbox.x = road6.boundaries[0] - 52
 			self.hitbox.y = road6.blitCoordinate(spawnLocation, self.carPath)
+			if self.carPath[1] == 0:
+				self.carPath[1] = random.choice([1,2])
+   
 
 		elif spawnLocation == 4:
 			self.orientation = "down"
@@ -69,6 +77,8 @@ class Car:
 			self.updateHitbox()
 			self.hitbox.y = road8.boundaries[1] - 52
 			self.hitbox.x = road8.blitCoordinate(spawnLocation, self.carPath)
+			if self.carPath[1] == 0:
+				self.carPath[1] = random.choice([1,2])
    
 		else:
 			self.orientation = "left"
@@ -76,6 +86,9 @@ class Car:
 			self.updateHitbox()
 			self.hitbox.x = road12.boundaries[0] +  road9.boundaries[2] + 52
 			self.hitbox.y = road12.blitCoordinate(spawnLocation, self.carPath)
+			if self.carPath[0] == 2:
+				self.carPath[0] = random.choice([0,1])
+   
 		print("done")
 
 
@@ -86,9 +99,9 @@ class Car:
 		self.orientation = newOri
 		self.updateHitbox()
 
-
 	def moveCar(self):
-		#self.checkIntersection()
+		self.checkIntersectionI1()
+		self.checkIntersectionI2()
 		# self.turn()
 		if self.orientation == "up":
 			self.hitbox.y -= self.speed
@@ -99,6 +112,89 @@ class Car:
 		elif self.orientation == "left":
 			self.hitbox.x -= self.speed
 
+	def updateHitbox(self):
+		self.hitbox = self.sprite.get_rect()
+    
+	def checkCurrentTurn(self):
+		# if (self.turnI1 == True) and (self.turnI2 == True):
+		# 	pass
+		if (self.turnI1 == True) or (self.turnI2 == True):
+			return self.carPath[1] 
+		else:
+			return self.carPath[0]
+	
+	def checkIntersectionI1(self):
+		if (self.hitbox.colliderect(I1.hitbox)):
+			if self.checkCurrentTurn() == 1:
+				pass
+			else:
+				if self.turn1Executed:
+					pass
+				else:
+					self.distanceIntoIntersection += self.speed
+					selectedLane = self.selectLane()
+					if self.distanceIntoIntersection >= selectedLane:
+						self.turnCar()
+						self.turn1Executed = True
+						self.turnI1 = True
+						print(f"Car Path: {self.carPath} Current Turn: {self.currentTurn} Selected Lane: {selectedLane}")
+		# else:
+		# 	print("NOT COLIDE")
+
+	def checkIntersectionI2(self):
+		if (self.hitbox.colliderect(I2.hitbox)):
+			if self.checkCurrentTurn() == 1:
+				pass
+			else:
+				if self.turn2Executed:
+					pass
+				else:
+					self.distanceIntoIntersection += self.speed
+					selectedLane = self.selectLane()
+					if self.distanceIntoIntersection >= selectedLane:
+						self.turnCar()
+						self.turn2Executed = True
+						self.turnI2 = True
+						print(f"Car Path: {self.carPath} Current Turn: {self.currentTurn} Selected Lane: {selectedLane}")
+		#else:
+			#print("NOT COLIDE")	
+
+	def selectLane(self):
+		leftLane1 = road1.freeSpace
+		leftLane2 =  road1.laneWidth +  road1.freeSpace + 4
+		rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace
+		rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace
+
+		self.currentTurn = self.checkCurrentTurn()
+		self.secondTurn = self.carPath[1]
+
+		if self.currentTurn == 0:
+			if self.secondTurn == 0:
+				return leftLane1
+			else:
+				return leftLane2
+			
+		elif self.currentTurn == 2:
+			if self.secondTurn == 2:
+				return rightLane1
+			else:
+				return rightLane2
+
+	def turnCar(self):
+		pass
+
+		# if(self.carPath[1]==0):
+		# 	return leftLane1
+		# elif(self.carPath[1]==2):
+		# 	return leftLane2
+		# elif(self.carPath[1]==0):
+		# 	return leftLane1
+		# 	else(self.carPath[1]==2):
+		# 		 leftLane2
+		
+			
+		
+		
 	'''def checkIntersection(self):
 		collisionFound = False
 		for road in allRoads:
@@ -109,24 +205,30 @@ class Car:
 		# at this point, the car is on a road or not, if not then it can be in an intersection, if its in an intersection then,
 
 		#if self.onRoad == 'intersection':
-		#	self.distanceIntoIntersection += self.speed
 	# so now the possibilities are its either not hit a road yet or its on a road, if its on a road we don't have to do anything, if it isn't on a road we don't have to do anything. so now to write the turning code					
-		leftLane1 = road1.freeSpace
-		leftLane2 =  road1.laneWidth +  road1.freeSpace + 4
-		rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace
-		rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace
 
 		# if self.distanceIntoIntersection != 0:
 		# 	if self.carPath[0] == 1:
 				'''
 
-			
-
 	# def drawHitbox(self, window):
 	# 	pygame.draw.rect(window, (255, 0, 0), self.hitbox, 2)
 
-	def updateHitbox(self):
-		self.hitbox = self.sprite.get_rect()
-    
-#	def turn(self,execution = 0):
-#		print("placeholder")
+	''' def carCollisionWithIntersection(self, cars):
+        carHitboxes = [car.hitbox for car in cars]
+        carsInIntersection = self.hitbox.collidelistall(carHitboxes)
+        if carsInIntersection != []:
+           # print(self.hitbox.collidelistall(carHitboxes))
+           for x in carsInIntersection:
+                print(x)
+           # self.distancetravelled += 1
+            
+            #self.turnInIntersection(cars)
+        else:
+            print("Not colliding")
+        
+    def turnInIntersection(self,cars):
+        pass
+        '''
+
+
