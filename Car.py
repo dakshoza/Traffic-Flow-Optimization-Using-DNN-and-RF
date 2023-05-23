@@ -62,7 +62,6 @@ class Car:
 					self.carPath[1] = random.choice([1,2])
 			self.hitbox.x = road4.blitCoordinate(spawnLocation, self.carPath)
    
-   
 		elif spawnLocation == 3:
 			self.orientation = "right"
 			self.sprite = pygame.transform.rotate(self.sprite,270)
@@ -100,7 +99,16 @@ class Car:
 
 	def changeOri(self, newOri):
 		self.orientation = newOri
-		#self.updateHitbox()
+		self.turnHitboxUpdate()
+
+	def turnHitboxUpdate(self):
+		storeWidth = self.hitbox.width
+		storeHeight = self.hitbox.height
+		storeHitbox = self.hitbox
+		storeHitbox.width = storeHeight
+		storeHitbox.height = storeWidth
+		self.updateHitbox()
+		self.hitbox = storeHitbox
 
 	def moveCar(self):
 		self.checkIntersectionI1()
