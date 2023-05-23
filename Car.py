@@ -4,7 +4,7 @@ from Roads import *
 from Intersections import *
 class Car:
 	def __init__(self):
-		self.speed = 3
+		self.speed = 2
 		self.distanceIntoIntersection = 0
 		self.turnI1 = False
 		self.turnI2 = False
@@ -41,7 +41,7 @@ class Car:
 
 		self.spawnLocation = random.randint(1,5)
 		self.setSpawn(self.spawnLocation)
-		#self.setSpawn(4)
+		#self.setSpawn()
 
 
 	def setSpawn(self, spawnLocation):
@@ -49,17 +49,18 @@ class Car:
 			self.orientation = "up"
 			self.updateHitbox()
 			self.hitbox.y = road2.boundaries[1] + road2.boundaries[3]
-			self.hitbox.x = road2.blitCoordinate(spawnLocation, self.carPath)
 			if self.carPath[0] == 1:
 				self.carPath[0] = random.choice([0,2])
+			self.hitbox.x = road2.blitCoordinate(spawnLocation, self.carPath)
    
 		elif spawnLocation == 2:
 			self.orientation = "up"
 			self.updateHitbox()
 			self.hitbox.y = road4.boundaries[1] + road4.boundaries[3]
+			if self.carPath[0] == 2:
+				if self.carPath[1] == 0:
+					self.carPath[1] = random.choice([1,2])
 			self.hitbox.x = road4.blitCoordinate(spawnLocation, self.carPath)
-			if self.carPath[1] == 0:
-				self.carPath[1] = random.choice([1,2])
    
    
 		elif spawnLocation == 3:
@@ -67,28 +68,29 @@ class Car:
 			self.sprite = pygame.transform.rotate(self.sprite,270)
 			self.updateHitbox()
 			self.hitbox.x = road6.boundaries[0] - 52
+			if self.carPath[0] == 1:
+				if self.carPath[1] == 0:
+					self.carPath[1] = random.choice([1,2])
 			self.hitbox.y = road6.blitCoordinate(spawnLocation, self.carPath)
-			if self.carPath[1] == 0:
-				self.carPath[1] = random.choice([1,2])
-   
 
 		elif spawnLocation == 4:
 			self.orientation = "down"
 			self.sprite = pygame.transform.rotate(self.sprite,180)
 			self.updateHitbox()
 			self.hitbox.y = road8.boundaries[1] - 52
+			if self.carPath[0] == 0:
+				if self.carPath[1] == 0:
+					self.carPath[1] = random.choice([1,2])
 			self.hitbox.x = road8.blitCoordinate(spawnLocation, self.carPath)
-			if self.carPath[1] == 0:
-				self.carPath[1] = random.choice([1,2])
    
 		else:
 			self.orientation = "left"
 			self.sprite = pygame.transform.rotate(self.sprite,90)
 			self.updateHitbox()
 			self.hitbox.x = road12.boundaries[0] +  road9.boundaries[2] + 52
-			self.hitbox.y = road12.blitCoordinate(spawnLocation, self.carPath)
 			if self.carPath[0] == 2:
 				self.carPath[0] = random.choice([0,1])
+			self.hitbox.y = road12.blitCoordinate(spawnLocation, self.carPath)
    
 		print("done")
 
@@ -98,7 +100,7 @@ class Car:
 
 	def changeOri(self, newOri):
 		self.orientation = newOri
-		self.updateHitbox()
+		#self.updateHitbox()
 
 	def moveCar(self):
 		self.checkIntersectionI1()
@@ -168,10 +170,10 @@ class Car:
 			#print("NOT COLIDE")	
 
 	def selectLane(self):
-		leftLane1 = road1.freeSpace
-		leftLane2 =  road1.laneWidth +  road1.freeSpace + 4
-		rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace
-		rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace
+		leftLane1 = road1.freeSpace + 30
+		leftLane2 =  road1.laneWidth +  road1.freeSpace + 4 + 30
+		rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace + 30
+		rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace + 30
 
 		self.currentTurn = self.checkCurrentTurn()
 		self.secondTurn = self.carPath[1]
@@ -191,54 +193,45 @@ class Car:
 			return None
 
 	def turnCar(self):
-		pass
+		if self.orientation == "up":
+			if self.currentTurn == 0:
+				self.sprite = pygame.transform.rotate(self.sprite,90)
+				#self.updateHitbox()
+				self.changeOri("left")
+			else:
+				self.sprite = pygame.transform.rotate(self.sprite,-90)
+				#self.updateHitbox()
+				self.changeOri("right")
 
-		# if(self.carPath[1]==0):
-		# 	return leftLane1
-		# elif(self.carPath[1]==2):
-		# 	return leftLane2
-		# elif(self.carPath[1]==0):
-		# 	return leftLane1
-		# 	else(self.carPath[1]==2):
-		# 		 leftLane2
-		
-			
-		
-		
-	'''def checkIntersection(self):
-		collisionFound = False
-		for road in allRoads:
-			if road.boundaries.collidepoint(self.hitbox.x, self.hitbox.y):
-				road.carList.append(self)
-				collisionFound = True
-	
-		# at this point, the car is on a road or not, if not then it can be in an intersection, if its in an intersection then,
+		elif self.orientation == "right":
+			if self.currentTurn == 0:
+				self.sprite = pygame.transform.rotate(self.sprite,90)
+				#self.updateHitbox()
+				self.changeOri("up")
+			else:
+				self.sprite = pygame.transform.rotate(self.sprite,-90)
+				#self.updateHitbox()
+				self.changeOri("down")
 
-		#if self.onRoad == 'intersection':
-	# so now the possibilities are its either not hit a road yet or its on a road, if its on a road we don't have to do anything, if it isn't on a road we don't have to do anything. so now to write the turning code					
+		elif self.orientation == "left":
+			if self.currentTurn == 0:
+				self.sprite = pygame.transform.rotate(self.sprite,90)
+				#self.updateHitbox()
+				self.changeOri("down")
+			else:
+				self.sprite = pygame.transform.rotate(self.sprite,-90)
+				#self.updateHitbox()
+				self.changeOri("up")
 
-		# if self.distanceIntoIntersection != 0:
-		# 	if self.carPath[0] == 1:
-				'''
+		elif self.orientation == "down":
+			if self.currentTurn == 0:
+				self.sprite = pygame.transform.rotate(self.sprite,90)
+				#self.updateHitbox()
+				self.changeOri("right")
+			else:
+				self.sprite = pygame.transform.rotate(self.sprite,-90)
+				#self.updateHitbox()
+				self.changeOri("left")
 
-	# def drawHitbox(self, window):
-	# 	pygame.draw.rect(window, (255, 0, 0), self.hitbox, 2)
-
-	''' def carCollisionWithIntersection(self, cars):
-        carHitboxes = [car.hitbox for car in cars]
-        carsInIntersection = self.hitbox.collidelistall(carHitboxes)
-        if carsInIntersection != []:
-           # print(self.hitbox.collidelistall(carHitboxes))
-           for x in carsInIntersection:
-                print(x)
-           # self.distancetravelled += 1
-            
-            #self.turnInIntersection(cars)
-        else:
-            print("Not colliding")
-        
-    def turnInIntersection(self,cars):
-        pass
-        '''
-
-
+	def drawHitbox(self, window):
+	 	pygame.draw.rect(window, (255, 0, 0), self.hitbox, 2)

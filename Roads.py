@@ -14,34 +14,51 @@ class Road:
         pygame.draw.rect(window,(0,0,255),self.boundaries,2)
 
     def blitCoordinate(self,spawnLocation, carPath):
-        if carPath[0] == 1:
-            x = self.blitCoordinate(spawnLocation, [random.choice([0,2])])
-        elif spawnLocation == 1 or spawnLocation == 2 or spawnLocation == 3:
-            if self.boundaries[2] < self.boundaries[3] : 
-                if carPath[0] == 0:
-                    x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
+        if spawnLocation == 1 or spawnLocation == 2:
+            if carPath[0] == 0:
+                if carPath[1] == 2:
+                        x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
                 else:
                     x = int(self.boundaries[0] + self.freeSpace)
-                        
-            elif self.boundaries[2] >= self.boundaries[3]: 
-                if carPath[0] == 0:
-                    x = int(self.boundaries[1] + self.freeSpace)
+            elif carPath[0] == 2:
+                x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
+            else:
+                x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
+                    
+        elif spawnLocation == 3:
+            if carPath[0] == 0:
+                x = int(self.boundaries[1] + self.freeSpace)
+            elif carPath[0] == 1:
+                if carPath[1] == 0:
+                    x = int(self.boundaries[1] + self.freeSpace)    
                 else:
-                    x = int(self.boundaries[1] +self.laneWidth + 4 + self.freeSpace)
+                    x = int(self.boundaries[1] + self.laneWidth + 4 + self.freeSpace)
+            else:
+                x = int(self.boundaries[1] +self.laneWidth + 4 + self.freeSpace)
+        
         else:
             if self.boundaries[2] < self.boundaries[3] :
                 if carPath[0] == 0:
-                    x = int(self.boundaries[0] + self.freeSpace)
-                else:
                     x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
+                elif carPath[0] == 1:
+                    x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
+                else:
+                    x = int(self.boundaries[0] + self.freeSpace)
                         
             elif self.boundaries[2] >= self.boundaries[3]: 
                 if carPath[0] == 0:
-                    x = int(self.boundaries[1] +self.laneWidth + 4 + self.freeSpace)
+                    if carPath[1] == 2:
+                        x = int(self.boundaries[1] + self.freeSpace)
+                    else:
+                        x = int(self.boundaries[1] + self.laneWidth + 4 + self.freeSpace)
+                elif carPath[0] == 1:
+                    if carPath[1] == 0:
+                        x = int(self.boundaries[1] + self.laneWidth + 4 + self.freeSpace)
+                    else:
+                        x = int(self.boundaries[1] + self.freeSpace)    
                 else:
                     x = int(self.boundaries[1] + self.freeSpace)
         return x
-            
             
 road1 = Road(767,517,87,327)
 road2 = Road(662,517,86,327)

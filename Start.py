@@ -1,6 +1,7 @@
 import pygame
 from Car import Car as Vehicle
 from Intersections import I1,I2 
+import Roads
 pygame.init()
 window = pygame.display.set_mode((1050,844))        
 
@@ -13,7 +14,7 @@ def genCar(num):
         tempCar = Vehicle()
         cars.append(tempCar)
 
-genCar(2)
+genCar(1)
 
 while running:
     window.blit(background,(0,0))
@@ -26,7 +27,8 @@ while running:
             running = False
             
     # window color
-
+    for road in Roads.allRoads:
+        pygame.draw.rect(window,(0,0,255), road.boundaries, 2)
     carHitboxes = [car.hitbox for car in cars]
 
     # Car Movement and collision check
@@ -38,7 +40,7 @@ while running:
             
         currentCar.moveCar()
         currentCar.drawCar(window)
-        #currentCar.drawHitbox(window)
+        currentCar.drawHitbox(window)
     
     for currentCar in cars:    
         if not all([currentCar.hitbox.x < 1200 , currentCar.hitbox.x > -60 , currentCar.hitbox.y > -100 , currentCar.hitbox.y < 950]):
