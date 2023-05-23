@@ -41,6 +41,7 @@ class Car:
 
 		self.spawnLocation = random.randint(1,5)
 		self.setSpawn(self.spawnLocation)
+		#self.setSpawn(4)
 
 
 	def setSpawn(self, spawnLocation):
@@ -125,11 +126,14 @@ class Car:
 	
 	def checkIntersectionI1(self):
 		if (self.hitbox.colliderect(I1.hitbox)):
-			if self.checkCurrentTurn() == 1:
+			if self.turn1Executed:
 				pass
 			else:
-				if self.turn1Executed:
-					pass
+				if self.checkCurrentTurn() == 1:
+					self.turn1Executed = True
+					self.turnI1 = True
+					selectedLane = self.selectLane()
+					print(f"Car Path: {self.carPath} Current Turn: {self.currentTurn} Selected Lane: {selectedLane}")
 				else:
 					self.distanceIntoIntersection += self.speed
 					selectedLane = self.selectLane()
@@ -143,11 +147,15 @@ class Car:
 
 	def checkIntersectionI2(self):
 		if (self.hitbox.colliderect(I2.hitbox)):
-			if self.checkCurrentTurn() == 1:
+			if self.turn2Executed:
 				pass
 			else:
-				if self.turn2Executed:
-					pass
+				if self.checkCurrentTurn() == 1:
+					self.turn2Executed = True
+					self.turnI2 = True
+					selectedLane = self.selectLane()
+					print(f"Car Path: {self.carPath} Current Turn: {self.currentTurn} Selected Lane: {selectedLane}")
+
 				else:
 					self.distanceIntoIntersection += self.speed
 					selectedLane = self.selectLane()
@@ -179,6 +187,8 @@ class Car:
 				return rightLane1
 			else:
 				return rightLane2
+		elif self.currentTurn == 1:
+			return None
 
 	def turnCar(self):
 		pass
