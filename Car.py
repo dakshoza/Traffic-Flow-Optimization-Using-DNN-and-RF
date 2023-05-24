@@ -41,8 +41,7 @@ class Car:
 
 		self.spawnLocation = random.randint(1,5)
 		self.setSpawn(self.spawnLocation)
-		#self.setSpawn(4)
-
+		#self.setSpawn(2)
 
 	def setSpawn(self, spawnLocation):
 		if spawnLocation == 1:
@@ -93,7 +92,6 @@ class Car:
    
 		print("done")
 
-
 	def drawCar(self, window):
 		window.blit(self.sprite, (self.hitbox.x,self.hitbox.y))
 
@@ -111,8 +109,6 @@ class Car:
 		self.hitbox = storeHitbox
 
 	def moveCar(self):
-		self.checkIntersectionI1()
-		self.checkIntersectionI2()
 		# self.turn()
 		if self.orientation == "up":
 			self.hitbox.y -= self.speed
@@ -122,6 +118,8 @@ class Car:
 			self.hitbox.x += self.speed
 		elif self.orientation == "left":
 			self.hitbox.x -= self.speed
+		self.checkIntersectionI1()
+		self.checkIntersectionI2()
 
 	def updateHitbox(self):
 		self.hitbox = self.sprite.get_rect()
@@ -151,8 +149,8 @@ class Car:
 						self.turnCar()
 						self.turn1Executed = True
 						self.turnI1 = True
+						print(f"Distance into intersection: {self.distanceIntoIntersection} Car Path: {self.carPath} Current Turn: {self.currentTurn} Selected Lane: {selectedLane}")
 						self.distanceIntoIntersection = 0
-						print(f"Car Path: {self.carPath} Current Turn: {self.currentTurn} Selected Lane: {selectedLane}")
 		# else:
 		# 	print("NOT COLIDE")
 
@@ -174,16 +172,16 @@ class Car:
 						self.turnCar()
 						self.turn2Executed = True
 						self.turnI2 = True
+						print(f"Distance into intersection: {self.distanceIntoIntersection} Car Path: {self.carPath} Current Turn: {self.currentTurn} Selected Lane: {selectedLane}")
 						self.distanceIntoIntersection = 0
-						print(f"Car Path: {self.carPath} Current Turn: {self.currentTurn} Selected Lane: {selectedLane}")
-		#else:
+						#else:
 			#print("NOT COLIDE")	
 
 	def selectLane(self):
-		leftLane1 = road1.freeSpace + 30
-		leftLane2 =  road1.laneWidth +  road1.freeSpace + 4 + 30
-		rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace + 30
-		rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace + 30
+		leftLane1 = road1.freeSpace + 35
+		leftLane2 =  road1.laneWidth +  road1.freeSpace + 4 + 35
+		rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace + 35
+		rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace + 35
 
 		self.currentTurn = self.checkCurrentTurn()
 		self.secondTurn = self.carPath[1]

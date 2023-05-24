@@ -61,17 +61,17 @@ class Road:
         return x
             
 road1 = Road(767,517,87,327)
-road2 = Road(662,517,86,327)
-road3 = Road(355,517,88,327)
-road4 = Road(251,517,86,327)
-road5 = Road(0,431,251,86)
+road2 = Road(662,517,87,327)
+road3 = Road(355,517,87,327)
+road4 = Road(251,517,87,327)
+road5 = Road(0,431,251,87)
 road6 = Road(0, 325, 251, 87)
-road7 = Road(251, 0, 86,325)
+road7 = Road(251, 0, 87,325)
 road8 = Road(356,0,87,325)
 road9 = Road(443,325,219,87)
 road10 = Road(443,431,219,87)
 road11 = Road(854,325,196,87)
-road12 = Road(854,431,196,86)
+road12 = Road(854,431,196,87)
 
 allRoads = [road1, 
             road2,road3,
