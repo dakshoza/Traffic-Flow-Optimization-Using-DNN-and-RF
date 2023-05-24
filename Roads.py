@@ -47,10 +47,10 @@ class Road:
                         
             elif self.boundaries[2] >= self.boundaries[3]: 
                 if carPath[0] == 0:
-                    if carPath[1] == 2:
-                        x = int(self.boundaries[1] + self.freeSpace)
-                    else:
-                        x = int(self.boundaries[1] + self.laneWidth + 4 + self.freeSpace)
+                    # if carPath[1] == 2:
+                    #x = int(self.boundaries[1] + self.freeSpace)
+                    # else:
+                    x = int(self.boundaries[1] + self.laneWidth + 4 + self.freeSpace)
                 elif carPath[0] == 1:
                     if carPath[1] == 0:
                         x = int(self.boundaries[1] + self.laneWidth + 4 + self.freeSpace)

@@ -40,8 +40,9 @@ class Car:
 		self.carPath.append(random.randint(0,2))
 
 		self.spawnLocation = random.randint(1,5)
+		#self.spawnLocation = random.choice([2])
 		self.setSpawn(self.spawnLocation)
-		#self.setSpawn(2)
+		#self.setSpawn(5)
 
 	def setSpawn(self, spawnLocation):
 		if spawnLocation == 1:
@@ -178,10 +179,10 @@ class Car:
 			#print("NOT COLIDE")	
 
 	def selectLane(self):
-		leftLane1 = road1.freeSpace + 35
+		leftLane1 = road1.freeSpace + 36
 		leftLane2 =  road1.laneWidth +  road1.freeSpace + 4 + 35
-		rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace + 35
-		rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace + 35
+		rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace + 34
+		rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace + 34
 
 		self.currentTurn = self.checkCurrentTurn()
 		self.secondTurn = self.carPath[1]
