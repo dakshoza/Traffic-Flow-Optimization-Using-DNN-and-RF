@@ -6,6 +6,7 @@ class Car:
 	def __init__(self):
 		self.speed = 3
 		self.distanceIntoIntersection = 0
+		self.distanceTravelled = 0
 		self.turnI1 = False
 		self.turnI2 = False
 		self.turn1Executed = False
@@ -40,7 +41,7 @@ class Car:
 		self.carPath.append(random.randint(0,2))
 
 		self.spawnLocation = random.randint(1,5)
-		#self.spawnLocation = random.choice([4])
+		#self.spawnLocation = random.choice([3])
 		self.setSpawn(self.spawnLocation)
 		#self.setSpawn(3)
 
@@ -52,6 +53,7 @@ class Car:
 			if self.carPath[0] == 1:
 				self.carPath[0] = random.choice([0,2])
 			self.hitbox.x = road2.blitCoordinate(spawnLocation, self.carPath)
+			
    
 		elif spawnLocation == 2:
 			self.orientation = "up"
@@ -90,9 +92,8 @@ class Car:
 			if self.carPath[0] == 2:
 				self.carPath[0] = random.choice([0,1])
 			self.hitbox.y = road12.blitCoordinate(spawnLocation, self.carPath)
+			
    
-		print("done")
-
 	def drawCar(self, window):
 		window.blit(self.sprite, (self.hitbox.x,self.hitbox.y))
 
@@ -120,6 +121,7 @@ class Car:
 			self.hitbox.x -= self.speed
 		self.checkIntersectionI1()
 		self.checkIntersectionI2()
+		self.distanceTravelled += self.speed
 
 	def updateHitbox(self):
 		self.hitbox = self.sprite.get_rect()
