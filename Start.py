@@ -1,8 +1,7 @@
-import pygame
-import random
+import pygame, time, Roads, random
 from Car import Car as Vehicle
 from Intersections import I1,I2 
-import Roads
+
 pygame.init()
 window = pygame.display.set_mode((1050,844))        
 
@@ -22,13 +21,14 @@ def genCar(num):
                 carGenerated = True
                 cars.append(tempCar)
                 carHitboxes.append(tempCar.hitbox)
-            else:
-                print(f"Collision at spawnpoint: {tempCar.spawnLocation}")
-                print("respawning Car")
         
 genCar(3)
 
+prevTime = time.time()
+
 while running:
+    dt = time.time() - prevTime # Calculating Delta Time
+    prevTime = time.time()
     window.blit(background,(0,0))
 
     pygame.draw.rect(window, (255, 0, 0), I1.hitbox, 2)
@@ -38,9 +38,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             
-    # window color
-    for road in Roads.allRoads:
-        pygame.draw.rect(window,(0,0,255), road.boundaries, 2)
+    # for road in Roads.allRoads:
+    #     pygame.draw.rect(window,(0,0,255), road.boundaries, 2)
     carHitboxes = [car.hitbox for car in cars]
 
     # Car Movement and collision check
@@ -49,9 +48,9 @@ while running:
         if currentCar.hitbox.collidelist(carHitboxes) > 0:
             print("Car Crash")
             #FOR SCOTT: uncomment this line if you want the sim to stop when cars crash
-            running = False
+            # running = False
         carHitboxes[i] = currentCar.hitbox
-        currentCar.moveCar()
+        currentCar.moveCar(dt)
         currentCar.drawCar(window)
         currentCar.drawHitbox(window)
     
@@ -59,7 +58,7 @@ while running:
         if not all([currentCar.hitbox.x < 1150 , currentCar.hitbox.x > -60 , currentCar.hitbox.y > -100 , currentCar.hitbox.y < 950]):
             cars.remove(currentCar)
             score += 1
-            genCar(2)
+            genCar(random.choice([0,1,1,1,1,2]))
 
 
     pygame.display.update()
