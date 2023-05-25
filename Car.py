@@ -42,7 +42,7 @@ class Car:
 		self.spawnLocation = random.randint(1,5)
 		#self.spawnLocation = random.choice([2])
 		self.setSpawn(self.spawnLocation)
-		#self.setSpawn(5)
+		#self.setSpawn(3)
 
 	def setSpawn(self, spawnLocation):
 		if spawnLocation == 1:
@@ -110,7 +110,6 @@ class Car:
 		self.hitbox = storeHitbox
 
 	def moveCar(self):
-		# self.turn()
 		if self.orientation == "up":
 			self.hitbox.y -= self.speed
 		elif self.orientation == "down":
@@ -179,13 +178,28 @@ class Car:
 			#print("NOT COLIDE")	
 
 	def selectLane(self):
-		leftLane1 = road1.freeSpace + 36
-		leftLane2 =  road1.laneWidth +  road1.freeSpace + 4 + 35
-		rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace + 34
-		rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace + 34
-
 		self.currentTurn = self.checkCurrentTurn()
 		self.secondTurn = self.carPath[1]
+		
+		if self.spawnLocation == 1 or self.spawnLocation == 5:
+			leftLane1 = road1.freeSpace + 36
+			leftLane2 =  road1.laneWidth +  road1.freeSpace + 4 + 35
+			rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace + 34
+			rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace + 34
+		
+		elif self.spawnLocation == 3 or self.spawnLocation == 4:
+			leftLane1 = road1.freeSpace + 48
+			leftLane2 =  road1.laneWidth +  road1.freeSpace + 4 + 49
+			rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace + 47
+			rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace + 47
+
+		else:
+			leftLane1 = road1.freeSpace + 30
+			leftLane2 =  road1.laneWidth +  road1.freeSpace + 4 + 30
+			rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace + 32
+			rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace + 32
+			if self.turnI1 == True and self.secondTurn == 2:
+				rightLane1 += 15
 
 		if self.currentTurn == 0:
 			if self.secondTurn == 0:
