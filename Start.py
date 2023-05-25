@@ -12,10 +12,19 @@ background = pygame.image.load('Assets\Road Work Ahead1050.png')
 cars = []
 carHitboxes = []
 def genCar(num):    
-    global cars
-    for i in range(0,num):
-        tempCar = Vehicle()
-        cars.append(tempCar)
+    global cars, carHitboxes
+    for i in range(num):
+        carGenerated = False
+        while not carGenerated:
+            tempCar = Vehicle()
+            print(f"spawn: {tempCar.spawnLocation}")
+            if tempCar.hitbox.collidelist(carHitboxes) == -1:
+                carGenerated = True
+                cars.append(tempCar)
+                carHitboxes.append(tempCar.hitbox)
+            else:
+                print(f"Collision at spawnpoint: {tempCar.spawnLocation}")
+                print("respawning Car")
         
 genCar(3)
 
@@ -36,21 +45,11 @@ while running:
 
     # Car Movement and collision check
     for i,currentCar in enumerate(cars):
-        carHitboxes = [car.hitbox for car in cars]
-        carHitboxes.remove(currentCar.hitbox)
-        if currentCar.hitbox.collidelist(carHitboxes) >= 0:
-            if currentCar.distanceTravelled <= 20:
-                print(f"Collision at spawnpoint: {currentCar.spawnLocation}")
-                cars.remove(currentCar)
-                print("respawning car")
-                currentCar = Vehicle()
-                print(f"new spawn: {currentCar.spawnLocation}")
-                cars.append(currentCar)
-            else:
-                print("Car Crash")
-                #FOR SCOTT: uncomment this line if you want the sim to stop when cars crash
-                # running = False
-        carHitboxes.append(currentCar.hitbox)
+        carHitboxes[i] = pygame.Rect(0,0,0,0)
+        if currentCar.hitbox.collidelist(carHitboxes) > 0:
+            print("Car Crash")
+            #FOR SCOTT: uncomment this line if you want the sim to stop when cars crash
+            running = False
         carHitboxes[i] = currentCar.hitbox
         currentCar.moveCar()
         currentCar.drawCar(window)
