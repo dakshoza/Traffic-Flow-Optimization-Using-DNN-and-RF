@@ -47,7 +47,9 @@ while running:
                 print(f"new spawn: {currentCar.spawnLocation}")
                 cars.append(currentCar)
             else:
-                print("Collision")
+                print("Car Crash")
+                #FOR SCOTT: uncomment this line if you want the sim to stop when cars crash
+                # running = False
         carHitboxes.append(currentCar.hitbox)
         carHitboxes[i] = currentCar.hitbox
         currentCar.moveCar()
