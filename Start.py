@@ -14,7 +14,7 @@ def genCar(num):
         tempCar = Vehicle()
         cars.append(tempCar)
 
-genCar(1)
+genCar(4)
 
 while running:
     window.blit(background,(0,0))

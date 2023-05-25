@@ -40,7 +40,7 @@ class Car:
 		self.carPath.append(random.randint(0,2))
 
 		self.spawnLocation = random.randint(1,5)
-		#self.spawnLocation = random.choice([2])
+		#self.spawnLocation = random.choice([4])
 		self.setSpawn(self.spawnLocation)
 		#self.setSpawn(3)
 
@@ -188,7 +188,7 @@ class Car:
 			rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace + 34
 		
 		elif self.spawnLocation == 3 or self.spawnLocation == 4:
-			leftLane1 = road1.freeSpace + 48
+			leftLane1 = road1.freeSpace + 50
 			leftLane2 =  road1.laneWidth +  road1.freeSpace + 4 + 49
 			rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace + 47
 			rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace + 47
@@ -205,7 +205,10 @@ class Car:
 			if self.secondTurn == 0:
 				return leftLane1
 			else:
-				return leftLane2
+				if self.spawnLocation == 4 and self.secondTurn != 2:
+					return leftLane1
+				else:
+					return leftLane2
 			
 		elif self.currentTurn == 2:
 			if self.secondTurn == 2:
