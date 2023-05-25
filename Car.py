@@ -6,7 +6,6 @@ class Car:
 	def __init__(self):
 		self.speed = 3
 		self.distanceIntoIntersection = 0
-		self.distanceTravelled = 0
 		self.turnI1 = False
 		self.turnI2 = False
 		self.turn1Executed = False
@@ -121,7 +120,6 @@ class Car:
 			self.hitbox.x -= self.speed
 		self.checkIntersectionI1()
 		self.checkIntersectionI2()
-		self.distanceTravelled += self.speed
 
 	def updateHitbox(self):
 		self.hitbox = self.sprite.get_rect()
