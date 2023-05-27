@@ -1,6 +1,7 @@
 import pygame, time, Roads, random
 from Car import Car as Vehicle
 from Intersections import I1,I2 
+from Car import TURN
 
 pygame.init()
 window = pygame.display.set_mode((1050,844))        
@@ -22,34 +23,55 @@ def genCar(num):
                 cars.append(tempCar)
                 carHitboxes.append(tempCar.hitbox)
         
-genCar(3)
+genCar(2)
 
 prevTime = time.time()
+
+invincibleCars = []
 
 while running:
     dt = time.time() - prevTime # Calculating Delta Time
     prevTime = time.time()
     window.blit(background,(0,0))
-
     pygame.draw.rect(window, (255, 0, 0), I1.hitbox, 2)
     pygame.draw.rect(window, (255, 0, 0), I2.hitbox, 2)
     #event checking
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == TURN:
+            turnedCar = event.ID
+            invincibleCars.append(turnedCar)
+            turnedCar.iTimer = 10
+            carHitboxes.remove(turnedCar.hitbox)
+    
+    for car in invincibleCars:
+        if turnedCar.iTimer == 0:
+            carHitboxes.append(car.hitbox)
+            invincibleCars.remove(car)
+        else:
+            car.iTimer -= 1
+        
+    print(invincibleCars)
+            
             
     # for road in Roads.allRoads:
     #     pygame.draw.rect(window,(0,0,255), road.boundaries, 2)
-    carHitboxes = [car.hitbox for car in cars]
 
     # Car Movement and collision check
     for i,currentCar in enumerate(cars):
-        carHitboxes[i] = pygame.Rect(0,0,0,0)
-        if currentCar.hitbox.collidelist(carHitboxes) > 0:
-            print("Car Crash")
+        removed = False
+        if currentCar.hitbox in carHitboxes:
+            carHitboxes.remove(currentCar.hitbox)
+            removed= True
+        collision = currentCar.hitbox.collidelist(carHitboxes)
+        if collision > 0:
+            if not((currentCar in invincibleCars) or (carHitboxes[collision] in invincibleCars)):
+                print("Car Crash")
             #FOR SCOTT: uncomment this line if you want the sim to stop when cars crash
-            # running = False
-        carHitboxes[i] = currentCar.hitbox
+                running = False
+        if removed:
+            carHitboxes.append(currentCar.hitbox)
         currentCar.moveCar(dt)
         currentCar.drawCar(window)
         currentCar.drawHitbox(window)
@@ -57,8 +79,9 @@ while running:
     for currentCar in cars:    
         if not all([currentCar.hitbox.x < 1150 , currentCar.hitbox.x > -60 , currentCar.hitbox.y > -100 , currentCar.hitbox.y < 950]):
             cars.remove(currentCar)
+            carHitboxes.remove(currentCar.hitbox)
             score += 1
-            genCar(random.choice([0,1,1,1,1,2]))
+            genCar(random.choice([2]))
 
 
     pygame.display.update()

@@ -1,7 +1,8 @@
-import random
-import pygame
+import random, pygame
 from Roads import *
 from Intersections import *
+
+TURN = pygame.USEREVENT + 0
 class Car:
 	def __init__(self):
 		self.speed = 120
@@ -10,6 +11,7 @@ class Car:
 		self.turnI2 = False
 		self.turn1Executed = False
 		self.turn2Executed = False
+		self.iTimer = 0 #invincibility timer
 		# Car sprite and Car Length
 		sprite = random.randint(1,6)
 		if sprite == 1:
@@ -42,7 +44,7 @@ class Car:
 		self.spawnLocation = random.randint(1,5)
 		#self.spawnLocation = random.choice([3])
 		self.setSpawn(self.spawnLocation)
-		#self.setSpawn(3)
+		# self.setSpawn(3)
 
 	def setSpawn(self, spawnLocation):
 		if spawnLocation == 1:
@@ -140,6 +142,7 @@ class Car:
 			return self.carPath[0]
 	
 	def checkIntersectionI1(self,dt):
+		invincibility = pygame.event.Event(TURN, ID = self)
 		if (self.hitbox.colliderect(I1.hitbox)):
 			if self.turn1Executed:
 				pass
@@ -154,14 +157,14 @@ class Car:
 					if self.distanceIntoIntersection >= selectedLane:
 						self.turnCar()
 						self.turn1Executed = True
+						pygame.event.post(invincibility)
 						self.turnI1 = True
 						self.distanceIntoIntersection = 0
 
 	def checkIntersectionI2(self, dt):
+		invincibility = pygame.event.Event(TURN, ID = self)
 		if (self.hitbox.colliderect(I2.hitbox)):
-			if self.turn2Executed:
-				pass
-			else:
+			if not self.turn2Executed:
 				if self.checkCurrentTurn() == 1:
 					self.turn2Executed = True
 					self.turnI2 = True
@@ -172,6 +175,7 @@ class Car:
 					if self.distanceIntoIntersection >= selectedLane:
 						self.turnCar()
 						self.turn2Executed = True
+						pygame.event.post(invincibility)
 						self.turnI2 = True
 						self.distanceIntoIntersection = 0
 
