@@ -105,30 +105,52 @@ class Car:
 		self.turnHitboxUpdate()
 
 	def turnHitboxUpdate(self):
-		storeWidth = self.hitbox.width
-		storeHeight = self.hitbox.height
-		storeHitbox = self.hitbox
-		storeHitbox.width = storeHeight
-		storeHitbox.height = storeWidth
-		self.updateHitbox()
-		self.hitbox = storeHitbox
+		self.hitbox = pygame.Rect(self.hitbox.x,self.hitbox.y,self.hitbox.height,self.hitbox.width)
+  
+	def checkSignal(self,dt):
+		try:
+			if self.onRoad.state == 0:
+				stopCoord = self.onRoad.stopPosition(self)
+				if self.orientation == "up":
+					if self.hitbox.y - round(self.speed*dt) <= stopCoord:
+						return False
+					else:
+						return True
+				elif self.orientation == "down":
+					if self.hitbox.y + round(self.speed*dt) >= stopCoord:
+						return False
+					else:
+						return True
+				elif self.orientation == "right":
+					if self.hitbox.x + round(self.speed*dt) >= stopCoord:
+						return False
+					else:
+						return True
+				elif self.orientation == "left":
+					if self.hitbox.x - round(self.speed*dt) <= stopCoord:
+						return False
+					else:
+						return True
+		except:
+			return True
 
 	def moveCar(self, dt):
-		self.pos 
-		if self.orientation == "up":
-			self.pos.y -= self.speed * dt
-			self.hitbox.y = round(self.pos.y)
-		elif self.orientation == "down":
-			self.pos.y += self.speed * dt
-			self.hitbox.y = round(self.pos.y)
-		elif self.orientation == "right":
-			self.pos.x += self.speed * dt
-			self.hitbox.x = round(self.pos.x)
-		elif self.orientation == "left":
-			self.pos.x -= self.speed * dt
-			self.hitbox.x = round(self.pos.x)
-		self.checkIntersectionI1(dt)
-		self.checkIntersectionI2(dt)
+		if self.checkSignal(dt):
+			if self.orientation == "up":
+				self.pos.y -= self.speed * dt
+				self.hitbox.y = round(self.pos.y)
+			elif self.orientation == "down":
+				self.pos.y += self.speed * dt
+				self.hitbox.y = round(self.pos.y)
+			elif self.orientation == "right":
+				self.pos.x += self.speed * dt
+				self.hitbox.x = round(self.pos.x)
+			elif self.orientation == "left":
+				self.pos.x -= self.speed * dt
+				self.hitbox.x = round(self.pos.x)
+			self.checkIntersectionI1(dt)
+			self.checkIntersectionI2(dt)
+
 
 	def updateHitbox(self):
 		self.hitbox = self.sprite.get_rect()

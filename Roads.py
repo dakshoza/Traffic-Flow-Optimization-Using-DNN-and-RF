@@ -1,5 +1,6 @@
 import pygame
 import random
+from TrafficSignals import *
 class Road:
     def __init__(self, x, y, width, height):
         self.boundaries = pygame.Rect(x, y, width, height)
@@ -9,6 +10,7 @@ class Road:
             self.laneWidth = int(round((height - 4)/2))
         self.freeSpace = int((self.laneWidth-30)/2)
         self.carList = []
+        self.state = 0
         
     def drawHitBox(self, window):
         pygame.draw.rect(window,(0,0,255),self.boundaries,2)
@@ -59,7 +61,39 @@ class Road:
                 else:
                     x = int(self.boundaries[1] + self.freeSpace)
         return x
+        
+    def update(self, newState):
+        self.state = newState
+        
+    def stopPosition(self, car):
+        if self.direction == "left":
+            self.carList.sort(key=lambda rect: rect.x)
+            carPos = self.carList.index(car)
+            x = self.boundaries.x
+            return 5 + x + (56*carPos)
+        if self.direction == "right":
+            self.carList.sort(key=lambda rect: rect.x, reverse=True)
+            carPos = self.carList.index(car)
+            x = self.boundaries.x + self.boundaries.width
+            return x - 5 - (56*carPos)
+        
+        if self.direction == "up":
+            self.carList.sort(key=lambda rect: rect.y, reverse=True)
+            carPos = self.carList.index(car)
+            y = self.boundaries.y
+            return y + 5 + (56*carPos)
+        
+        if self.direction == "up":
+            self.carList.sort(key=lambda rect: rect.y)
+            carPos = self.carList.index(car)
+            y = self.boundaries.y
+            return y - 5 - (56*carPos)
+        
+        
+        
             
+        
+        
 road1 = Road(767,517,87,327)
 road2 = Road(662,517,87,327)
 road3 = Road(355,517,87,327)
@@ -73,6 +107,24 @@ road10 = Road(443,431,219,87)
 road11 = Road(854,325,196,87)
 road12 = Road(854,431,196,87)
 
+road4.signal = A0
+road6.signal = A1
+road8.signal = A2
+road10.signal = A3
+road2.signal = B0
+road9.signal = B1
+road12.signal = B2
+
+road4.direction = "up"
+road6.direction = "right"
+road8.direction = "down"
+road10.direction = "left"
+road2.direction = "up"
+road9.direction = "right"
+road12.direction = "left"
+
+monitoredRoads = [road4,road6,road8,road10,road2,road9,road12,]
+
 allRoads = [road1, 
             road2,road3,
             road4,road5,
@@ -80,3 +132,5 @@ allRoads = [road1,
             road8,road9,
             road10,road11,
             road12]
+
+signalRoads = [road.boundaries for road in monitoredRoads]

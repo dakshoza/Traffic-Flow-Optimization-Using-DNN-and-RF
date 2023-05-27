@@ -1,7 +1,8 @@
-import pygame, time, Roads, random
+import pygame, time, random
 from Car import Car as Vehicle
 from Intersections import I1,I2 
 from Car import TURN
+from Roads import *
 
 pygame.init()
 window = pygame.display.set_mode((1050,844))        
@@ -30,8 +31,13 @@ prevTime = time.time()
 invincibleCars = []
 
 while running:
-    dt = time.time() - prevTime # Calculating Delta Time
-    prevTime = time.time()
+    #delta time estimation for debugging
+    dt = 0.012044906616210938
+    
+    # dt = time.time() - prevTime # Calculating Delta Time
+    # prevTime = time.time()
+    
+    
     window.blit(background,(0,0))
     pygame.draw.rect(window, (255, 0, 0), I1.hitbox, 2)
     pygame.draw.rect(window, (255, 0, 0), I2.hitbox, 2)
@@ -43,7 +49,7 @@ while running:
             turnedCar = event.ID
             invincibleCars.append(turnedCar)
             turnedCar.iTimer = 10
-            carHitboxes.remove(turnedCar.hitbox)
+            carHitboxes.remove(pygame.Rect(turnedCar.hitbox.x, turnedCar.hitbox.y, turnedCar.hitbox.height, turnedCar.hitbox.width))
     
     for car in invincibleCars:
         if turnedCar.iTimer == 0:
@@ -65,13 +71,19 @@ while running:
             carHitboxes.remove(currentCar.hitbox)
             removed= True
         collision = currentCar.hitbox.collidelist(carHitboxes)
-        if collision > 0:
+        if collision >= 0:
             if not((currentCar in invincibleCars) or (carHitboxes[collision] in invincibleCars)):
                 print("Car Crash")
-            #FOR SCOTT: uncomment this line if you want the sim to stop when cars crash
                 running = False
         if removed:
             carHitboxes.append(currentCar.hitbox)
+        
+        # Linking Car and Roads
+        roadIndex = currentCar.hitbox.collidelist(signalRoads)
+        if roadIndex >=0:
+            monitoredRoads[roadIndex].carList.append(currentCar)
+            currentCar.onRoad = monitoredRoads[roadIndex]
+        
         currentCar.moveCar(dt)
         currentCar.drawCar(window)
         currentCar.drawHitbox(window)
