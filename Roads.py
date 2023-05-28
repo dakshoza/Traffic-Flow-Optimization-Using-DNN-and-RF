@@ -63,37 +63,31 @@ class Road:
                     x = int(self.boundaries[1] + self.freeSpace)
         return x
         
-    def update(self, newState):
-        self.state = newState
-        
-    def stopPosition(self, car):
-        if self.direction == "left":
-            self.carList.sort(key=lambda rect: rect.x)
-            carPos = self.carList.index(car)
-            x = self.boundaries.x
-            return 5 + x + (56*carPos)
-        if self.direction == "right":
-            self.carList.sort(key=lambda rect: rect.x, reverse=True)
-            carPos = self.carList.index(car)
-            x = self.boundaries.x + self.boundaries.width
-            return x - 5 - (56*carPos)
-        
-        if self.direction == "up":
-            self.carList.sort(key=lambda rect: rect.y, reverse=True)
-            carPos = self.carList.index(car)
-            y = self.boundaries.y
-            return y + 5 + (56*carPos)
-        
-        if self.direction == "up":
-            self.carList.sort(key=lambda rect: rect.y)
-            carPos = self.carList.index(car)
-            y = self.boundaries.y
-            return y - 5 - (56*carPos)
-        
-        
+    def update(self):
+        if self.signal.state == 0:
+            self.signal.state = 1
+        else: 
+            self.signal.state = 0
             
+    def stopPosition(self, car):
+        if car in self.lane1List:
+            carPos = self.lane1List.index(car)
+        elif car in self.lane2List:
+            carPos = self.lane2List.index(car)
+        if self.direction == "left":
+            self.carList.sort(key=lambda rect: rect.hitbox.x)
+            x = self.boundaries.x
+            return (10 + x + (59*carPos))
+        elif self.direction == "right":
+            self.carList.sort(key=lambda rect: rect.hitbox.x, reverse=True)
+            x = self.boundaries.x + self.boundaries.width
+            return (x - 10 - 52 - (59*carPos))
+        elif self.direction == "up":
+            self.carList.sort(key=lambda rect: rect.hitbox.y, reverse=True)
+            y = self.boundaries.y
+            return (y + 10 + (59*carPos))
         
-        
+                  
 road1 = Road(767,517,87,327)
 road2 = Road(662,517,87,327)
 road3 = Road(355,517,87,327)
