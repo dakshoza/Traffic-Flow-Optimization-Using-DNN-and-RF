@@ -9,7 +9,8 @@ class Road:
         else: 
             self.laneWidth = int(round((height - 4)/2))
         self.freeSpace = int((self.laneWidth-30)/2)
-        self.carList = []
+        self.lane1List = []
+        self.lane2List = []
         self.state = 0
         
     def drawHitBox(self, window):
@@ -62,34 +63,34 @@ class Road:
                     x = int(self.boundaries[1] + self.freeSpace)
         return x
         
-    def update(self, newState):
-        self.state = newState
-        
+    def update(self):
+        if self.signal.state == 0:
+            self.signal.state = 1
+        else: 
+            self.signal.state = 0
+            
     def stopPosition(self, car):
+        if car in self.lane1List:
+            carPos = self.lane1List.index(car)
+        elif car in self.lane2List:
+            carPos = self.lane2List.index(car)
         if self.direction == "left":
-            self.carList.sort(key=lambda rect: rect.x)
-            carPos = self.carList.index(car)
+            self.carList.sort(key=lambda rect: rect.hitbox.x)
             x = self.boundaries.x
-            return 5 + x + (56*carPos)
-        if self.direction == "right":
-            self.carList.sort(key=lambda rect: rect.x, reverse=True)
-            carPos = self.carList.index(car)
+            return (10 + x + (59*carPos))
+        elif self.direction == "right":
+            self.carList.sort(key=lambda rect: rect.hitbox.x, reverse=True)
             x = self.boundaries.x + self.boundaries.width
-            return x - 5 - (56*carPos)
-        
-        if self.direction == "up":
-            self.carList.sort(key=lambda rect: rect.y, reverse=True)
-            carPos = self.carList.index(car)
+            return (x - 10 - 52 - (59*carPos))
+        elif self.direction == "up":
+            self.carList.sort(key=lambda rect: rect.hitbox.y, reverse=True)
             y = self.boundaries.y
-            return y + 5 + (56*carPos)
+            return (y + 10 + (59*carPos))
         
-        if self.direction == "up":
-            self.carList.sort(key=lambda rect: rect.y)
-            carPos = self.carList.index(car)
-            y = self.boundaries.y
-            return y - 5 - (56*carPos)
-        
-        
+        elif self.direction == "down":
+            self.carList.sort(key=lambda rect: rect.hitbox.y)
+            y = self.boundaries.y + self.boundaries.height
+            return (y - 52 - 10 - (59*carPos))
         
             
         

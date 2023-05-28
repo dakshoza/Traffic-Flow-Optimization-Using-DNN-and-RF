@@ -24,7 +24,7 @@ def genCar(num):
                 cars.append(tempCar)
                 carHitboxes.append(tempCar.hitbox)
         
-genCar(2)
+genCar(1)
 
 prevTime = time.time()
 
@@ -45,6 +45,15 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:  # Left mouse button
+                mouse_pos = pygame.mouse.get_pos()
+                for road in monitoredRoads:
+                   if road.boundaries.collidepoint(mouse_pos):
+                        road.update() 
+                        break
+            else:
+                genCar(1)
         if event.type == TURN:
             turnedCar = event.ID
             invincibleCars.append(turnedCar)
@@ -61,8 +70,11 @@ while running:
     print(invincibleCars)
             
             
-    # for road in Roads.allRoads:
-    #     pygame.draw.rect(window,(0,0,255), road.boundaries, 2)
+    for road in monitoredRoads:
+        if road.signal.state == 0:
+            pygame.draw.rect(window,(255,0,0, 200), road.boundaries)
+        elif road.signal.state == 1:
+            pygame.draw.rect(window,(0,255,0, 200), road.boundaries)
 
     # Car Movement and collision check
     for i,currentCar in enumerate(cars):
@@ -81,8 +93,32 @@ while running:
         # Linking Car and Roads
         roadIndex = currentCar.hitbox.collidelist(signalRoads)
         if roadIndex >=0:
-            monitoredRoads[roadIndex].carList.append(currentCar)
-            currentCar.onRoad = monitoredRoads[roadIndex]
+            collidedRoad = monitoredRoads[roadIndex]
+            
+            if collidedRoad.direction == "up":
+                if currentCar.hitbox.x < collidedRoad.boundaries.x + (collidedRoad.boundaries.width/2):
+                    collidedRoad.lane1List.append(currentCar)
+                else:
+                    collidedRoad.lane2List.append(currentCar)
+                    
+            elif collidedRoad.direction == "down":
+                if currentCar.hitbox.x >= collidedRoad.boundaries.x + (collidedRoad.boundaries.width/2):
+                    collidedRoad.lane1List.append(currentCar)
+                else:
+                    collidedRoad.lane2List.append(currentCar)
+                    
+            elif collidedRoad.direction == "left":
+                if currentCar.hitbox.y < collidedRoad.boundaries.y + (collidedRoad.boundaries.height/2):
+                    collidedRoad.lane2List.append(currentCar)
+                else:
+                    collidedRoad.lane1List.append(currentCar)
+                    
+            elif collidedRoad.direction == "right":
+                if currentCar.hitbox.y < collidedRoad.boundaries.y + (collidedRoad.boundaries.height/2):
+                    collidedRoad.lane1List.append(currentCar)
+                else:
+                    collidedRoad.lane2List.append(currentCar)
+            currentCar.onRoad = collidedRoad
         
         currentCar.moveCar(dt)
         currentCar.drawCar(window)
@@ -97,5 +133,9 @@ while running:
 
 
     pygame.display.update()
+    for road in monitoredRoads:
+        road.carList = []
+        road.lane1List = []
+        road.lane2List = []
 
 print(f"Score: {score}")

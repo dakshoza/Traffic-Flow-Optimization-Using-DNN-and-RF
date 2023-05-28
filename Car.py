@@ -42,9 +42,8 @@ class Car:
 		self.carPath.append(random.randint(0,2))
 
 		self.spawnLocation = random.randint(1,5)
-		#self.spawnLocation = random.choice([3])
 		self.setSpawn(self.spawnLocation)
-		# self.setSpawn(3)
+		# self.setSpawn(2)
 
 	def setSpawn(self, spawnLocation):
 		if spawnLocation == 1:
@@ -109,7 +108,7 @@ class Car:
   
 	def checkSignal(self,dt):
 		try:
-			if self.onRoad.state == 0:
+			if self.onRoad.signal.state == 0:
 				stopCoord = self.onRoad.stopPosition(self)
 				if self.orientation == "up":
 					if self.hitbox.y - round(self.speed*dt) <= stopCoord:
@@ -131,8 +130,12 @@ class Car:
 						return False
 					else:
 						return True
-		except:
-			return True
+			else:
+				return True
+		except Exception as e:
+			print(str(e))
+			return True  
+   
 
 	def moveCar(self, dt):
 		if self.checkSignal(dt):
