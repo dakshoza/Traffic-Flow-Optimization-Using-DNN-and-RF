@@ -10,7 +10,8 @@ class Road:
             self.laneWidth = int(round((height - 4)/2))
         self.freeSpace = int((self.laneWidth-30)/2)
         self.carList = []
-        self.state = 0
+        self.state = 0 
+        self.waitingTime = 0
         
     def drawHitBox(self, window):
         pygame.draw.rect(window,(0,0,255),self.boundaries,2)
@@ -88,7 +89,6 @@ class Road:
             carPos = self.carList.index(car)
             y = self.boundaries.y
             return y - 5 - (56*carPos)
-        
         
         
             

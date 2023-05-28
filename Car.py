@@ -151,7 +151,6 @@ class Car:
 			self.checkIntersectionI1(dt)
 			self.checkIntersectionI2(dt)
 
-
 	def updateHitbox(self):
 		self.hitbox = self.sprite.get_rect()
     
