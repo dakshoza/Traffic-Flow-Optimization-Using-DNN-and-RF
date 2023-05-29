@@ -10,7 +10,7 @@ class agent:
     def __init__(self, stateSize, actionSize):
         self.stateSize = stateSize
         self.actionSize = actionSize
-        self.memory = deque(maxlen=10000)  
+        self.memory = deque(maxlen=20000)  
         self.gamma = 0.95  
         self.epsilon = 1.0  
         self.epsilonDecay = 0.995  

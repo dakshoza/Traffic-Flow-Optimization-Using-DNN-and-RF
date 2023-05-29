@@ -84,11 +84,6 @@ class Road:
         elif self.direction == "up":
             self.carList.sort(key=lambda rect: rect.hitbox.y, reverse=True)
             y = self.boundaries.y
-<<<<<<< Updated upstream
-            return (y + 10 + (59*carPos))
-        
-                  
-=======
             return (y + 10 + (60*carPos))  
         elif self.direction == "down":
             self.carList.sort(key=lambda rect: rect.hitbox.y)
@@ -98,7 +93,6 @@ class Road:
             
         
         
->>>>>>> Stashed changes
 road1 = Road(767,517,87,327)
 road2 = Road(662,517,87,327)
 road3 = Road(355,517,87,327)
