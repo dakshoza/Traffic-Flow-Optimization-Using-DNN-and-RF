@@ -12,6 +12,7 @@ class Car:
 		self.turn1Executed = False
 		self.turn2Executed = False
 		self.iTimer = 0 #invincibility timer
+		self.waitTime = 1
 		# Car sprite and Car Length
 		sprite = random.randint(1,6)
 		if sprite == 1:
@@ -43,7 +44,7 @@ class Car:
 
 		self.spawnLocation = random.randint(1,5)
 		self.setSpawn(self.spawnLocation)
-		# self.setSpawn(2)
+		# self.setSpawn(1)
 
 	def setSpawn(self, spawnLocation):
 		if spawnLocation == 1:
@@ -100,33 +101,58 @@ class Car:
 		window.blit(self.sprite, (self.hitbox.x,self.hitbox.y))
 
 	def changeOri(self, newOri):
+		invincibility = pygame.event.Event(TURN, ID = self)
 		self.orientation = newOri
-		self.turnHitboxUpdate()
+		pygame.event.post(invincibility)
 
 	def turnHitboxUpdate(self):
 		self.hitbox = pygame.Rect(self.hitbox.x,self.hitbox.y,self.hitbox.height,self.hitbox.width)
+		if self.orientation == "up":
+			self.pos.y -= 45
+		elif self.orientation == "down":
+			self.pos.y += 45
+		elif self.orientation == "right":
+			self.pos.x += 45
+		elif self.orientation == "left":
+			self.pos.x -= 45
   
 	def checkSignal(self,dt):
+		queuePos = 1
+		try:
+			if self.lane == 1:
+				queuePos = self.onRoad.lane1List.index(self)
+			if self.lane == 2:
+				queuePos = self.onRoad.lane2List.index(self)
+		except:
+			pass
 		try:
 			if self.onRoad.signal.state == 0:
 				stopCoord = self.onRoad.stopPosition(self)
 				if self.orientation == "up":
-					if self.hitbox.y - round(self.speed*dt) <= stopCoord:
+					if (self.hitbox.top < stopCoord) and queuePos == 0:
+						return True
+					elif self.hitbox.y - round(self.speed*dt) <= stopCoord:
 						return False
 					else:
 						return True
 				elif self.orientation == "down":
-					if self.hitbox.y + round(self.speed*dt) >= stopCoord:
+					if self.hitbox.top > stopCoord and queuePos == 0:
+						return True
+					elif self.hitbox.y + round(self.speed*dt) >= stopCoord:
 						return False
 					else:
 						return True
 				elif self.orientation == "right":
-					if self.hitbox.x + round(self.speed*dt) >= stopCoord:
+					if self.hitbox.left > stopCoord and queuePos == 0:
+						return True
+					elif self.hitbox.x + round(self.speed*dt) >= stopCoord:
 						return False
 					else:
 						return True
 				elif self.orientation == "left":
-					if self.hitbox.x - round(self.speed*dt) <= stopCoord:
+					if self.hitbox.left < stopCoord and queuePos == 0:
+						return True
+					elif self.hitbox.x - round(self.speed*dt) <= stopCoord:
 						return False
 					else:
 						return True
@@ -166,7 +192,6 @@ class Car:
 			return self.carPath[0]
 	
 	def checkIntersectionI1(self,dt):
-		invincibility = pygame.event.Event(TURN, ID = self)
 		if (self.hitbox.colliderect(I1.hitbox)):
 			if self.turn1Executed:
 				pass
@@ -181,7 +206,6 @@ class Car:
 					if self.distanceIntoIntersection >= selectedLane:
 						self.turnCar()
 						self.turn1Executed = True
-						pygame.event.post(invincibility)
 						self.turnI1 = True
 						self.distanceIntoIntersection = 0
 
@@ -199,7 +223,6 @@ class Car:
 					if self.distanceIntoIntersection >= selectedLane:
 						self.turnCar()
 						self.turn2Executed = True
-						pygame.event.post(invincibility)
 						self.turnI2 = True
 						self.distanceIntoIntersection = 0
 
@@ -207,12 +230,18 @@ class Car:
 		self.currentTurn = self.checkCurrentTurn()
 		self.secondTurn = self.carPath[1]
 		
-		if self.spawnLocation == 1 or self.spawnLocation == 5:
+		if self.spawnLocation == 5:
 			leftLane1 = road1.freeSpace + 36
 			leftLane2 =  road1.laneWidth +  road1.freeSpace + 4 + 35
 			rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace + 34
 			rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace + 34
 		
+		elif self.spawnLocation == 1: 
+			leftLane1 = road1.freeSpace + 31
+			leftLane2 =  road1.laneWidth +  road1.freeSpace + 4 + 30
+			rightLane1 =  road1.laneWidth*2 + 23 + road1.freeSpace + 34
+			rightLane2 = road1.laneWidth*3 + 23 + road1.freeSpace + 34
+  
 		elif self.spawnLocation == 3 or self.spawnLocation == 4:
 			leftLane1 = road1.freeSpace + 50
 			leftLane2 =  road1.laneWidth +  road1.freeSpace + 4 + 49

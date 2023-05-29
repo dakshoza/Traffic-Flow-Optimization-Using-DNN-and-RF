@@ -19,15 +19,14 @@ class Road:
     def blitCoordinate(self,spawnLocation, carPath):
         if spawnLocation == 1 or spawnLocation == 2:
             if carPath[0] == 0:
-                if carPath[1] == 2:
-                        x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
-                else:
-                    x = int(self.boundaries[0] + self.freeSpace)
-            elif carPath[0] == 2:
-                x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
+                # if carPath[1] == 2:
+                #         x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
+                # else:
+                x = int(self.boundaries[0] + self.freeSpace)
+            # elif carPath[0] == 2:
+            #     x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
             else:
                 x = int(self.boundaries[0] + self.laneWidth + 4 + self.freeSpace)
-                    
         elif spawnLocation == 3:
             if carPath[0] == 0:
                 x = int(self.boundaries[1] + self.freeSpace)
@@ -77,17 +76,29 @@ class Road:
         if self.direction == "left":
             self.carList.sort(key=lambda rect: rect.hitbox.x)
             x = self.boundaries.x
-            return (10 + x + (59*carPos))
+            return (10 + x + (60*carPos))
         elif self.direction == "right":
             self.carList.sort(key=lambda rect: rect.hitbox.x, reverse=True)
             x = self.boundaries.x + self.boundaries.width
-            return (x - 10 - 52 - (59*carPos))
+            return (x - 10 - 52 - (60*carPos))
         elif self.direction == "up":
             self.carList.sort(key=lambda rect: rect.hitbox.y, reverse=True)
             y = self.boundaries.y
+<<<<<<< Updated upstream
             return (y + 10 + (59*carPos))
         
                   
+=======
+            return (y + 10 + (60*carPos))  
+        elif self.direction == "down":
+            self.carList.sort(key=lambda rect: rect.hitbox.y)
+            y = self.boundaries.y + self.boundaries.height
+            return (y - 52 - 10 - (60*carPos))
+        
+            
+        
+        
+>>>>>>> Stashed changes
 road1 = Road(767,517,87,327)
 road2 = Road(662,517,87,327)
 road3 = Road(355,517,87,327)

@@ -56,9 +56,10 @@ while running:
                 genCar(1)
         if event.type == TURN:
             turnedCar = event.ID
+            carHitboxes.remove(turnedCar.hitbox)
+            turnedCar.turnHitboxUpdate()
             invincibleCars.append(turnedCar)
             turnedCar.iTimer = 10
-            carHitboxes.remove(pygame.Rect(turnedCar.hitbox.x, turnedCar.hitbox.y, turnedCar.hitbox.height, turnedCar.hitbox.width))
     
     for car in invincibleCars:
         if turnedCar.iTimer == 0:
@@ -98,38 +99,46 @@ while running:
             if collidedRoad.direction == "up":
                 if currentCar.hitbox.x < collidedRoad.boundaries.x + (collidedRoad.boundaries.width/2):
                     collidedRoad.lane1List.append(currentCar)
+                    currentCar.lane=1
                 else:
                     collidedRoad.lane2List.append(currentCar)
+                    currentCar.lane=2
                     
             elif collidedRoad.direction == "down":
                 if currentCar.hitbox.x >= collidedRoad.boundaries.x + (collidedRoad.boundaries.width/2):
                     collidedRoad.lane1List.append(currentCar)
+                    currentCar.lane=1
                 else:
                     collidedRoad.lane2List.append(currentCar)
+                    currentCar.lane=2
                     
             elif collidedRoad.direction == "left":
                 if currentCar.hitbox.y < collidedRoad.boundaries.y + (collidedRoad.boundaries.height/2):
                     collidedRoad.lane2List.append(currentCar)
+                    currentCar.lane=2
                 else:
                     collidedRoad.lane1List.append(currentCar)
+                    currentCar.lane=1
                     
             elif collidedRoad.direction == "right":
                 if currentCar.hitbox.y < collidedRoad.boundaries.y + (collidedRoad.boundaries.height/2):
                     collidedRoad.lane1List.append(currentCar)
+                    currentCar.lane=1
                 else:
                     collidedRoad.lane2List.append(currentCar)
+                    currentCar.lane=2
             currentCar.onRoad = collidedRoad
         
         currentCar.moveCar(dt)
         currentCar.drawCar(window)
-        currentCar.drawHitbox(window)
+        # currentCar.drawHitbox(window)
     
     for currentCar in cars:    
         if not all([currentCar.hitbox.x < 1150 , currentCar.hitbox.x > -60 , currentCar.hitbox.y > -100 , currentCar.hitbox.y < 950]):
             cars.remove(currentCar)
             carHitboxes.remove(currentCar.hitbox)
             score += 1
-            genCar(random.choice([2]))
+            genCar(random.choice([0,1,1,1,1,1,1,1,1,1,1,2,2]))
 
 
     pygame.display.update()
