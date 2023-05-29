@@ -2,13 +2,6 @@ class TrafficSignal:
     def __init__(self):
         self.state = 0 # 0 - red, 1 - green
     
-    def changeState(self):
-        if self.state:
-            self.state = 0
-        else:
-            self.state = 1
-        
-        print(self.state)
 
 A0 = TrafficSignal()
 A1 = TrafficSignal()

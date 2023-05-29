@@ -10,6 +10,8 @@ class Road:
             self.laneWidth = int(round((height - 4)/2))
         self.freeSpace = int((self.laneWidth-30)/2)
         self.carList = []
+        self.lane1List = []
+        self.lane2List = []
         self.state = 0 
         self.waitingTime = 0
         
@@ -65,6 +67,8 @@ class Road:
     def update(self):
         if self.signal.state == 0:
             self.signal.state = 1
+            for car in self.carList:
+                car.wait = 1
         else: 
             self.signal.state = 0
             
@@ -84,15 +88,23 @@ class Road:
         elif self.direction == "up":
             self.carList.sort(key=lambda rect: rect.hitbox.y, reverse=True)
             y = self.boundaries.y
+<<<<<<< Updated upstream
             return (y + 10 + (60*carPos))  
+=======
+            return (y + 10 + (60*carPos))
+>>>>>>> Stashed changes
         elif self.direction == "down":
             self.carList.sort(key=lambda rect: rect.hitbox.y)
             y = self.boundaries.y + self.boundaries.height
-            return (y - 52 - 10 - (60*carPos))
+            return (y - 10 - 52 - (60*carPos))
         
+<<<<<<< Updated upstream
             
         
         
+=======
+                  
+>>>>>>> Stashed changes
 road1 = Road(767,517,87,327)
 road2 = Road(662,517,87,327)
 road3 = Road(355,517,87,327)

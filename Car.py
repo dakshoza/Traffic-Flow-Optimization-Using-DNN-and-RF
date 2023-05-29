@@ -132,6 +132,7 @@ class Car:
 					if (self.hitbox.top < stopCoord) and queuePos == 0:
 						return True
 					elif self.hitbox.y - round(self.speed*dt) <= stopCoord:
+						self.wait *= 1.15
 						return False
 					else:
 						return True
@@ -139,6 +140,7 @@ class Car:
 					if self.hitbox.top > stopCoord and queuePos == 0:
 						return True
 					elif self.hitbox.y + round(self.speed*dt) >= stopCoord:
+						self.wait *= 1.15
 						return False
 					else:
 						return True
@@ -146,6 +148,7 @@ class Car:
 					if self.hitbox.left > stopCoord and queuePos == 0:
 						return True
 					elif self.hitbox.x + round(self.speed*dt) >= stopCoord:
+						self.wait *= 1.15
 						return False
 					else:
 						return True
@@ -153,6 +156,7 @@ class Car:
 					if self.hitbox.left < stopCoord and queuePos == 0:
 						return True
 					elif self.hitbox.x - round(self.speed*dt) <= stopCoord:
+						self.wait *= 1.15
 						return False
 					else:
 						return True
