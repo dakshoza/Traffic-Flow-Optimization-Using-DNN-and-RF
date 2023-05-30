@@ -72,10 +72,16 @@ while running:
             
             
     for road in monitoredRoads:
+        road.totalWaitTime = 0
         if road.signal.state == 0:
             pygame.draw.rect(window,(255,0,0, 200), road.boundaries)
         elif road.signal.state == 1:
             pygame.draw.rect(window,(0,255,0, 200), road.boundaries)
+
+        # Wait time calculation
+        for car in road.carList:
+            road.totalWaitTime += car.wait
+        
 
     # Car Movement and collision check
     for i,currentCar in enumerate(cars):
