@@ -121,7 +121,7 @@ class Car:
 		try:
 			if self.lane == 1:
 				queuePos = self.onRoad.lane1List.index(self)
-			if self.lane == 2:
+			elif self.lane == 2:
 				queuePos = self.onRoad.lane2List.index(self)
 		except:
 			pass
@@ -133,7 +133,7 @@ class Car:
 						return True
 					elif self.hitbox.y - round(self.speed*dt) <= stopCoord:
 						self.waitTime += 1
-						self.waiTime *= 1.15
+						self.waitTime *= 1.15
 						return False
 					else:
 						return True
@@ -142,7 +142,7 @@ class Car:
 						return True
 					elif self.hitbox.y + round(self.speed*dt) >= stopCoord:
 						self.waitTime += 1
-						self.waiTime *= 1.15
+						self.waitTime *= 1.15
 						return False
 					else:
 						return True
@@ -151,7 +151,7 @@ class Car:
 						return True
 					elif self.hitbox.x + round(self.speed*dt) >= stopCoord:
 						self.waitTime += 1
-						self.waiTime *= 1.15
+						self.waitTime *= 1.15
 						return False
 					else:
 						return True
@@ -160,7 +160,7 @@ class Car:
 						return True
 					elif self.hitbox.x - round(self.speed*dt) <= stopCoord:
 						self.waitTime += 1	
-						self.waiTime *= 1.15
+						self.waitTime *= 1.15
 						return False
 					else:
 						return True
