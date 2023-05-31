@@ -3,7 +3,7 @@ import numpy as np
 from collections import deque
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense
-from tensorflow.python.keras.optimizer_v2 import adam
+from tensorflow.python.keras.optimizer_v2.adam import Adam
 
 # Define your DQN agent class
 class agent:
@@ -16,6 +16,7 @@ class agent:
         self.epsilonDecay = 0.995  
         self.epsilonMin = 0.01  
         self.learningRate = 0.001 
+        self.loss= 0
         self.model = self.buildModel()
 
     def buildModel(self):
@@ -23,7 +24,7 @@ class agent:
         model.add(Dense(24, input_dim=self.stateSize, activation='relu'))
         model.add(Dense(24, activation='relu'))
         model.add(Dense(self.actionSize, activation='linear'))
-        model.compile(loss='mse', optimizer=adam(lr=self.learningRate))
+        model.compile(loss='mse', optimizer=Adam(learning_rate=self.learningRate))
         return model
 
     def remember(self, state, action, reward, nextState, done):
@@ -33,7 +34,7 @@ class agent:
         #epsilon-greedy policy
         if np.random.rand() <= self.epsilon:
             # Random action selection
-            numActions = random.randint(1, self.actionSize)  # Select random number of actions
+            numActions = random.randint(1, 2)  # Select random number of actions
             actionIndices = random.sample(range(self.actionSize), numActions)  # Select random indices
         else:
             # Exploitation: Select actions with highest Q-values
@@ -63,7 +64,8 @@ class agent:
             targetFinal = self.model.predict(state)
             targetFinal[0][action] = target # Updates current(predicted) Q-values with target Q-values
 
-            self.model.fit(state, targetFinal, epochs=1, verbose=1) # Train the model according to target Q-values
+            history = self.model.fit(state, targetFinal, epochs=1, verbose=2) # Train the model according to target Q-values
+            self.loss = history.history['loss'][0]
 
         if self.epsilon > self.epsilonMin:
             self.epsilon *= self.epsilonDecay # Decaying epsilon value to reduce exploration and promote exploitation

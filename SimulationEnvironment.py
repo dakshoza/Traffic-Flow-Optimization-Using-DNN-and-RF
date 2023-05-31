@@ -6,27 +6,40 @@ class SimulationEnvironment:
     def __init__(self):
         self.stateSize = 14  # Number of inputs
         self.actionSize = 7  # Number of outputs
+        self.iterationCount = [0] * self.actionSize
+
 
     def reset(self):
         # Reset the environment to its initial state and return the initial state
         state = [0]*14
         for road in monitoredRoads:
             road.waitingTime = 0
+            road.carList = []
+            road.lane1List = []
+            road.lane2List = []
         for signal in allSignals:
             signal.state = 0
         return state
   
     def takeAction(self, action):
         # Take an action in the environment
-        for i,signal in enumerate(allSignals):
-            signal.state = action[i]
+        tempReward = 0
+        for i, road in enumerate(monitoredRoads):
+            if action[i] != road.signal.state: 
+                if self.iterationCount[i] <= 10: 
+                    tempReward -= 10
+                else:
+                    road.update(action[i])
+                    self.iterationCount[i] = 0
+            self.iterationCount[i] += 1
+        return tempReward
         
-    def getParameters(self, time, collision, waitingTime, score):
+    def getParameters(self, time, collisionCheck, waitingTime, score):
         nextState = self.getState()
-        reward = self.getReward(collision, waitingTime, score)
+        reward = self.getReward(collisionCheck, waitingTime, score)
 
         # Terminating episode condition
-        if time >= 8040 or collision:
+        if time >= 8040 or collisionCheck:
             done = True
         else:
             done = False

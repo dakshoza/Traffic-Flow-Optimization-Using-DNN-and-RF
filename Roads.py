@@ -1,5 +1,4 @@
 import pygame
-import random
 from TrafficSignals import *
 class Road:
     def __init__(self, x, y, width, height):
@@ -64,14 +63,15 @@ class Road:
                     x = int(self.boundaries[1] + self.freeSpace)
         return x
         
-    def update(self):
-        if self.signal.state == 0:
-            self.signal.state = 1
+    def update(self, targetState):
+        if self.signal.state != targetState:
+            if targetState == 0:
+                self.signal.state = 0
+            else:
+                self.signal.state = 1
             for car in self.carList:
-                car.wait = 1
-        else: 
-            self.signal.state = 0
-            
+                car.waitTime = 0
+
     def stopPosition(self, car):
         if car in self.lane1List:
             carPos = self.lane1List.index(car)

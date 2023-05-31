@@ -5,14 +5,14 @@ from Intersections import *
 TURN = pygame.USEREVENT + 0
 class Car:
 	def __init__(self):
-		self.speed = 120
+		self.speed = 200
 		self.distanceIntoIntersection = 0
 		self.turnI1 = False
 		self.turnI2 = False
 		self.turn1Executed = False
 		self.turn2Executed = False
 		self.iTimer = 0 #invincibility timer
-		self.waitTime = 1
+		self.waitTime = 0
 		# Car sprite and Car Length
 		sprite = random.randint(1,6)
 		if sprite == 1:
@@ -132,7 +132,8 @@ class Car:
 					if (self.hitbox.top < stopCoord) and queuePos == 0:
 						return True
 					elif self.hitbox.y - round(self.speed*dt) <= stopCoord:
-						self.wait *= 1.15
+						self.waitTime += 1
+						self.waiTime *= 1.15
 						return False
 					else:
 						return True
@@ -140,7 +141,8 @@ class Car:
 					if self.hitbox.top > stopCoord and queuePos == 0:
 						return True
 					elif self.hitbox.y + round(self.speed*dt) >= stopCoord:
-						self.wait *= 1.15
+						self.waitTime += 1
+						self.waiTime *= 1.15
 						return False
 					else:
 						return True
@@ -148,7 +150,8 @@ class Car:
 					if self.hitbox.left > stopCoord and queuePos == 0:
 						return True
 					elif self.hitbox.x + round(self.speed*dt) >= stopCoord:
-						self.wait *= 1.15
+						self.waitTime += 1
+						self.waiTime *= 1.15
 						return False
 					else:
 						return True
@@ -156,7 +159,8 @@ class Car:
 					if self.hitbox.left < stopCoord and queuePos == 0:
 						return True
 					elif self.hitbox.x - round(self.speed*dt) <= stopCoord:
-						self.wait *= 1.15
+						self.waitTime += 1	
+						self.waiTime *= 1.15
 						return False
 					else:
 						return True
