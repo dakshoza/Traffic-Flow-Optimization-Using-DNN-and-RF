@@ -29,7 +29,7 @@ class SimulationEnvironment:
                 if self.iterationCount[i] <= 10: 
                     tempReward -= 10
                 else:
-                    road.update(action[i])
+                    tempReward += road.update(action[i])
                     self.iterationCount[i] = 0
             self.iterationCount[i] += 1
         return tempReward

@@ -10,12 +10,12 @@ class agent:
     def __init__(self, stateSize, actionSize):
         self.stateSize = stateSize
         self.actionSize = actionSize
-        self.memory = deque(maxlen=20000)  
+        self.memory = deque(maxlen=1000)  
         self.gamma = 0.95  
         self.epsilon = 1.0  
         self.epsilonDecay = 0.995  
         self.epsilonMin = 0.01  
-        self.learningRate = 0.001 
+        self.learningRate = 0.1 
         self.loss= 0
         self.model = self.buildModel()
 
@@ -64,8 +64,7 @@ class agent:
             targetFinal = self.model.predict(state)
             targetFinal[0][action] = target # Updates current(predicted) Q-values with target Q-values
 
-            history = self.model.fit(state, targetFinal, epochs=1, verbose=2) # Train the model according to target Q-values
-            self.loss = history.history['loss'][0]
+            self.model.fit(state, targetFinal, epochs=1, verbose=2) # Train the model according to target Q-values
 
         if self.epsilon > self.epsilonMin:
             self.epsilon *= self.epsilonDecay # Decaying epsilon value to reduce exploration and promote exploitation

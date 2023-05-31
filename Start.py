@@ -15,8 +15,8 @@ window = pygame.display.set_mode((1050,844))
 env = SimulationEnvironment()
 agent = agent(env.stateSize, env.actionSize)
 
-EPISODES = 1000  
-batchSize = 67 
+EPISODES = 50
+batchSize = 20 
 
 running = True 
 background = pygame.image.load('Assets\Road Work Ahead1050.png')
@@ -34,6 +34,8 @@ def genCar(num):
                 carHitboxes.append(tempCar.hitbox)
         
 prevTime = tm.time()
+
+agent.load_weights("agent_weights.h5")
 
 while running:
     #delta time estimation for debugging
@@ -53,7 +55,7 @@ while running:
 
         state = np.reshape(state, [1, env.stateSize])
     
-        for time in range(8040):
+        for time in range(4020):
             collisionCheck = False
             action = agent.act(state)
             tempReward = env.takeAction(action)
@@ -78,6 +80,7 @@ while running:
                     #     genCar(1)
                 if event.type == TURN:
                     turnedCar = event.ID
+                    tempReward += 10
                     if turnedCar.hitbox in carHitboxes:
                         carHitboxes.remove(turnedCar.hitbox)
                     turnedCar.turnHitboxUpdate()
@@ -193,16 +196,16 @@ while running:
             if len(agent.memory) > batchSize:
                 agent.trainMemory(batchSize)
 
-            print("Training loss: ",agent.loss)
+            # print("Training loss: ",agent.loss)
             
-            pygame.display.update()
+            # pygame.display.update()
             for road in monitoredRoads:
                 road.carList = []
                 road.lane1List = []
                 road.lane2List = []
         # Save the agent's weights every 10 episodes
-        if episode % 10 == 0:
-            agent.save_weights("agent_weights.h5")
+        # if episode % 10 == 0:
+        agent.save_weights("agent_weights.h5")
 
     
     # Save the final trained agent's weights

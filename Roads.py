@@ -64,13 +64,17 @@ class Road:
         return x
         
     def update(self, targetState):
+        tempReward = 0
         if self.signal.state != targetState:
             if targetState == 0:
                 self.signal.state = 0
             else:
                 self.signal.state = 1
+                if self.carList == []:
+                    tempReward = -20
             for car in self.carList:
                 car.waitTime = 0
+        return tempReward
 
     def stopPosition(self, car):
         if car in self.lane1List:
