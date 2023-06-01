@@ -27,7 +27,7 @@ def genCar(num):
         carGenerated = False
         while not carGenerated:
             tempCar = Vehicle()
-            print(f"spawn: {tempCar.spawnLocation}")
+            # print(f"spawn: {tempCar.spawnLocation}")
             if tempCar.hitbox.collidelist(carHitboxes) == -1:
                 carGenerated = True
                 cars.append(tempCar)
@@ -93,7 +93,7 @@ while running:
                     invincibleCars.remove(car)
                 else:
                     car.iTimer -= 1
-            print(invincibleCars)
+            # print(invincibleCars)
 
             for road in monitoredRoads:
                 road.waitingTime = 0
@@ -120,7 +120,7 @@ while running:
                 collision = currentCar.hitbox.collidelist(carHitboxes)
                 if collision >= 0:
                     if not((currentCar in invincibleCars) or (carHitboxes[collision] in invincibleCars)):
-                        print("Car Crash")
+                        # print("Car Crash")
                         collisionCheck = True
                 if removed:
                     carHitboxes.append(currentCar.hitbox)
@@ -198,7 +198,7 @@ while running:
 
             # print("Training loss: ",agent.loss)
             
-            # pygame.display.update()
+            pygame.display.update()
             for road in monitoredRoads:
                 road.carList = []
                 road.lane1List = []
@@ -207,8 +207,10 @@ while running:
         # if episode % 10 == 0:
         agent.save_weights("agent_weights.h5")
 
+        if episode == 49:
+            running = False
     
     # Save the final trained agent's weights
-    agent.save_weights("final_agent_weights.h5")
+    # agent.save_weights("final_agent_weights.h5")
 
 print(f"Score: {score}")

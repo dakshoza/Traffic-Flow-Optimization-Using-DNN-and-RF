@@ -1,5 +1,6 @@
 import random
 import numpy as np  
+import tensorflow as tf
 from collections import deque
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense
@@ -13,7 +14,7 @@ class agent:
         self.memory = deque(maxlen=1000)  
         self.gamma = 0.95  
         self.epsilon = 1.0  
-        self.epsilonDecay = 0.995  
+        self.epsilonDecay = 0.85  
         self.epsilonMin = 0.01  
         self.learningRate = 0.1 
         self.loss= 0
@@ -29,6 +30,8 @@ class agent:
 
     def remember(self, state, action, reward, nextState, done):
         self.memory.append((state, action, reward, nextState, done))
+        if len(self.memory) > self.memory.maxlen:
+            self.memory.popleft()
 
     def act(self, state):
         #epsilon-greedy policy
@@ -52,6 +55,7 @@ class agent:
             binaryAction[index] = 1
         return binaryAction
 
+
     def trainMemory(self, batchSize):
         # Train the agent by training Memory experiences from the trainMemory memory
         minibatch = random.sample(self.memory, batchSize)
@@ -64,10 +68,12 @@ class agent:
             targetFinal = self.model.predict(state)
             targetFinal[0][action] = target # Updates current(predicted) Q-values with target Q-values
 
-            self.model.fit(state, targetFinal, epochs=1, verbose=2) # Train the model according to target Q-values
+            self.model.fit(state, targetFinal, epochs=1, verbose=1) # Train the model according to target Q-values
 
         if self.epsilon > self.epsilonMin:
             self.epsilon *= self.epsilonDecay # Decaying epsilon value to reduce exploration and promote exploitation
+
+        del minibatch  # Clear memory
 
     def save_weights(self, filename):
         # Save the weights of the agent to a file
@@ -76,3 +82,4 @@ class agent:
     def load_weights(self, filename):
         # Load the weights of the agent from a file
         self.model.load_weights(filename)
+
