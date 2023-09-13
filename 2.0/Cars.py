@@ -1,4 +1,5 @@
 import random
+import pygame
 from Graphing import *
 class Car:
     def __init__(self):
@@ -21,6 +22,12 @@ class Car:
         self.path = getPath(spawnpoint, endpoint)
 
         #Waypoints
+
+    #Sprite loading
+        sprite_number = random.randint(1, 6)
+        sprite_path = f"./Assets/CarSprites/CarSprite{sprite_number}.png"
+        self.sprite = pygame.image.load(sprite_path)
+
 
     #Spawning
     
