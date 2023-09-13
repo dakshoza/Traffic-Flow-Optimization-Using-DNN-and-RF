@@ -1,13 +1,13 @@
 import pygame, random
 import time as tm
 import numpy as np
-from Roads import *
-from Car import TURN
-from Car import Car as Vehicle
-from Agent import agent
-from TrafficSignals import *
-from Intersections import I1,I2 
-from SimulationEnvironment import SimulationEnvironment
+from Roads_old import *
+from Car_old import TURN
+from Car_old import Car as Vehicle
+from Agent_old import agent
+from TrafficSignals_old import *
+from Intersections_old import I1,I2 
+from SimulationEnvironment_old import SimulationEnvironment
 
 pygame.init()
 window = pygame.display.set_mode((1050,844))        
