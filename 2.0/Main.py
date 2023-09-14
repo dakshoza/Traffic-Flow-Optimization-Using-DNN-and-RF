@@ -12,6 +12,7 @@ def genCars(num):
 background = pygame.image.load("Assets/background.png")
 
 running = True
+
 while running:
     # Event Check
     for event in pygame.event.get():
