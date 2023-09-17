@@ -35,7 +35,7 @@ def genCar(num):
         
 prevTime = tm.time()
 
-agent.load_weights("agent_weights.h5")
+# agent.load_weights("agent_weights_old.h5")
 
 while running:
     #delta time estimation for debugging
@@ -192,9 +192,9 @@ while running:
                 print("Episode: {}/{}, Score: {}".format(episode, EPISODES, score))
                 break
 
-            # Train the agent by replaying experiences from the trainMemory memory
-            if len(agent.memory) > batchSize:
-                agent.trainMemory(batchSize)
+            # # Train the agent by replaying experiences from the trainMemory memory
+            # if len(agent.memory) > batchSize:
+            #     agent.trainMemory(batchSize)
 
             # print("Training loss: ",agent.loss)
             

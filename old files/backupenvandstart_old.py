@@ -1,8 +1,8 @@
 import pygame
 import numpy as np
-from Agent import agent
-from TrafficSignals import *
-from SimulationEnvironment import SimulationEnvironment
+from Agent_old import agent
+from TrafficSignals_old import *
+from SimulationEnvironment_old import SimulationEnvironment
 
 # Initialize Pygame and create the game window
 pygame.init()

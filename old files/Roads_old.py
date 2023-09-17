@@ -1,5 +1,5 @@
 import pygame
-from TrafficSignals import *
+from TrafficSignals_old import *
 class Road:
     def __init__(self, x, y, width, height):
         self.boundaries = pygame.Rect(x, y, width, height)

@@ -1,6 +1,6 @@
 import random, pygame
-from Roads import *
-from Intersections import *
+from Roads_old import *
+from Intersections_old import *
 
 TURN = pygame.USEREVENT + 0
 class Car:
