@@ -14,11 +14,18 @@ background = pygame.image.load("Assets/background.png")
 running = True
 
 while running:
+    window.blit(background,(0,0))
     # Event Check
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    window.blit(background,(0,0))
+    genCars(5)
+
+    for car in currentCars:
+        car.drive()
+        car.render(window)
+    
+
     pygame.display.update()
     

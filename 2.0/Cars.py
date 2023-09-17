@@ -13,9 +13,20 @@ Spawnpoints = {
 
 class Car:
     def __init__(self):
-        self.executedT1 = False
-    #Spawn Point
+    #Spawn Point & direction
         spawnpoint = random.choice([1,2,2,2,3,3,4,5,5,5,6])
+        self.dx = 0
+        if spawnpoint == 2:
+            self.dx = 8
+            self.dy = 0
+        elif spawnpoint == 5:
+            self.dx = -8
+            self.dy = 0
+        elif spawnpoint == 1 | spawnpoint == 6:
+            self.dy = -8
+        else:
+            self.dy = 8
+        
         '''
             This biases the spawning so that there is a :
             - 1 in 11 chance for it to spawn at 1
@@ -40,26 +51,30 @@ class Car:
             x1, y1 = lanes[0]
             x2, y2 = lanes[1]
             x3, y3 = self.waypoint[0]
-            if (sqrt((x3-x1)^2 + (y3-y1)^2) < sqrt((x3-x2)^2 + sqrt((y3-y2)^2))):
+            if (sqrt(float(x3-x1)**2 + float(y3-y1)**2) < sqrt(float(x3-x2)**2 + sqrt(float(y3-y2)**2))):
                 self.waypoint.insert(0, lanes[0])
             else:
-                self.waypoint.insert(0, lanes[1])         
+                self.waypoint.insert(0, lanes[1])
 
     #Sprite Loading
         self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{random.randint(1, 6)}.png")
-
+        self.hitbox = self.sprite.get_rect()
 
     #Spawning
+        self.hitbox.x, self.hitbox.y = random.choice(Spawnpoints[spawnpoint])
         #Finding first turn
-        # global Spawnpoints
-
-        # self.sprite.x = Spawnpoints[spawnpoint][1]
+    
     
     # def findWaypoints(path):
 
     # def turns():
 
-            
+    def drive(self):
+        self.hitbox.x += self.dx
+        self.hitbox.y += self.dy
+
+    def render(self, screen):
+        screen.blit(self.sprite, (self.hitbox.x,self.hitbox.y))
 
 #testing
 for i in range(12):

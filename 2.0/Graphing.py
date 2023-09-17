@@ -1,8 +1,10 @@
 import networkx as nx
+import matplotlib.pyplot as plt
 
 G = nx.Graph()
 
 G.add_edges_from([(1,"I1"),(2,"I1"), (3, "I1"), ("I1", "I2"), ("I2", 4), ("I2", 5),("I2", 6)])
+
 
 def getPath(start, end):
     return nx.shortest_path(G,start,end)
