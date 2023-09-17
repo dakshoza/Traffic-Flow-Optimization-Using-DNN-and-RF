@@ -1,7 +1,7 @@
 import random, pygame
 from Graphing import *
 from math import sqrt
-
+speed = 4
 Spawnpoints = {
     1: [(272,844), (317, 844)],
     2: [(0,346), (0, 391)],
@@ -13,20 +13,27 @@ Spawnpoints = {
 
 class Car:
     def __init__(self):
-    #Spawn Point & direction
+
+    #Sprite Loading
+        self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{random.randint(1, 6)}.png")
+
+    #Spawn Point & direction with rotation
         spawnpoint = random.choice([1,2,2,2,3,3,4,5,5,5,6])
         self.dx = 0
         if spawnpoint == 2:
-            self.dx = 8
+            self.dx = speed
             self.dy = 0
+            self.sprite = pygame.transform.rotate(self.sprite,270)
         elif spawnpoint == 5:
-            self.dx = -8
+            self.dx = -speed
             self.dy = 0
-        elif spawnpoint == 1 | spawnpoint == 6:
-            self.dy = -8
+            self.sprite = pygame.transform.rotate(self.sprite,90)
+        elif spawnpoint == 1 or spawnpoint == 6:
+            self.dy = -speed
         else:
-            self.dy = 8
-        
+            self.dy = speed
+            self.sprite = pygame.transform.rotate(self.sprite,180)
+        self.hitbox = self.sprite.get_rect()
         '''
             This biases the spawning so that there is a :
             - 1 in 11 chance for it to spawn at 1
@@ -38,7 +45,6 @@ class Car:
         #Basic Path
         destinations = [i for i in range(1,7)]
         destinations.remove(spawnpoint)
-
         endpoint = random.choice(destinations)
         path = getPath(spawnpoint, endpoint)[2:]        
 
@@ -51,22 +57,24 @@ class Car:
             x1, y1 = lanes[0]
             x2, y2 = lanes[1]
             x3, y3 = self.waypoint[0]
-            if (sqrt(float(x3-x1)**2 + float(y3-y1)**2) < sqrt(float(x3-x2)**2 + sqrt(float(y3-y2)**2))):
+            if (sqrt((x3-x1)**2 + (y3-y1)**2) < sqrt((x3-x2)**2 + sqrt((y3-y2)**2))):
                 self.waypoint.insert(0, lanes[0])
             else:
                 self.waypoint.insert(0, lanes[1])
 
-    #Sprite Loading
-        self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{random.randint(1, 6)}.png")
-        self.hitbox = self.sprite.get_rect()
-
     #Spawning
-        self.hitbox.x, self.hitbox.y = random.choice(Spawnpoints[spawnpoint])
+
+        x1, y1 = Spawnpoints[spawnpoint][0]
+        x2, y2 = Spawnpoints[spawnpoint][1]
+        x3,y3 = self.waypoint[0]
+        if (sqrt((x3-x1)**2 + (y3-y1)**2) < sqrt((x3-x2)**2 + (y3-y2)**2)):
+            self.hitbox.x, self.hitbox.y = Spawnpoints[spawnpoint][0]
+        else:
+            self.hitbox.x, self.hitbox.y = Spawnpoints[spawnpoint][1]
+
+
         #Finding first turn
     
-    
-    # def findWaypoints(path):
-
     # def turns():
 
     def drive(self):
@@ -77,6 +85,6 @@ class Car:
         screen.blit(self.sprite, (self.hitbox.x,self.hitbox.y))
 
 #testing
-for i in range(12):
-    x = Car()
+# for i in range(12):
+#     x = Car()
 
