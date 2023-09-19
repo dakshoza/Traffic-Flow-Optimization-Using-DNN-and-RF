@@ -13,11 +13,13 @@ class Road:
         self.trafficDensity = 0 # The traffic density for this road
         self.distanceToClosestCar = 0 # For the AI model, distance to the first car in queue
 
+    # queue length can straight up be pulled from the models
+
     def calcTrafficDensity(self):
-    # We make a dictionary with all the roads and their respective queueAmount, then do self.queueAmount/sum(dict.values()) to get a ratio 
+        # We make a dictionary with all the roads and their respective queueAmount, then do self.queueAmount/sum(dict.values()) to get a ratio 
         self.trafficDensity = len(self.queue)/len(currentCars)
-        pass
-    
+
+
     def addCar(self, Car):
         self.queue.append(Car)
     
@@ -33,9 +35,10 @@ class Road:
         
 
     def checkTurn(self):
-        # print(self.distanceToClosestCar)
+        # distance to closest car is in the check turn as the rl agent will require it each frame. 
         try:
             if (self.orientation == 0):
+                
                 #for a car, its distance from the intersection is calculated to feed to the ai model
                 self.distanceToClosestCar = self.queue[0].hitbox.top - self.IBoundary
                 
@@ -45,6 +48,7 @@ class Road:
                     pass # Tell car to turn function
 
             elif (self.orientation == 1):
+                
                 #for a car, its distance from the intersection is calculated to feed to the ai model
                 self.distanceToClosestCar = self.IBoundary - self.queue[0].hitbox.bottom 
                 
@@ -54,6 +58,7 @@ class Road:
                     pass # Tell car to turn function
 
             elif self.orientation == 2:
+                
                 #for a car, its distance from the intersection is calculated to feed to the ai model
                 self.distanceToClosestCar = self.queue[0].hitbox.left - self.IBoundary
                 
@@ -63,6 +68,7 @@ class Road:
                     pass # Tell car to turn function
 
             else:
+                
                 #for a car, its distance from the intersection is calculated to feed to the ai model
                 self.distanceToClosestCar = self.IBoundary - self.queue[0].hitbox.right
                 
