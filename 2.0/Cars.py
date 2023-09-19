@@ -3,6 +3,8 @@ from Graphing import getPath
 from math import sqrt
 from Roads import SignalRoads, speed
 
+currentCars = []
+
 class Car:
     def __init__(self):
 
@@ -11,6 +13,7 @@ class Car:
 
     #Spawn Point & direction with rotation
         spawnpoint = random.choice([0,1,1,1,2,2,3,4,4,4,5])
+        # spawnpoint = 1
 
         self.dx = 0
         if spawnpoint == 1:

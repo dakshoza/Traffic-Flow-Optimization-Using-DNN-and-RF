@@ -3,9 +3,8 @@ from Cars import *
 
 window = pygame.display.set_mode((1050,844))
 
-currentCars = []
 def genCars(num):
-    global currentCars
+    # global currentCars
     if len(currentCars) <= 100:
         for i in range(num):
             currentCars.append(Car())
