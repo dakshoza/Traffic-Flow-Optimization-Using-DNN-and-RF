@@ -1,4 +1,4 @@
-speed = 4
+speed = 2
 class Road:
 # Have to define all road bounds
 
@@ -18,27 +18,36 @@ class Road:
         self.queue.append(Car)
     
     def popCar(self, Car):
+        # Removing car from queue
         self.queue.remove(Car)
+        print(f"{Car} removed from queue, headed {self.orientation}")
         # Resorting queue to make sure no overtaking has been done
         if (self.orientation == 0) or (self.orientation == 1):
             self.queue = sorted(self.queue, key=lambda car: abs(self.IBoundary - car.hitbox.y))
         else:
             self.queue = sorted(self.queue, key=lambda car: abs(self.IBoundary - car.hitbox.x))
+        
 
     def checkTurn(self):
-        if (self.orientation == 0):
-            if (self.queue[0].hitbox.top - speed) <= self.IBoundary:
-                pass # Tell car to turn function
-
-        elif (self.orientation == 1):
-            if (self.queue[0].hitbox.bottom + speed) >= self.IBoundary:
-                pass # Tell car to turn function
-        elif self.orientation == 2:
-            if (self.queue[0].hitbox.left - speed) <= self.IBoundary:
-                pass # Tell car to turn function
-        else:
-            if (self.queue[0].hitbox.right + speed) >= self.IBoundary:
-                pass # Tell car to turn function
+        try:
+            if (self.orientation == 0):
+                if (self.queue[0].hitbox.top - speed) <= self.IBoundary:
+                    self.popCar(self.queue[0])
+                    pass # Tell car to turn function
+            elif (self.orientation == 1):
+                if (self.queue[0].hitbox.bottom + speed) >= self.IBoundary:
+                    self.popCar(self.queue[0])
+                    pass # Tell car to turn function
+            elif self.orientation == 2:
+                if (self.queue[0].hitbox.left - speed) <= self.IBoundary:
+                    self.popCar(self.queue[0])
+                    pass # Tell car to turn function
+            else:
+                if (self.queue[0].hitbox.right + speed) >= self.IBoundary:
+                    self.popCar(self.queue[0])
+                    pass # Tell car to turn function
+        except:
+            pass
 
 
 SignalRoads = {

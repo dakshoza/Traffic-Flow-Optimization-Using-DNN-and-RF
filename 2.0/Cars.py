@@ -25,7 +25,7 @@ class Car:
         else:
             self.dy = speed
             self.sprite = pygame.transform.rotate(self.sprite,180)
-        self.hitbox = self.sprite.get_rect()
+        self.hitbox = self.sprite.get_rect()    
         SignalRoads[spawnpoint].addCar(self)
         '''
             This biases the spawning so that there is a :

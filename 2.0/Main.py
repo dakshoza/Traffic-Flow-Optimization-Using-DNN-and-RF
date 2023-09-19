@@ -14,7 +14,7 @@ background = pygame.image.load("Assets/background.png")
 
 running = True
 
-genCars(6)
+genCars(2)
 
 while running:
     window.blit(background,(0,0))
@@ -23,8 +23,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    for road in SignalRoads:
-        road.checkTurn()
+    for number,road in enumerate(SignalRoads.values()):
+        if len(road.queue) != 0:
+            road.checkTurn()
+        # if len(road.queue)!= 0:
+        #     print(f"Road: {number}: {road.queue}")
 
     for car in currentCars:
         car.drive()
