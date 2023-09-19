@@ -14,7 +14,7 @@ background = pygame.image.load("Assets/background.png")
 
 running = True
 
-genCars(2)
+genCars(1)
 
 while running:
     window.blit(background,(0,0))
@@ -38,6 +38,7 @@ while running:
             currentCars.remove(car)
             genCars(random.choice([0,1,1,1,2,2,2,3,3]))
 
+        # pygame.draw.rect(window, (0,255,0), car.hitbox)
         #Checking waypoints wrt roads
         # try:
         #     pygame.draw.circle(window, (0,255,0), car.waypoint[0], 2)

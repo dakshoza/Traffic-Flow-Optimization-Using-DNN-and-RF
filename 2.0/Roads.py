@@ -1,3 +1,5 @@
+from collections import deque
+
 speed = 2
 class Road:
 # Have to define all road bounds
@@ -7,7 +9,7 @@ class Road:
         self.IBoundary = IBoundary # Intersection Boundary
         self.Spawnpoint = Spawnpoint
         self.Waypoint= Waypoint
-        self.queue = []
+        self.queue = deque()
         self.trafficDensity = 0 # The traffic density for this road
 
     def calcTrafficDensity(self):
@@ -19,7 +21,7 @@ class Road:
     
     def popCar(self, Car):
         # Removing car from queue
-        self.queue.remove(Car)
+        self.queue.popleft()
         print(f"{Car} removed from queue, headed {self.orientation}")
         # Resorting queue to make sure no overtaking has been done
         if (self.orientation == 0) or (self.orientation == 1):

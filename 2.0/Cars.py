@@ -11,6 +11,7 @@ class Car:
 
     #Spawn Point & direction with rotation
         spawnpoint = random.choice([0,1,1,1,2,2,3,4,4,4,5])
+
         self.dx = 0
         if spawnpoint == 1:
             self.dx = speed
@@ -76,8 +77,3 @@ class Car:
 
     def render(self, screen):
         screen.blit(self.sprite, (self.hitbox.x,self.hitbox.y))
-
-#testing
-for i in range(12):
-    x = Car()
-
