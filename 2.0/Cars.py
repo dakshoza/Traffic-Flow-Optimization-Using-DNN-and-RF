@@ -6,13 +6,11 @@ from Roads import SignalRoads, speed
 currentCars = []
 
 class Car:
-    def __init__(self):
+    def __init__(self, spawnpoint):
 
     #Sprite Loading
         self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{random.randint(1, 6)}.png")
 
-    #Spawn Point
-        spawnpoint = random.choice([0,1,1,1,2,2,3,4,4,4,5])
         # spawnpoint = 5
         self.hitbox = self.sprite.get_rect()    
         SignalRoads[spawnpoint].addCar(self)
@@ -56,11 +54,10 @@ class Car:
         
         self.CDR(SignalRoads[spawnpoint], (tempx, tempy))
 
-        # Setting direction, rotation and centering on road
-        
-
-
-        #Finding first turn
+        # Check Queue:
+        for car in SignalRoads[spawnpoint].spawnQ:
+            if self.hitbox.colliderect(car.hitbox):
+                SignalRoads[spawnpoint].spawnQ.append(self)
     
     def CDR(self, road, currentCoord): # Centering, Direction and Rotation
         tempx,tempy = currentCoord

@@ -1,4 +1,3 @@
-from Cars import *
 
 speed = 2
 class Road:
@@ -10,14 +9,15 @@ class Road:
         self.Spawnpoint = Spawnpoint
         self.Waypoint= Waypoint
         self.queue = []
+        self.spawnQ = []
         self.trafficDensity = 0 # The traffic density for this road
         self.distanceToClosestCar = 0 # For the AI model, distance to the first car in queue
 
     # queue length can straight up be pulled from the models
 
-    def calcTrafficDensity(self):
+    # def calcTrafficDensity(self):
         # We make a dictionary with all the roads and their respective queueAmount, then do self.queueAmount/sum(dict.values()) to get a ratio 
-        self.trafficDensity = len(self.queue)/len(currentCars)
+        # self.trafficDensity = len(self.queue)/len(currentCars)
 
 
     def addCar(self, Car):

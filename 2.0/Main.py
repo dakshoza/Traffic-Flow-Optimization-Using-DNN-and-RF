@@ -5,18 +5,19 @@ window = pygame.display.set_mode((1050,844))
 
 def genCars(num):
     # global currentCars
-    if len(currentCars) <= 100:
+    if len(currentCars) < 100:
         for i in range(num):
-            collision = False
-            while True:
-                newCar = Car()
-                for car in currentCars:
-                    if newCar.hitbox.colliderect(car.hitbox):
-                        collision = True
+            spawnpoint = random.choice([0,1,1,1,2,2,3,4,4,4,5])
+            if len(SignalRoads[spawnpoint].spawnQ) > 0:
+                currentCars.append(SignalRoads[spawnpoint].spawnQ[0])
+            else:
+                newCar = Car(spawnpoint)
+                #check if any collision was found on spawn
+                if not newCar.hitbox.collidelistall([car.hitbox for car in SignalRoads[spawnpoint].queue]):
+                    currentCars.append(newCar)
+                else:
+                    SignalRoads[spawnpoint].spawnQ.append(newCar)
 
-                if not collision:
-                    currentCars.append(Car())
-                    break
 
 
 background = pygame.image.load("Assets/background.png")
@@ -35,6 +36,10 @@ while running:
     for road in SignalRoads.values():
         if len(road.queue) != 0:
             road.checkTurn()
+        if len(road.spawnQ) >0:
+            if not road.spawnQ[0].hitbox.collidelistall([car.hitbox for car in road.queue]):
+                currentCars.append(road.spawnQ[0])
+
 
     for car in currentCars:
         car.drive()
