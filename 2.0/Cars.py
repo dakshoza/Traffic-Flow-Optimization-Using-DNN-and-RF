@@ -3,17 +3,14 @@ from Graphing import getPath
 from math import sqrt
 from Roads import SignalRoads, speed
 
-currentCars = []
-
-class Car:
+class Car(pygame.sprite.Sprite):
     def __init__(self, spawnpoint):
-
+        super(Car, self).__init__()
     #Sprite Loading
         self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{random.randint(1, 6)}.png")
 
         # spawnpoint = 5
-        self.hitbox = self.sprite.get_rect()    
-        SignalRoads[spawnpoint].addCar(self)
+        self.rect = self.sprite.get_rect
         '''
             This biases the spawning so that there is a :
             - 1 in 11 chance for it to spawn at 1
@@ -54,10 +51,7 @@ class Car:
         
         self.CDR(SignalRoads[spawnpoint], (tempx, tempy))
 
-        # Check Queue:
-        for car in SignalRoads[spawnpoint].spawnQ:
-            if self.hitbox.colliderect(car.hitbox):
-                SignalRoads[spawnpoint].spawnQ.append(self)
+
     
     def CDR(self, road, currentCoord): # Centering, Direction and Rotation
         tempx,tempy = currentCoord
@@ -65,35 +59,37 @@ class Car:
             self.dx = speed
             self.dy = 0
             self.sprite = pygame.transform.rotate(self.sprite,270)
-            self.hitbox = self.sprite.get_rect()
-            self.hitbox.centery = tempy
-            self.hitbox.right = tempx
+            self.rect = self.sprite.get_rect()
+            self.rect.centery = tempy
+            self.rect.right = tempx
 
         elif road.orientation == 2:
             self.dx = -speed
             self.dy = 0
             self.sprite = pygame.transform.rotate(self.sprite,90)
-            self.hitbox = self.sprite.get_rect()
-            self.hitbox.left = tempx
-            self.hitbox.centery = tempy
+            self.rect = self.sprite.get_rect()
+            self.rect.left = tempx
+            self.rect.centery = tempy
 
         elif road.orientation == 0:
             self.dx = 0
             self.dy = -speed
-            self.hitbox = self.sprite.get_rect()
-            self.hitbox.centerx = tempx
-            self.hitbox.top = tempy
+            self.rect = self.sprite.get_rect()
+            self.rect.centerx = tempx
+            self.rect.top = tempy
         else:
             self.dx = 0
             self.dy = speed
             self.sprite = pygame.transform.rotate(self.sprite,180)
-            self.hitbox = self.sprite.get_rect()
-            self.hitbox.bottom = tempy
-            self.hitbox.centerx = tempx
+            self.rect = self.sprite.get_rect()
+            self.rect.bottom = tempy
+            self.rect.centerx = tempx
 
-    def drive(self):
-        self.hitbox.x += self.dx
-        self.hitbox.y += self.dy
+    def drive(self, times=1):
+        self.rect.x += times*self.dx
+        self.rect.y += times*self.dy
 
     def render(self, screen):
-        screen.blit(self.sprite, (self.hitbox.x,self.hitbox.y))
+        screen.blit(self.sprite, (self.rect.x,self.rect.y))
+
+    # def collisionPredict(self, road):
