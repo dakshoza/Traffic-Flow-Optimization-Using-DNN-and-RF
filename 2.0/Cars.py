@@ -51,6 +51,8 @@ class Car(pygame.sprite.Sprite):
         
         self.CDR(SignalRoads[spawnpoint], (tempx, tempy))
 
+        # self.waitTime = 0
+
 
     
     def CDR(self, road, currentCoord): # Centering, Direction and Rotation

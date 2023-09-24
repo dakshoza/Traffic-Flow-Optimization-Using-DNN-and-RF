@@ -10,7 +10,7 @@ class Road:
         self.Waypoint= Waypoint
         self.queue = []
         self.spawnQ = []
-        self.trafficDensity = 0 # The traffic density for this road
+        self.trafficDensity =   0 # The traffic density for this road
         self.distanceToClosestCar = 0 # For the AI model, distance to the first car in queue
 
     # queue length can straight up be pulled from the models

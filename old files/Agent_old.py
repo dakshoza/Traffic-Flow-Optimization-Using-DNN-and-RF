@@ -11,7 +11,8 @@ class agent:
     def __init__(self, stateSize, actionSize):
         self.stateSize = stateSize
         self.actionSize = actionSize
-        self.memory = deque(maxlen=1000)  
+        # self.memory = deque(maxlen=1000)  
+        self.memory  = []
         self.gamma = 0.95  
         self.epsilon = 1.0  
         self.epsilonDecay = 0.85  
@@ -30,8 +31,9 @@ class agent:
 
     def remember(self, state, action, reward, nextState, done):
         self.memory.append((state, action, reward, nextState, done))
-        if len(self.memory) > self.memory.maxlen:
-            self.memory.popleft()
+        # if len(self.memory) > self.memory.maxlen:
+        if len(self.memory) > 1000:
+            self.memory.pop(0)
 
     def act(self, state):
         #epsilon-greedy policy
