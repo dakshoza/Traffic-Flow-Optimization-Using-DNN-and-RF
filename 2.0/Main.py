@@ -3,25 +3,22 @@ import numpy as np
 from Cars import *
 
 window = pygame.display.set_mode((1050,844))
-currentCars = pygame.sprite.Group()
+currentCars = []
 
 def genCars(num):
-    # global currentCars
     if len(currentCars) < 100:
         for i in range(num):
             spawnpoint = random.choice([0,1,1,1,2,2,3,4,4,4,5])
-            # spawnpoint = random.choice([2,3])
+            # spawnpoint = random.choice([2,3,0,5])
             spawnRoad = SignalRoads[spawnpoint]
-            if len(spawnRoad.spawnQ) > 0:
-                currentCars.add(spawnRoad.spawnQ[0])
+        
+            newCar = Car(spawnpoint)
+            #check if any collision was found on spawn
+            if len(newCar.rect.collidelistall([car.rect for car in spawnRoad.queue]))>0:
+                spawnRoad.spawnQ.append(newCar)
             else:
-                newCar = Car(spawnpoint)
-                #check if any collision was found on spawn
-                if len(pygame.sprite.spritecollide(newCar,currentCars,False,pygame.sprite.collide_rect_ratio(1.3)))>=0:
-                    currentCars.add(newCar)
-                    spawnRoad.queue.append(newCar)
-                else:
-                    spawnRoad.spawnQ.append(newCar)
+                currentCars.append(newCar)
+                spawnRoad.queue.append(newCar)
 
 pauseSimulator = False
 
@@ -79,8 +76,9 @@ while running:
                 road.checkTurn()
                 if len(road.spawnQ) >0:
                     road.spawnQ[0].drive(4)
-                    if not road.spawnQ[0].rect.collidelistall([car.rect for car in road.queue]):
+                    if len(road.spawnQ[0].rect.collidelistall([car.rect for car in road.queue]))==0:
                         road.spawnQ[0].drive(-4)
+                        road.queue.append(road.spawnQ[0])
                         currentCars.append(road.spawnQ.pop(0))
                     else:
                         road.spawnQ[0].drive(-4)
@@ -93,8 +91,8 @@ while running:
             # Deleting the cars
             if (car.rect.x < -50 or car.rect.x > 1100) or (car.rect.y < -50 or car.rect.y > 890):
                 currentCars.remove(car)
-                # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
-                genCars(1)
+                genCars(random.choice([0,1,1,1,2,2,2,3,3]))
+                # genCars(1)
 
         pygame.display.flip()
         

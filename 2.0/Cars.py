@@ -3,9 +3,8 @@ from Graphing import getPath
 from math import sqrt
 from Roads import SignalRoads, speed
 
-class Car(pygame.sprite.Sprite):
+class Car():
     def __init__(self, spawnpoint):
-        super(Car, self).__init__()
     #Sprite Loading
         self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{random.randint(1, 6)}.png")
 

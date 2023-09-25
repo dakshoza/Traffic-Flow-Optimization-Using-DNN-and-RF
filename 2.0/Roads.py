@@ -1,5 +1,5 @@
 
-speed = 2
+speed = 4
 class Road:
 # Have to define all road bounds
 
