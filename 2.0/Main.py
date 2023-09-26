@@ -1,4 +1,4 @@
-import pygame, random, csv
+import csv, pygame
 import numpy as np
 from Cars import *
 
@@ -15,7 +15,8 @@ def genCars(num):
             newCar = Car(spawnpoint)
             #check if any collision was found on spawn
             if len(newCar.rect.collidelistall([car.rect for car in spawnRoad.queue]))>0:
-                spawnRoad.spawnQ.append(newCar)
+                if len(spawnRoad.spawnQ) <10:
+                    spawnRoad.spawnQ.append(newCar)
             else:
                 currentCars.append(newCar)
                 spawnRoad.queue.append(newCar)
@@ -85,14 +86,16 @@ while running:
 
 
         for car in currentCars:
-            car.drive()
             car.render(window)
 
             # Deleting the cars
-            if (car.rect.x < -50 or car.rect.x > 1100) or (car.rect.y < -50 or car.rect.y > 890):
+            if (car.rect.x < -150 or car.rect.x > 1200) or (car.rect.y < -150 or car.rect.y > 990):
                 currentCars.remove(car)
                 genCars(random.choice([0,1,1,1,2,2,2,3,3]))
                 # genCars(1)
+
+        # for car in TurningCars:
+        #     car.drive()
 
         pygame.display.flip()
         

@@ -1,5 +1,6 @@
-
+import pygame
 speed = 4
+TurningCars = []
 class Road:
 # Have to define all road bounds
 
@@ -10,7 +11,7 @@ class Road:
         self.Waypoint= Waypoint
         self.queue = []
         self.spawnQ = []
-        self.trafficDensity =   0 # The traffic density for this road
+        self.signalState = False
         self.distanceToClosestCar = 0 # For the AI model, distance to the first car in queue
 
     # queue length can straight up be pulled from the models
@@ -22,7 +23,7 @@ class Road:
     
     def popCar(self, Car):
         # Removing car from queue
-        self.queue.pop(0)
+        TurningCars.append(self.queue.pop(0))
         print(f"{Car} removed from queue, headed {self.orientation}")
         # Resorting queue to make sure no overtaking has been done
         if (self.orientation == 0) or (self.orientation == 1):
@@ -32,63 +33,104 @@ class Road:
         
 
     def checkTurn(self):
-        # distance to closest car is in the check turn as the rl agent will require it each frame. 
-        try:
-            if (self.orientation == 0):
-                
-                #for a car, its distance from the intersection is calculated to feed to the ai model
-                self.distanceToClosestCar = self.queue[0].rect.top - self.IBoundary
-                
-                if (self.queue[0].rect.top - speed) <= self.IBoundary:
-                    self.popCar(self.queue[0])
-                    if len(self.queue) == 0:
-                        self.distanceToClosestCar = 0
-                    else:
-                        self.distanceToClosestCar = self.queue[0].rect.top - self.IBoundary
-                    pass # Tell car to turn function
+        #If Signal Is on
+        if self.signalState:
+            for car in self.queue:
+                car.drive()
+                # If it crossed the boundary:
+                if self.orientation in [2,3]:
+                    if len(car.rect.clipline((self.IBoundary,0),(self.IBoundary,844))) != 0:
+                        print("Touched Boundary")
+                        TurningCars.append(car)
+                        self.popCar(car)
+                else:
+                    if len(car.rect.clipline((0,self.IBoundary),(1050,self.IBoundary))) != 0:
+                        print("Touched Boundary")
+                        TurningCars.append(car)
+                        # Pop - recalculates distance, removes from queues
+                        self.popCar(car)
+        #If Signal off
+        else:
+            for car in self.queue:
+                #If next won't move will exit/collide:
+                car.drive(2)
+                if self.orientation in [2,3]:
+                    if (len(car.rect.clipline((self.IBoundary,0),(self.IBoundary,844))) == 0) and (len(car.rect.collidelistall([a.rect for a in self.queue])) <=1):
+                        car.drive()
+                else:
+                    if (len(car.rect.clipline((0,self.IBoundary),(1050,self.IBoundary))) == 0) and (len(car.rect.collidelistall([a.rect for a in self.queue])) <=1):
+                        car.drive()
+                car.drive(-2)
 
-            elif (self.orientation == 1):
+    # def checkTurn(self): #This function moves the cars in their lane.
+    #     # Signal On
+    #     if self.signalState:
+    #         for car in self.queue:
+    #             car.drive()
+        
+    #     #Signal Off
+    #     # else:
+    #     for car in self.queue:
+    #         #Checking if car collides with line
                 
-                #for a car, its distance from the intersection is calculated to feed to the ai model
-                self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.bottom 
-                
-                if (self.queue[0].rect.bottom + speed) >= self.IBoundary:
-                    self.popCar(self.queue[0])
-                    if len(self.queue)== 0:
-                        self.distanceToClosestCar = 0
-                    else:
-                        self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.bottom 
-                    pass # Tell car to turn function
 
-            elif self.orientation == 2:
+    #     # distance to closest car is in the check turn as the rl agent will require it each frame. 
+    #     try:
+    #         if (self.orientation == 0):
                 
-                #for a car, its distance from the intersection is calculated to feed to the ai model
-                self.distanceToClosestCar = self.queue[0].rect.left - self.IBoundary
+    #             #for a car, its distance from the intersection is calculated to feed to the ai model
+    #             self.distanceToClosestCar = self.queue[0].rect.top - self.IBoundary
                 
-                if (self.queue[0].rect.left - speed) <= self.IBoundary:
-                    self.popCar(self.queue[0])
-                    if len(self.queue)== 0:
-                        self.distanceToClosestCar = 0
-                    else:
-                        self.distanceToClosestCar = self.queue[0].rect.left - self.IBoundary
-                    pass # Tell car to turn function
+    #             if (self.queue[0].rect.top - speed) <= self.IBoundary:
+    #                 self.popCar(self.queue[0])
+    #                 if len(self.queue) == 0:
+    #                     self.distanceToClosestCar = 0
+    #                 else:
+    #                     self.distanceToClosestCar = self.queue[0].rect.top - self.IBoundary
+    #                 pass # Tell car to turn function
 
-            else:
+    #         elif (self.orientation == 1):
                 
-                #for a car, its distance from the intersection is calculated to feed to the ai model
-                self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.right
+    #             #for a car, its distance from the intersection is calculated to feed to the ai model
+    #             self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.bottom 
                 
-                if (self.queue[0].rect.right + speed) >= self.IBoundary:
-                    self.popCar(self.queue[0])
-                    if len(self.queue)== 0:
-                        self.distanceToClosestCar = 0
-                    else:
-                        self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.right
+    #             if (self.queue[0].rect.bottom + speed) >= self.IBoundary:
+    #                 self.popCar(self.queue[0])
+    #                 if len(self.queue)== 0:
+    #                     self.distanceToClosestCar = 0
+    #                 else:
+    #                     self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.bottom 
+    #                 pass # Tell car to turn function
 
-                    pass # Tell car to turn function
-                    pass # Tell car to turn function
-        except:
-            pass
+    #         elif self.orientation == 2:
+                
+    #             #for a car, its distance from the intersection is calculated to feed to the ai model
+    #             self.distanceToClosestCar = self.queue[0].rect.left - self.IBoundary
+                
+    #             if (self.queue[0].rect.left - speed) <= self.IBoundary:
+    #                 self.popCar(self.queue[0])
+    #                 if len(self.queue)== 0:
+    #                     self.distanceToClosestCar = 0
+    #                 else:
+    #                     self.distanceToClosestCar = self.queue[0].rect.left - self.IBoundary
+    #                 pass # Tell car to turn function
+
+    #         else:
+                
+    #             #for a car, its distance from the intersection is calculated to feed to the ai model
+    #             self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.right
+                
+    #             if (self.queue[0].rect.right + speed) >= self.IBoundary:
+    #                 self.popCar(self.queue[0])
+    #                 if len(self.queue)== 0:
+    #                     self.distanceToClosestCar = 0
+    #                 else:
+    #                     self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.right
+
+    #                 pass # Tell car to turn function
+    #                 pass # Tell car to turn function
+    #     except:
+    #         pass
 
 
 SignalRoads = {
