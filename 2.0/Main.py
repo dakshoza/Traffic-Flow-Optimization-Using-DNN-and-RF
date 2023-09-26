@@ -55,7 +55,7 @@ background = pygame.image.load("Assets/background.png")
 
 running = True
 
-genCars(7)
+genCars(1)
 
 while running:
     window.blit(background,(0,0))
@@ -84,18 +84,35 @@ while running:
                         currentCars.append(road.spawnQ.pop(0))
                     else:
                         road.spawnQ[0].drive(-4)
+            for wp in road.Waypoint:
+                pygame.draw.circle(window,(255,0,0),wp, 5)
 
         for car in TurningCars:
             car.turn()
+
+        for car in ExitingCars:
+            car.drive()
 
         for car in currentCars:
             car.render(window)
 
             # Deleting the cars
             if (car.rect.x < -150 or car.rect.x > 1200) or (car.rect.y < -150 or car.rect.y > 990):
-                currentCars.remove(car)
-                genCars(random.choice([0,1,1,1,2,2,2,3,3]))
-                # genCars(1)
+                try:
+                    currentCars.remove(car)
+                except:
+                    pass
+                try:
+                    TurningCars.remove(car)
+                except:
+                    pass
+                try:
+                    ExitingCars.remove(car)
+                except:
+                    pass
+                # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
+                genCars(1)
+
 
         # for car in TurningCars:
         #     car.drive()

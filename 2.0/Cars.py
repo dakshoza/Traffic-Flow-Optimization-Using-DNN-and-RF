@@ -4,10 +4,13 @@ from math import sqrt
 from Roads import *
 from pygame import Vector2
 
+
+ExitingCars = []
 class Car():
     def __init__(self, spawnpoint):
     #Sprite Loading
-        self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{random.randint(1, 6)}.png")
+        self.spriteNumber = random.randint(1, 6)
+        self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{self.spriteNumber}.png")
 
         # spawnpoint = 5
         self.rect = self.sprite.get_rect
@@ -24,7 +27,9 @@ class Car():
         destinations.remove(spawnpoint)
         endpoint = random.choice(destinations)
         path = getPath(spawnpoint, endpoint)[2:]  
-        self.roads = path      
+        self.roads = getPath(spawnpoint, endpoint)[2:]     
+        print(path)
+        print(self.roads)
         #Waypoints
         if len(path) == 1:
             self.waypoint = [random.choice(SignalRoads[path.pop(0)].Waypoint)]
@@ -92,7 +97,7 @@ class Car():
         self.rect.y += times*self.dy
 
     def turn(self):
-        pos = Vector2(self.rect.x, self.rect.y)
+        pos = Vector2(self.rect.centerx, self.rect.centery)
         waypoint = Vector2(self.waypoint[0])
         direction = waypoint - pos
         distance = direction.length()
@@ -101,36 +106,54 @@ class Car():
         if distance < speed:
             newRoad = SignalRoads[self.roads.pop(0)]
             #Add to Intersection roads
-            if self.roads[0] in ["I1", "I2"]:
+            if newRoad == SignalRoads["I1"] or newRoad == SignalRoads["I2"]:
                 newRoad.queue.append(self)
-            
-            #Clip to waypoint 
-            self.rect.center = self.waypoint.pop[0]
+            else:
+                ExitingCars.append(self)
 
+            
             #Change movement Vector
             if newRoad.orientation ==0:
-                self.dx = 0            
-                self.dy = speed
-            elif newRoad.orientation == 1:  
-                self.dx = 0            
-                self.dy = -speed
+                if self.dx !=0 and self.dy != speed:
+                    self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{self.spriteNumber}.png")
+                    self.dx = 0            
+                    self.dy = speed
+                    self.sprite = pygame.transform.rotate(self.sprite, 180) 
+                #Clip to waypoint 
+                    self.rect.centerx = self.waypoint[0][0]
+                    self.rect.bottom = self.waypoint[0][1]
+            elif newRoad.orientation == 1:
+                if self.dx !=0 and self.dy != -speed:
+                    self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{self.spriteNumber}.png")
+                    self.dx = 0            
+                    self.dy = -speed
+                    self.rect.centerx = self.waypoint[0][0]
+                    self.rect.top = self.waypoint[0][1]
             elif newRoad.orientation == 2:  
-                self.dx = speed         
-                self.dy = 0
+                if self.dx !=speed and self.dy != 0:
+                    self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{self.spriteNumber}.png")
+                    self.dx = speed         
+                    self.dy = 0
+                    self.sprite = pygame.transform.rotate(self.sprite, 270)
+                    self.rect.centery = self.waypoint[0][1]
+                    self.rect.right = self.waypoint[0][0]
             else:  
-                self.dx = -speed          
-                self.dy = 0
-
+                if self.dx != -speed and self.dy != 0:
+                    self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{self.spriteNumber}.png")
+                    self.dx = -speed          
+                    self.dy = 0
+                    self.sprite = pygame.transform.rotate(self.sprite, 90)
+                    self.rect.centery = self.waypoint[0][1]
+                    self.rect.left = self.waypoint[0][0]
+            self.waypoint.pop(0)
             TurningCars.remove(self)
         # Still turning
         else: 
-            direction = direction.normalize() * speed
-            angle = math.degrees(math.atan2(-direction[1], direction[0]))
-            self.sprite = pygame.transform.rotate(self.sprite, angle)
-            self.rect.x += direction.x
-            self.rect.y += direction.y
-            #rotate image and update rectangle
-            self.rect = self.sprite.get_rect()
+            direction = direction.normalize()
+            self.rect.x += direction.x * speed
+            self.rect.y += direction.y * speed
+
+
 
         # self.drive()
 
@@ -141,3 +164,4 @@ class Car():
 
     # def collisionPredict(self, road):
 
+Car(1)

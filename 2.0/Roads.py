@@ -63,66 +63,6 @@ class Road:
 
         self.calculateDistanceToClosestCar()
 
-    # def checkTurn(self): #This function moves the cars in their lane.
-       
-
-    #     # distance to closest car is in the check turn as the rl agent will require it each frame. 
-    #     try:
-    #         if (self.orientation == 0):
-                
-    #             #for a car, its distance from the intersection is calculated to feed to the ai model
-    #             self.distanceToClosestCar = self.queue[0].rect.top - self.IBoundary
-                
-    #             if (self.queue[0].rect.top - speed) <= self.IBoundary:
-    #                 self.popCar(self.queue[0])
-    #                 if len(self.queue) == 0:
-    #                     self.distanceToClosestCar = 0
-    #                 else:
-    #                     self.distanceToClosestCar = self.queue[0].rect.top - self.IBoundary
-    #                 pass # Tell car to turn function
-
-    #         elif (self.orientation == 1):
-                
-    #             #for a car, its distance from the intersection is calculated to feed to the ai model
-    #             self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.bottom 
-                
-    #             if (self.queue[0].rect.bottom + speed) >= self.IBoundary:
-    #                 self.popCar(self.queue[0])
-    #                 if len(self.queue)== 0:
-    #                     self.distanceToClosestCar = 0
-    #                 else:
-    #                     self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.bottom 
-    #                 pass # Tell car to turn function
-
-    #         elif self.orientation == 2:
-                
-    #             #for a car, its distance from the intersection is calculated to feed to the ai model
-    #             self.distanceToClosestCar = self.queue[0].rect.left - self.IBoundary
-                
-    #             if (self.queue[0].rect.left - speed) <= self.IBoundary:
-    #                 self.popCar(self.queue[0])
-    #                 if len(self.queue)== 0:
-    #                     self.distanceToClosestCar = 0
-    #                 else:
-    #                     self.distanceToClosestCar = self.queue[0].rect.left - self.IBoundary
-    #                 pass # Tell car to turn function
-
-    #         else:
-                
-    #             #for a car, its distance from the intersection is calculated to feed to the ai model
-    #             self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.right
-                
-    #             if (self.queue[0].rect.right + speed) >= self.IBoundary:
-    #                 self.popCar(self.queue[0])
-    #                 if len(self.queue)== 0:
-    #                     self.distanceToClosestCar = 0
-    #                 else:
-    #                     self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.right
-
-    #                 pass # Tell car to turn function
-    #                 pass # Tell car to turn function
-    #     except:
-    #         pass
     def calculateDistanceToClosestCar(self):
         if len(self.queue)==0:
             self.distanceToClosestCar == 1000
@@ -155,6 +95,6 @@ SignalRoads = {
     3 : Road(1,322, Spawnpoint= [(831, 0), (790, 0)], Waypoint =[(682,322), (726,322)]),
     4 : Road(2,857, Spawnpoint= [(1050, 494), (1050, 452)], Waypoint =[(857,348), (857,390)]),
     5 : Road(0,520, Spawnpoint= [(684, 844), (727, 844)],Waypoint =[(833,520), (788,520)]),
-    "I1" : Road(3,445, Waypoint =[(445,348 ), (445,388)]),
-    "I2" : Road(2,659, Waypoint =[(659,494), (659, 451)])
+    "I1" : Road(3,445, Waypoint =[(659,494), (659, 451)]),
+    "I2" : Road(2,659, Waypoint =[(445,348 ), (445,388)])
 }
