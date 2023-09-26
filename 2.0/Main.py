@@ -55,7 +55,7 @@ background = pygame.image.load("Assets/background.png")
 
 running = True
 
-genCars(1)
+genCars(4)
 
 while running:
     window.blit(background,(0,0))

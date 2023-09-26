@@ -119,15 +119,17 @@ class Car():
                     self.dx = 0            
                     self.dy = speed
                     self.sprite = pygame.transform.rotate(self.sprite, 180) 
+                    self.rect = self.sprite.get_rect()
                 #Clip to waypoint 
-                    self.rect.centerx = self.waypoint[0][0]
+                    self.rect.center = (self.waypoint[0][0], self.rect.y)
                     self.rect.bottom = self.waypoint[0][1]
             elif newRoad.orientation == 1:
                 if self.dx !=0 and self.dy != -speed:
                     self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{self.spriteNumber}.png")
                     self.dx = 0            
                     self.dy = -speed
-                    self.rect.centerx = self.waypoint[0][0]
+                    self.rect = self.sprite.get_rect()
+                    self.rect.center = (self.waypoint[0][0], self.rect.y)
                     self.rect.top = self.waypoint[0][1]
             elif newRoad.orientation == 2:  
                 if self.dx !=speed and self.dy != 0:
@@ -135,7 +137,8 @@ class Car():
                     self.dx = speed         
                     self.dy = 0
                     self.sprite = pygame.transform.rotate(self.sprite, 270)
-                    self.rect.centery = self.waypoint[0][1]
+                    self.rect = self.sprite.get_rect()
+                    self.rect.center = (self.rect.x, self.waypoint[0][1])
                     self.rect.right = self.waypoint[0][0]
             else:  
                 if self.dx != -speed and self.dy != 0:
@@ -143,7 +146,8 @@ class Car():
                     self.dx = -speed          
                     self.dy = 0
                     self.sprite = pygame.transform.rotate(self.sprite, 90)
-                    self.rect.centery = self.waypoint[0][1]
+                    self.rect = self.sprite.get_rect()
+                    self.rect.center = (self.rect.x, self.waypoint[0][1])
                     self.rect.left = self.waypoint[0][0]
             self.waypoint.pop(0)
             TurningCars.remove(self)
@@ -163,5 +167,3 @@ class Car():
         screen.blit(self.sprite, (self.rect.x,self.rect.y))
 
     # def collisionPredict(self, road):
-
-Car(1)
