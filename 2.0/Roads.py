@@ -1,4 +1,6 @@
 import pygame
+from pygame import Vector2 as v2
+
 speed = 4
 TurningCars = []
 currentCars = []

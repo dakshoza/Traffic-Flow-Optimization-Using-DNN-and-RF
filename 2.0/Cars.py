@@ -1,7 +1,8 @@
-import random, pygame
+import random, pygame, math
 from Graphing import getPath
 from math import sqrt
 from Roads import *
+from pygame import Vector2
 
 class Car():
     def __init__(self, spawnpoint):
@@ -22,8 +23,8 @@ class Car():
         destinations = [i for i in range(6)]
         destinations.remove(spawnpoint)
         endpoint = random.choice(destinations)
-        path = getPath(spawnpoint, endpoint)[2:]        
-
+        path = getPath(spawnpoint, endpoint)[2:]  
+        self.roads = path      
         #Waypoints
         if len(path) == 1:
             self.waypoint = [random.choice(SignalRoads[path.pop(0)].Waypoint)]
@@ -90,7 +91,53 @@ class Car():
         self.rect.x += times*self.dx
         self.rect.y += times*self.dy
 
+    def turn(self):
+        pos = Vector2(self.rect.x, self.rect.y)
+        waypoint = Vector2(self.waypoint[0])
+        direction = waypoint - pos
+        distance = direction.length()
+
+        #If it's gonna overshoot
+        if distance < speed:
+            newRoad = SignalRoads[self.roads.pop(0)]
+            #Add to Intersection roads
+            if self.roads[0] in ["I1", "I2"]:
+                newRoad.queue.append(self)
+            
+            #Clip to waypoint 
+            self.rect.center = self.waypoint.pop[0]
+
+            #Change movement Vector
+            if newRoad.orientation ==0:
+                self.dx = 0            
+                self.dy = speed
+            elif newRoad.orientation == 1:  
+                self.dx = 0            
+                self.dy = -speed
+            elif newRoad.orientation == 2:  
+                self.dx = speed         
+                self.dy = 0
+            else:  
+                self.dx = -speed          
+                self.dy = 0
+
+            TurningCars.remove(self)
+        # Still turning
+        else: 
+            direction = direction.normalize() * speed
+            angle = math.degrees(math.atan2(-direction[1], direction[0]))
+            self.sprite = pygame.transform.rotate(self.sprite, angle)
+            self.rect.x += direction.x
+            self.rect.y += direction.y
+            #rotate image and update rectangle
+            self.rect = self.sprite.get_rect()
+
+        # self.drive()
+
+
+
     def render(self, screen):
         screen.blit(self.sprite, (self.rect.x,self.rect.y))
 
     # def collisionPredict(self, road):
+

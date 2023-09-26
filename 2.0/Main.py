@@ -55,7 +55,7 @@ background = pygame.image.load("Assets/background.png")
 
 running = True
 
-genCars(5)
+genCars(7)
 
 while running:
     window.blit(background,(0,0))
@@ -86,7 +86,7 @@ while running:
                         road.spawnQ[0].drive(-4)
 
         for car in TurningCars:
-            pass
+            car.turn()
 
         for car in currentCars:
             car.render(window)
