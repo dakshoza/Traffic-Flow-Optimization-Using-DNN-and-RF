@@ -98,3 +98,9 @@ SignalRoads = {
     "I1" : Road(3,445, Waypoint =[(659,494), (659, 451)]),
     "I2" : Road(2,659, Waypoint =[(445,348 ), (445,388)])
 }
+
+
+Crossroads = {
+    0 : [SignalRoads[0], SignalRoads[1], SignalRoads[2], SignalRoads['I1']],
+    1 : [SignalRoads[3], SignalRoads[4], SignalRoads[5], SignalRoads["I2"]]
+}

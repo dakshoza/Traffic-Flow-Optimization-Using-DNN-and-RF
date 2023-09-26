@@ -1,8 +1,11 @@
 import csv, pygame
 import numpy as np
 from Cars import *
+from Env import Environment
 
 window = pygame.display.set_mode((1050,844))
+
+env = Environment()
 
 def genCars(num):
     if len(currentCars) < 100:
@@ -32,30 +35,11 @@ def append_to_csv(file_name, data):
         print("Error appending data to", file_name)
         print(e)
 
-
-def addToTrainingData():
-    # waitingTimes = []
-    trafficDensities = np.zeros(6)
-    queueLengths = np.zeros(6)
-    distancesToClosestCars = np.zeros(6)
-
-    for index in range(6):
-        queueLengths[index] = len(SignalRoads[index].queue)
-        distancesToClosestCars[index] = SignalRoads[index].distanceToClosestCar
-
-    trafficDensities = queueLengths/np.sum(queueLengths)
-
-    training_example = np.concatenate((trafficDensities, queueLengths, distancesToClosestCars))
-    
-    print(training_example)
-    
-    append_to_csv('2.0/TrainingDataset.csv', training_example)
-
 background = pygame.image.load("Assets/background.png")
 
 running = True
 
-genCars(4)
+genCars(10)
 
 while running:
     window.blit(background,(0,0))
@@ -67,7 +51,10 @@ while running:
             if event.key == pygame.K_p:  # Toggle pause on "P" key press
                 pauseSimulator = not pauseSimulator
                 if pauseSimulator == True:
-                    addToTrainingData()
+                    snapshot = env.getState()
+                    print(snapshot)
+                    append_to_csv('2.0/TrainingDataset.csv', snapshot)
+                    
             if event.key == pygame.K_t:  # Toggle Signals
                 for road in SignalRoads.values():
                     road.signalState = not road.signalState
