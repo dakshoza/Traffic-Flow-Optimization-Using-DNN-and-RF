@@ -3,7 +3,6 @@ import numpy as np
 from Cars import *
 
 window = pygame.display.set_mode((1050,844))
-currentCars = []
 
 def genCars(num):
     if len(currentCars) < 100:
@@ -69,9 +68,11 @@ while running:
                 pauseSimulator = not pauseSimulator
                 if pauseSimulator == True:
                     addToTrainingData()
+            if event.key == pygame.K_t:  # Toggle Signals
+                for road in SignalRoads.values():
+                    road.signalState = not road.signalState
 
     if not pauseSimulator:
-
         for road in SignalRoads.values():
             if len(road.queue) != 0:
                 road.checkTurn()
@@ -84,6 +85,8 @@ while running:
                     else:
                         road.spawnQ[0].drive(-4)
 
+        for car in TurningCars:
+            pass
 
         for car in currentCars:
             car.render(window)

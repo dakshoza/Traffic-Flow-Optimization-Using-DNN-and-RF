@@ -1,6 +1,7 @@
 import pygame
 speed = 4
 TurningCars = []
+currentCars = []
 class Road:
 # Have to define all road bounds
 
@@ -12,7 +13,7 @@ class Road:
         self.queue = []
         self.spawnQ = []
         self.signalState = False
-        self.distanceToClosestCar = 0 # For the AI model, distance to the first car in queue
+        self.distanceToClosestCar = 1000 # For the AI model, distance to the first car in queue
 
     # queue length can straight up be pulled from the models
 
@@ -23,16 +24,15 @@ class Road:
     
     def popCar(self, Car):
         # Removing car from queue
-        TurningCars.append(self.queue.pop(0))
-        print(f"{Car} removed from queue, headed {self.orientation}")
-        # Resorting queue to make sure no overtaking has been done
+        TurningCars.append(Car)
+        self.queue.remove(Car)
+        # Resorting queue
         if (self.orientation == 0) or (self.orientation == 1):
             self.queue = sorted(self.queue, key=lambda car: abs(self.IBoundary - car.rect.y))
         else:
             self.queue = sorted(self.queue, key=lambda car: abs(self.IBoundary - car.rect.x))
-        
 
-    def checkTurn(self):
+    def checkTurn(self): #REAL ONE
         #If Signal Is on
         if self.signalState:
             for car in self.queue:
@@ -41,13 +41,10 @@ class Road:
                 if self.orientation in [2,3]:
                     if len(car.rect.clipline((self.IBoundary,0),(self.IBoundary,844))) != 0:
                         print("Touched Boundary")
-                        TurningCars.append(car)
                         self.popCar(car)
                 else:
                     if len(car.rect.clipline((0,self.IBoundary),(1050,self.IBoundary))) != 0:
                         print("Touched Boundary")
-                        TurningCars.append(car)
-                        # Pop - recalculates distance, removes from queues
                         self.popCar(car)
         #If Signal off
         else:
@@ -62,17 +59,10 @@ class Road:
                         car.drive()
                 car.drive(-2)
 
+        self.calculateDistanceToClosestCar()
+
     # def checkTurn(self): #This function moves the cars in their lane.
-    #     # Signal On
-    #     if self.signalState:
-    #         for car in self.queue:
-    #             car.drive()
-        
-    #     #Signal Off
-    #     # else:
-    #     for car in self.queue:
-    #         #Checking if car collides with line
-                
+       
 
     #     # distance to closest car is in the check turn as the rl agent will require it each frame. 
     #     try:
@@ -131,6 +121,29 @@ class Road:
     #                 pass # Tell car to turn function
     #     except:
     #         pass
+    def calculateDistanceToClosestCar(self):
+        if len(self.queue)==0:
+            self.distanceToClosestCar == 1000
+        else:
+            try:
+                if (self.orientation == 0):
+                    #for a car, its distance from the intersection is calculated to feed to the ai model
+                    self.distanceToClosestCar = self.queue[0].rect.top - self.IBoundary
+                    
+                elif (self.orientation == 1):
+                    #for a car, its distance from the intersection is calculated to feed to the ai model
+                    self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.bottom 
+                    
+                elif self.orientation == 2:
+                    #for a car, its distance from the intersection is calculated to feed to the ai model
+                    self.distanceToClosestCar = self.queue[0].rect.left - self.IBoundary
+
+                else:
+                    #for a car, its distance from the intersection is calculated to feed to the ai model
+                    self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.right
+            except:
+                pass
+
 
 
 SignalRoads = {

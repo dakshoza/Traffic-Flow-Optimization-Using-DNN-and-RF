@@ -1,7 +1,7 @@
 import random, pygame
 from Graphing import getPath
 from math import sqrt
-from Roads import SignalRoads, speed, TurningCars
+from Roads import *
 
 class Car():
     def __init__(self, spawnpoint):
