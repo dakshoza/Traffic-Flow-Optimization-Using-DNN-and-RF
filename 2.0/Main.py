@@ -48,8 +48,8 @@ def addToTrainingData():
     training_example = np.concatenate((trafficDensities, queueLengths, distancesToClosestCars))
     
     print(training_example)
-
-    append_to_csv('2.0\TrainingDataset.csv', training_example)
+    
+    append_to_csv('2.0/TrainingDataset.csv', training_example)
 
 background = pygame.image.load("Assets/background.png")
 
