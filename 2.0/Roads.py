@@ -4,10 +4,13 @@ from pygame import Vector2 as v2
 speed = 4
 TurningCars = []
 currentCars = []
+T1Turners = []
+T2Turners = []
 class Road:
 # Have to define all road bounds
 
-    def __init__(self, orientation, IBoundary, Waypoint, Spawnpoint=[]):
+    def __init__(self, name, orientation, IBoundary, Waypoint, Spawnpoint=[]):
+        self.name = name
         self.orientation = orientation # 0 for up, 1: down, 2: left, 3: right
         self.IBoundary = IBoundary # Intersection Boundary
         self.Spawnpoint = Spawnpoint
@@ -28,6 +31,10 @@ class Road:
     def popCar(self, Car):
         # Removing car from queue
         TurningCars.append(Car)
+        if self.name in [0,1,2,"I2"]:
+            T1Turners.append(Car)
+        else:
+            T2Turners.append(Car)
         Car.rotate()
         self.queue.remove(Car)
         # Resorting queue
@@ -97,14 +104,14 @@ class Road:
 
 
 SignalRoads = {
-    0 : Road(0,520, Spawnpoint= [(272,844), (317, 844)], Waypoint =[(422,519), (377,520)]),
-    1 : Road(3,247, Spawnpoint= [(0,346), (0, 391)], Waypoint =[(247,497), (247,455)]),
-    2 : Road(1,321, Spawnpoint= [(422, 0), (379, 0)], Waypoint =[(273,321), (316,321)]),
-    3 : Road(1,322, Spawnpoint= [(831, 0), (790, 0)], Waypoint =[(682,322), (726,322)]),
-    4 : Road(2,857, Spawnpoint= [(1050, 494), (1050, 452)], Waypoint =[(857,348), (857,390)]),
-    5 : Road(0,520, Spawnpoint= [(684, 844), (727, 844)],Waypoint =[(833,520), (788,520)]),
-    "I1" : Road(3,445, Waypoint =[(659,494), (659, 451)]),
-    "I2" : Road(2,659, Waypoint =[(445,348 ), (445,388)])
+    0 : Road(0 ,0,520, Spawnpoint= [(272,844), (317, 844)], Waypoint =[(422,519), (377,520)]),
+    1 : Road(1 ,3,247, Spawnpoint= [(0,346), (0, 391)], Waypoint =[(247,497), (247,455)]),
+    2 : Road(2 ,1,321, Spawnpoint= [(422, 0), (379, 0)], Waypoint =[(273,321), (316,321)]),
+    3 : Road(3 ,1,322, Spawnpoint= [(831, 0), (790, 0)], Waypoint =[(682,322), (726,322)]),
+    4 : Road(4 ,2,857, Spawnpoint= [(1050, 494), (1050, 452)], Waypoint =[(857,348), (857,390)]),
+    5 : Road(5 ,0,520, Spawnpoint= [(684, 844), (727, 844)],Waypoint =[(833,520), (788,520)]),
+    "I1" : Road("I1",3,445, Waypoint =[(659,494), (659, 451)]),
+    "I2" : Road("I2",2,659, Waypoint =[(445,348 ), (445,388)])
 }
 
 

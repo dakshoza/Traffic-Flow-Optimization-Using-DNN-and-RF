@@ -100,6 +100,14 @@ while running:
                 except:
                     pass
                 try:
+                    T1Turners.remove(car)
+                except:
+                    pass
+                try:
+                    T2Turners.remove(car)
+                except:
+                    pass
+                try:
                     ExitingCars.remove(car)
                 except:
                     pass

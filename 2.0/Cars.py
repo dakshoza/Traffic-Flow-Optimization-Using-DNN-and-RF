@@ -165,6 +165,14 @@ class Car():
                     self.rect.left = self.waypoint[0][0]
             self.waypoint.pop(0)
             TurningCars.remove(self)
+            try:
+                T1Turners.remove(self)
+            except:
+                pass
+            try:
+                T2Turners.remove(self)
+            except:
+                pass
         # Still turning
         else: 
             direction = direction.normalize()
