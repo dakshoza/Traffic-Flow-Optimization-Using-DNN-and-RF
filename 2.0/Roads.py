@@ -19,6 +19,7 @@ class Road:
         self.popWait = 0
         self.spawnQ = []
         self.signalState = False
+        self.roadWaitTime = 0
         self.distanceToClosestCar = 1000 # For the AI model, distance to the first car in queue
 
     # queue length can straight up be pulled from the models
@@ -47,6 +48,7 @@ class Road:
         #If Signal Is on
         if self.signalState:
             for car in self.queue:
+                car.waitTime = 1
                 car.drive()
                 # If it crossed the boundary:
                 if self.orientation in [2,3]:
@@ -67,6 +69,7 @@ class Road:
         else:
             for car in self.queue:
                 #If next won't move will exit/collide:
+                car.waitTime *= 1.15
                 car.drive(5)
                 if self.orientation in [2,3]:
                     if (len(car.rect.clipline((self.IBoundary,0),(self.IBoundary,844))) == 0) and (len(car.rect.collidelistall([a.rect for a in self.queue])) <=1):
@@ -77,6 +80,13 @@ class Road:
                 car.drive(-5)
 
         self.calculateDistanceToClosestCar()
+        self.calculateRoadWaitingTime()
+
+    def calculateRoadWaitingTime(self):
+        self.roadWaitTime == 0
+        if len(self.queue)!=0:
+            for car in self.queue:
+                self.roadWaitTime += car.waitTime
 
     def calculateDistanceToClosestCar(self):
         if len(self.queue)==0:

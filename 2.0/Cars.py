@@ -12,7 +12,7 @@ class Car():
         self.waypoint = []
         self.spriteNumber = random.randint(1, 6)
         self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{self.spriteNumber}.png")
-
+        self.waitTime = 1
         # spawnpoint = 5
         self.rect = self.sprite.get_rect
         '''

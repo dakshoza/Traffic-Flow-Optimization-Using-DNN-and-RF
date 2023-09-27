@@ -6,14 +6,19 @@ class Environment:
     def __init__(self):
         pass
 
-    def getState(self):
+    def getOldState(self):
+        return np.array([Road.signalState for Road in SignalRoads.values()])
+
+    def getData(self, oldState):
         trafficStates = np.array([Road.signalState for Road in SignalRoads.values()])
         queueLengths = np.array([len(Road.queue) for Road in SignalRoads.values()])
+        queueLengths = np.append(queueLengths, len(TurningCars))
         distancesToClosestCars = np.array([Road.distanceToClosestCar for Road in SignalRoads.values()])
+        waitTimes = np.array([Road.roadWaitTime for Road in SignalRoads.values()])
 
         trafficDensities = queueLengths / np.sum(queueLengths)
 
-        training_example = np.concatenate((trafficStates, trafficDensities, distancesToClosestCars))
+        training_example = np.concatenate((oldState, trafficDensities, distancesToClosestCars, waitTimes, trafficStates))
 
         self.append_to_csv('2.0\TrainingDataset.csv', training_example)
 

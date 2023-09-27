@@ -1,4 +1,4 @@
-import csv, pygame
+import pygame, random
 from Cars import *
 from Env import Environment
 
@@ -39,7 +39,7 @@ background = pygame.image.load("Assets/background.png")
 
 running = True
 
-genCars(1)
+genCars(random.randint(8, 16))
 
 while running:
     window.blit(background,(0,0))
@@ -50,8 +50,10 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_p:  # Toggle pause on "P" key press
                 pauseSimulator = not pauseSimulator
+                if pauseSimulator == True:
+                    oldState = env.getOldState()
             if event.key == pygame.K_s:
-                env.getState()
+                env.getData(oldState)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 mouse_pos = pygame.mouse.get_pos()
@@ -85,6 +87,8 @@ while running:
 
         for car in TurningCars:
             car.turn()
+            # if len(car.rect.collidelistall(TurningCars)) >0:
+            #     pass # Collision Detected
 
         for car in ExitingCars:
             car.drive()
