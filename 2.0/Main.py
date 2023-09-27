@@ -1,10 +1,12 @@
 import pygame, random
 from Cars import *
 from Env import Environment
+from AIModel import model
 
 window = pygame.display.set_mode((1050,844))
 
 env = Environment()
+model1 = model() 
 
 def genCars(num):
     if len(currentCars) < 100:
