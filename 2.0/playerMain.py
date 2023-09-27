@@ -69,8 +69,6 @@ while running:
                     currentCars.append(road.spawnQ.pop(0))
                 else:
                     road.spawnQ[0].drive(-4)
-        for wp in road.Waypoint:
-            pygame.draw.circle(window,(255,0,0),wp, 5)
     tick -= 1
     if tick ==0:
         tick = 100
