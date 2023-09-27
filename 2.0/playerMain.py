@@ -1,6 +1,6 @@
-import pygame
-import time
+import pygame, time
 from Cars import *
+from Env import Environment
 
 window = pygame.display.set_mode((1050,844))
 
@@ -20,29 +20,26 @@ def genCars(num):
                 currentCars.append(newCar)
                 spawnRoad.queue.append(newCar)
 
-background = pygame.image.load("Assets/background.png")
-
-crossroad1 = Crossroads[0]
-crossroad2 = Crossroads[1]
-
-currentSignalIndex = 0
-signalTimer = 0
-
-crossroad1[currentSignalIndex].signalState = True
-crossroad2[currentSignalIndex].signalState = True
-
-clock = pygame.time.Clock()
-
 startTime = time.time()
 
 score = 0
 
+background = pygame.image.load("Assets/background.png")
+
+roadHitboxes = {
+    0 : pygame.Rect(252, 523, 86, 321),
+    1 : pygame.Rect(1, 325, 245, 96),
+    2 : pygame.Rect(357, 0, 87, 319),
+    3 : pygame.Rect(768, 0, 87, 319),
+    4 : pygame.Rect(861, 431, 190, 86),
+    5 : pygame.Rect(662, 522, 86, 322),
+    "I1" : pygame.Rect(450, 432, 207, 84),
+    "I2" : pygame.Rect(450, 324, 207, 88)
+}
+
 running = True
 
 genCars(10)
-
-# for Road in SignalRoads.values():
-#     Road.signalState = True
 
 while running:
     window.blit(background,(0,0))
@@ -50,7 +47,17 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+        elif event.type == pygame.KEYDOWN: 
+            if event.key == pygame.K_t:  # Toggle Signals
+                for road in SignalRoads.values():
+                    road.signalState = not road.signalState
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                mouse_pos = pygame.mouse.get_pos()
+                for road_id, rect in roadHitboxes.items():
+                    if rect.collidepoint(mouse_pos):
+                        SignalRoads[road_id].signalState = not SignalRoads[road_id].signalState
+    
     for road in SignalRoads.values():
         if len(road.queue) != 0:
             road.checkTurn()
@@ -65,16 +72,11 @@ while running:
         for wp in road.Waypoint:
             pygame.draw.circle(window,(255,0,0),wp, 5)
 
-    signalTimer += clock.tick(60) / 1000
-
-    if signalTimer >= 2:
-        currentSignalIndex = (currentSignalIndex + 1) % 4
-        for index in range(4):
-            crossroad1[index].signalState = False
-            crossroad2[index].signalState = False
-        crossroad1[currentSignalIndex].signalState = True
-        crossroad2[currentSignalIndex].signalState = True
-        signalTimer = 0
+    for road_id, road in SignalRoads.items():
+        if road.signalState == False:
+            pygame.draw.rect(window, (255, 0, 0, 200), roadHitboxes[road_id])
+        else:
+            pygame.draw.rect(window, (0, 255, 0, 200), roadHitboxes[road_id])
 
     for car in TurningCars:
         car.turn()
@@ -110,4 +112,4 @@ while running:
         running = False
 
     pygame.display.flip()
-        
+    

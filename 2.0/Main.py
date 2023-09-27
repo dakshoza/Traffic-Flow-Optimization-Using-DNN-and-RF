@@ -1,5 +1,4 @@
 import csv, pygame
-import numpy as np
 from Cars import *
 from Env import Environment
 
@@ -25,16 +24,6 @@ def genCars(num):
 
 pauseSimulator = False
 
-def append_to_csv(file_name, data):
-    try:
-        with open(file_name, 'a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(data)
-        print("Data appended to", file_name)
-    except Exception as e:
-        print("Error appending data to", file_name)
-        print(e)
-
 background = pygame.image.load("Assets/background.png")
 
 running = True
@@ -51,9 +40,7 @@ while running:
             if event.key == pygame.K_p:  # Toggle pause on "P" key press
                 pauseSimulator = not pauseSimulator
                 if pauseSimulator == True:
-                    snapshot = env.getState()
-                    print(snapshot)
-                    append_to_csv('2.0/TrainingDataset.csv', snapshot)
+                    env.getState()
                     
             if event.key == pygame.K_t:  # Toggle Signals
                 for road in SignalRoads.values():

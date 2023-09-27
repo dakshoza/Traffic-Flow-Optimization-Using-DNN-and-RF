@@ -60,14 +60,14 @@ class Road:
         else:
             for car in self.queue:
                 #If next won't move will exit/collide:
-                car.drive(2)
+                car.drive(5)
                 if self.orientation in [2,3]:
                     if (len(car.rect.clipline((self.IBoundary,0),(self.IBoundary,844))) == 0) and (len(car.rect.collidelistall([a.rect for a in self.queue])) <=1):
                         car.drive()
                 else:
                     if (len(car.rect.clipline((0,self.IBoundary),(1050,self.IBoundary))) == 0) and (len(car.rect.collidelistall([a.rect for a in self.queue])) <=1):
                         car.drive()
-                car.drive(-2)
+                car.drive(-5)
 
         self.calculateDistanceToClosestCar()
 
