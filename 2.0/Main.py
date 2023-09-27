@@ -82,8 +82,7 @@ while running:
                         currentCars.append(road.spawnQ.pop(0))
                     else:
                         road.spawnQ[0].drive(-4)
-            for wp in road.Waypoint:
-                pygame.draw.circle(window,(255,0,0),wp, 5)
+            
 
         for car in TurningCars:
             car.turn()
@@ -117,6 +116,13 @@ while running:
                     pass
                 # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
                 genCars(1)
+
+        for road in SignalRoads.values():
+            pygame.draw.rect(window, (0,0,0,200), road.signal)
+        if not road.signalState:
+            pygame.draw.circle(window,(255,0,0), road.signal.center, 5)
+        else:
+            pygame.draw.circle(window,(0,255,0), road.signal.center, 5)
                 
     pygame.display.flip()
         

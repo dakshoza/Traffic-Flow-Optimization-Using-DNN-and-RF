@@ -17,6 +17,7 @@ class Road:
         self.Waypoint= Waypoint
         self.queue = []
         self.popWait = 0
+        self.signal = pygame.Rect(0,0,0,0)
         self.spawnQ = []
         self.signalState = False
         self.roadWaitTime = 0
@@ -129,3 +130,13 @@ Crossroads = {
     0 : [SignalRoads[0], SignalRoads[1], SignalRoads[2], SignalRoads['I1']],
     1 : [SignalRoads[3], SignalRoads[4], SignalRoads[5], SignalRoads["I2"]]
 }
+
+
+SignalRoads[0].signal = pygame.Rect(252,510,30,20)
+SignalRoads[1].signal = pygame.Rect(238,326,20,30)
+SignalRoads[2].signal = pygame.Rect(413,312,30,20)
+SignalRoads["I1"].signal = pygame.Rect(436,486,20,30)
+SignalRoads[3].signal = pygame.Rect(823,312,30,20)
+SignalRoads[4].signal = pygame.Rect(847,486,20,30)
+SignalRoads[5].signal = pygame.Rect(663,510,30,20)
+SignalRoads["I2"].signal = pygame.Rect(649,326,20,30)

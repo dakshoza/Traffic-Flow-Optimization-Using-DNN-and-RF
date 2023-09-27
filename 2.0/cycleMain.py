@@ -109,5 +109,13 @@ while running:
         print(f"Score : {score}")
         running = False
 
+    for road in SignalRoads.values():
+        pygame.draw.rect(window, (0,0,0,200), road.signal)
+        if not road.signalState:
+            pygame.draw.circle(window,(255,0,0), road.signal.center, 5)
+        else:
+            pygame.draw.circle(window,(0,255,0), road.signal.center, 5)
+
+
     pygame.display.flip()
         
