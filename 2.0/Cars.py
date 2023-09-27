@@ -9,6 +9,7 @@ ExitingCars = []
 class Car():
     def __init__(self, spawnpoint):
     #Sprite Loading
+        self.waypoint = []
         self.spriteNumber = random.randint(1, 6)
         self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{self.spriteNumber}.png")
 
@@ -34,23 +35,30 @@ class Car():
         endpoint = random.choice(destinations)
         path = getPath(spawnpoint, endpoint)[2:]  
         self.roads = getPath(spawnpoint, endpoint)[2:]     
-        # print(path)
-        # print(self.roads)
         #Waypoints
-        if len(path) == 1:
-            self.waypoint = [random.choice(SignalRoads[path.pop(0)].Waypoint)]
-        else:
-            self.waypoint = [random.choice(SignalRoads[path.pop(1)].Waypoint)]
-            lanes = SignalRoads[path.pop(0)].Waypoint
-            x1, y1 = lanes[0]
-            x2, y2 = lanes[1]
-            x3, y3 = self.waypoint[0]
-            if (sqrt((x3-x1)**2 + (y3-y1)**2) < sqrt((x3-x2)**2 + sqrt((y3-y2)**2))):
-                self.waypoint.insert(0, lanes[0])
-            else:
-                self.waypoint.insert(0, lanes[1])
 
-    #Spawning
+        #Which Final waypoint is closer to spawn
+        x1 ,y1 = SignalRoads[path[-1]].Waypoint[0]
+        x2 ,y2 = SignalRoads[path[-1]].Waypoint[1]
+        x3, y3 = random.choice(SignalRoads[spawnpoint].Spawnpoint)
+        if (sqrt((x3-x1)**2 + (y3-y1)**2) < sqrt((x3-x2)**2 + sqrt((y3-y2)**2))):
+            self.waypoint.append(SignalRoads[path[-1]].Waypoint[0])
+        else:
+            self.waypoint.append(SignalRoads[path[-1]].Waypoint[1])
+        path.pop()
+        #Which middle waypoint (if any) is closer to end waypoint
+        if path != []:
+            x1, y1 = SignalRoads[path[-1]].Waypoint[0]
+            x2, y2 = SignalRoads[path[-1]].Waypoint[1]
+            x3, y3 = self.waypoint[0]
+
+            if (sqrt((x3 - x1) ** 2 + (y3 - y1) ** 2) < sqrt((x3 - x2) ** 2 + (y3 - y2) ** 2)):
+                value_to_insert = SignalRoads[path.pop(0)].Waypoint[0]
+            else:
+                value_to_insert = SignalRoads[path.pop(0)].Waypoint[1]
+
+            self.waypoint.insert(0, value_to_insert)
+
         #Picking Closer lane
         x1, y1 = SignalRoads[spawnpoint].Spawnpoint[0]
         x2, y2 = SignalRoads[spawnpoint].Spawnpoint[1]
