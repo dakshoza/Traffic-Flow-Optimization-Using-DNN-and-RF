@@ -100,9 +100,5 @@ while running:
                 # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
                 genCars(1)
 
-
-        # for car in TurningCars:
-        #     car.drive()
-
         pygame.display.flip()
         

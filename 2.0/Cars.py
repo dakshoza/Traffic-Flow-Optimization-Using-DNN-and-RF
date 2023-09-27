@@ -23,8 +23,14 @@ class Car():
         '''
     #Path Generation
         #Basic Path
-        destinations = [i for i in range(6)]
-        destinations.remove(spawnpoint)
+        if spawnpoint in [0,1,2]:
+            destinations = [0,0,1,1,2,2,3,4,5]
+            destinations.remove(spawnpoint)
+            destinations.remove(spawnpoint)
+        else:
+            destinations = [0,1,2,3,3,4,4,5,5]
+            destinations.remove(spawnpoint)
+            destinations.remove(spawnpoint)
         endpoint = random.choice(destinations)
         path = getPath(spawnpoint, endpoint)[2:]  
         self.roads = getPath(spawnpoint, endpoint)[2:]     
@@ -157,11 +163,16 @@ class Car():
             self.rect.x += direction.x * speed
             self.rect.y += direction.y * speed
 
-
-
-        # self.drive()
-
-
+    def rotate(self):
+        pos = Vector2(self.rect.center)
+        oldpos = (self.rect.x, self.rect.y)
+        destination = Vector2(self.waypoint[0])
+        distanceVector = destination-pos
+        angle = math.degrees(math.atan2(-distanceVector[1], distanceVector[0]))
+        self.sprite = pygame.image.load(f"./Assets/CarSprites/CarSprite{self.spriteNumber}.png")
+        self.sprite = pygame.transform.rotate(self.sprite, angle+270)
+        self.rect = self.sprite.get_rect()
+        self.rect.x, self.rect.y = oldpos
 
     def render(self, screen):
         screen.blit(self.sprite, (self.rect.x,self.rect.y))

@@ -110,7 +110,9 @@ while running:
         running = False
 
     # for car in TurningCars:
-    #     car.drive()
+    #     if len(car.rect.collidelistall(TurningCars)) >1:
+    #         print("crash")
+    #         running=False
 
     pygame.display.flip()
         

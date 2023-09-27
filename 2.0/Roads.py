@@ -13,6 +13,7 @@ class Road:
         self.Spawnpoint = Spawnpoint
         self.Waypoint= Waypoint
         self.queue = []
+        self.popWait = 0
         self.spawnQ = []
         self.signalState = False
         self.distanceToClosestCar = 1000 # For the AI model, distance to the first car in queue
@@ -27,6 +28,7 @@ class Road:
     def popCar(self, Car):
         # Removing car from queue
         TurningCars.append(Car)
+        Car.rotate()
         self.queue.remove(Car)
         # Resorting queue
         if (self.orientation == 0) or (self.orientation == 1):
@@ -42,12 +44,18 @@ class Road:
                 # If it crossed the boundary:
                 if self.orientation in [2,3]:
                     if len(car.rect.clipline((self.IBoundary,0),(self.IBoundary,844))) != 0:
-                        print("Touched Boundary")
-                        self.popCar(car)
+                        if self.popWait == 0:
+                            self.popCar(car)
+                            self.popWait == 15
+                        else: 
+                            self.popWait -=1
                 else:
                     if len(car.rect.clipline((0,self.IBoundary),(1050,self.IBoundary))) != 0:
-                        print("Touched Boundary")
-                        self.popCar(car)
+                        if self.popWait == 0:
+                            self.popCar(car)
+                            self.popWait == 15
+                        else: 
+                            self.popWait -=1
         #If Signal off
         else:
             for car in self.queue:
