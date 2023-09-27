@@ -7,18 +7,18 @@ class Environment:
         pass
 
     def getOldState(self):
-        return np.array([Road.signalState for Road in SignalRoads.values()])
+        return np.array([Road.signalState for Road in list(SignalRoads.values())[:4]])
 
     def getData(self, oldState):
-        trafficStates = np.array([Road.signalState for Road in SignalRoads.values()])
-        queueLengths = np.array([len(Road.queue) for Road in SignalRoads.values()])
-        queueLengths = np.append(queueLengths, len(TurningCars))
-        distancesToClosestCars = np.array([Road.distanceToClosestCar for Road in SignalRoads.values()])
-        waitTimes = np.array([Road.roadWaitTime for Road in SignalRoads.values()])
+        trafficStates = np.array([Road.signalState for Road in list(SignalRoads.values())[:4]])
+        queueLengths = np.array([len(Road.queue) for Road in list(SignalRoads.values())[:4]])
+        queueLengths = np.append(queueLengths, len(T1Turners))
+        distancesToClosestCars = np.array([Road.distanceToClosestCar for Road in list(SignalRoads.values())[:4]])
+        # waitTimes = np.array([Road.roadWaitTime for Road in list(SignalRoads.values())[:4]])
 
         trafficDensities = queueLengths / np.sum(queueLengths)
 
-        training_example = np.concatenate((oldState, trafficDensities, distancesToClosestCars, waitTimes, trafficStates))
+        training_example = np.concatenate((oldState, trafficDensities, distancesToClosestCars, trafficStates))
 
         self.append_to_csv('2.0\TrainingDataset.csv', training_example)
 
