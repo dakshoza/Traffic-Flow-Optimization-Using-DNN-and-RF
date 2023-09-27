@@ -34,8 +34,8 @@ class Car():
         endpoint = random.choice(destinations)
         path = getPath(spawnpoint, endpoint)[2:]  
         self.roads = getPath(spawnpoint, endpoint)[2:]     
-        print(path)
-        print(self.roads)
+        # print(path)
+        # print(self.roads)
         #Waypoints
         if len(path) == 1:
             self.waypoint = [random.choice(SignalRoads[path.pop(0)].Waypoint)]

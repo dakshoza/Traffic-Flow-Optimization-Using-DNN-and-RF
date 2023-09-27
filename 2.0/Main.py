@@ -24,6 +24,17 @@ def genCars(num):
 
 pauseSimulator = False
 
+roadHitboxes = {
+    0 : pygame.Rect(252, 523, 86, 321),
+    1 : pygame.Rect(1, 325, 245, 96),
+    2 : pygame.Rect(357, 0, 87, 319),
+    3 : pygame.Rect(768, 0, 87, 319),
+    4 : pygame.Rect(861, 431, 190, 86),
+    5 : pygame.Rect(662, 522, 86, 322),
+    "I1" : pygame.Rect(450, 432, 207, 84),
+    "I2" : pygame.Rect(450, 324, 207, 88)
+}
+
 background = pygame.image.load("Assets/background.png")
 
 running = True
@@ -39,12 +50,23 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_p:  # Toggle pause on "P" key press
                 pauseSimulator = not pauseSimulator
-                if pauseSimulator == True:
-                    env.getState()
-                    
-            if event.key == pygame.K_t:  # Toggle Signals
-                for road in SignalRoads.values():
-                    road.signalState = not road.signalState
+            if event.key == pygame.K_s:
+                env.getState()
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                mouse_pos = pygame.mouse.get_pos()
+                for road_id, rect in roadHitboxes.items():
+                    if rect.collidepoint(mouse_pos):
+                        SignalRoads[road_id].signalState = not SignalRoads[road_id].signalState        
+
+    for road_id, road in SignalRoads.items():
+            if road.signalState == False:
+                pygame.draw.rect(window, (255, 0, 0, 200), roadHitboxes[road_id])
+            else:
+                pygame.draw.rect(window, (0, 255, 0, 200), roadHitboxes[road_id])
+
+    for car in currentCars:
+        car.render(window)
 
     if not pauseSimulator:
         for road in SignalRoads.values():
@@ -67,9 +89,6 @@ while running:
         for car in ExitingCars:
             car.drive()
 
-        for car in currentCars:
-            car.render(window)
-
             # Deleting the cars
             if (car.rect.x < -150 or car.rect.x > 1200) or (car.rect.y < -150 or car.rect.y > 990):
                 try:
@@ -86,6 +105,6 @@ while running:
                     pass
                 # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
                 genCars(1)
-
-        pygame.display.flip()
+                
+    pygame.display.flip()
         
