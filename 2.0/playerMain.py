@@ -38,7 +38,7 @@ roadHitboxes = {
 }
 
 running = True
-
+tick = 100
 genCars(10)
 
 while running:
@@ -69,8 +69,10 @@ while running:
                     currentCars.append(road.spawnQ.pop(0))
                 else:
                     road.spawnQ[0].drive(-4)
-        for wp in road.Waypoint:
-            pygame.draw.circle(window,(255,0,0),wp, 5)
+    tick -= 1
+    if tick ==0:
+        tick = 100
+        genCars(random.choice([0,1,1,1,2,2,2,3,3]))
 
     for car in TurningCars:
         car.turn()
@@ -96,9 +98,8 @@ while running:
                 score += 1
             except:
                 pass
-            # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
-            
-            genCars(1)
+            genCars(random.choice([0,1,1,1,2,2,2,3,3]))
+            # genCars(1)
 
     elapsedTime = time.time() - startTime
     
