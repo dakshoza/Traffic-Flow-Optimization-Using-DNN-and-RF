@@ -72,12 +72,6 @@ while running:
         for wp in road.Waypoint:
             pygame.draw.circle(window,(255,0,0),wp, 5)
 
-    for road_id, road in SignalRoads.items():
-        if road.signalState == False:
-            pygame.draw.rect(window, (255, 0, 0, 200), roadHitboxes[road_id])
-        else:
-            pygame.draw.rect(window, (0, 255, 0, 200), roadHitboxes[road_id])
-
     for car in TurningCars:
         car.turn()
 
@@ -103,6 +97,7 @@ while running:
             except:
                 pass
             # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
+            
             genCars(1)
 
     elapsedTime = time.time() - startTime

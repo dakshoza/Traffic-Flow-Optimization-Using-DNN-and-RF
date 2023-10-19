@@ -1,12 +1,11 @@
 import pygame, random
 from Cars import *
 from Env import Environment
-# from AIModel import model
+from AIModel import model1
 
 window = pygame.display.set_mode((1050,844))
 
 env = Environment()
-# model1 = model() 
 
 def genCars(num):
     if len(currentCars) < 100:
@@ -49,25 +48,26 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_p:  # Toggle pause on "P" key press
-                pauseSimulator = not pauseSimulator
-                if pauseSimulator == True:
-                    oldState = env.getOldState()
-            if event.key == pygame.K_s:
-                env.getData(oldState)
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                mouse_pos = pygame.mouse.get_pos()
-                for road_id, rect in roadHitboxes.items():
-                    if rect.collidepoint(mouse_pos):
-                        SignalRoads[road_id].signalState = not SignalRoads[road_id].signalState        
+        
+        
 
     for road_id, road in SignalRoads.items():
             if road.signalState == False:
                 pygame.draw.rect(window, (255, 0, 0, 200), roadHitboxes[road_id])
             else:
                 pygame.draw.rect(window, (0, 255, 0, 200), roadHitboxes[road_id])
+     
+    data1 = env.getData1()
+    data2 = env.getData2()
+
+    action1 = model1.predict(data1)
+    action2 = model1.predict(data2)
+
+    action1 = (action1 >= 0.5).astype(int)
+    action2 = (action2 >= 0.5).astype(int)
+
+    env.takeAction1(action1)
+    env.takeAction2(action2)
 
     for car in currentCars:
         car.render(window)

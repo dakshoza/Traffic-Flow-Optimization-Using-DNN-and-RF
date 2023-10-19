@@ -6,22 +6,39 @@ class Environment:
     def __init__(self):
         pass
 
-    def getOldState(self):
-        return np.array([Road.signalState for Road in list(SignalRoads.values())[:4]])
-
-    def getData(self, oldState):
-        trafficStates = np.array([Road.signalState for Road in list(SignalRoads.values())[:4]])
-        queueLengths = np.array([len(Road.queue) for Road in list(SignalRoads.values())[:4]])
-        queueLengths = np.append(queueLengths, len(T1Turners))
-        distancesToClosestCars = np.array([Road.distanceToClosestCar for Road in list(SignalRoads.values())[:4]])
+    def getData1(self):
+        trafficStates = [Road.signalState for Road in list(SignalRoads.values())[:4]]
+        queueLengths = [len(Road.queue) for Road in list(SignalRoads.values())[:4]]
+        queueLengths.append(len(T1Turners))
+        distancesToClosestCars = [Road.distanceToClosestCar for Road in list(SignalRoads.values())[:4]]
         # waitTimes = np.array([Road.roadWaitTime for Road in list(SignalRoads.values())[:4]])
 
-        trafficDensities = queueLengths / np.sum(queueLengths)
+        trafficDensities = [queueLengths[index] / sum(queueLengths) for index in range(len(queueLengths))]
 
-        training_example = np.concatenate((oldState, trafficDensities, distancesToClosestCars, trafficStates))
+        training_example = trafficStates + trafficDensities + distancesToClosestCars
 
-        self.append_to_csv('2.0\TrainingDataset.csv', training_example)
+        training_example = np.array([training_example])
+        training_example = training_example.reshape(-1, 13)
 
+        return training_example
+    
+    def getData2(self):
+        trafficStates = [Road.signalState for Road in list(SignalRoads.values())[4:]]
+        queueLengths = [len(Road.queue) for Road in list(SignalRoads.values())[4:]]
+        queueLengths.append(len(T2Turners))
+        distancesToClosestCars = [Road.distanceToClosestCar for Road in list(SignalRoads.values())[4:]]
+        # waitTimes = np.array([Road.roadWaitTime for Road in list(SignalRoads.values())[:4]])
+
+        trafficDensities = [queueLengths[index] / sum(queueLengths) for index in range(len(queueLengths))]
+
+        training_example = trafficStates + trafficDensities + distancesToClosestCars
+
+
+        training_example = np.array([training_example])
+        training_example = training_example.reshape(-1, 13)
+
+        return training_example
+    
     def append_to_csv(self, file_name, data):
         try:
             with open(file_name, 'a', newline='') as file:
@@ -32,6 +49,10 @@ class Environment:
             print("Error appending data to", file_name)
             print(e)
 
-    def takeAction(self, action):
-        for index, Road in enumerate(SignalRoads.values()):
-            Road.signalState = action[index]
+    def takeAction1(self, action):
+        for index, Road in enumerate(list(SignalRoads.values())[:4]):
+            Road.signalState = action[0][index]
+
+    def takeAction2(self, action):
+        for index, Road in enumerate(list(SignalRoads.values())[4:]):
+            Road.signalState = action[0][index]
