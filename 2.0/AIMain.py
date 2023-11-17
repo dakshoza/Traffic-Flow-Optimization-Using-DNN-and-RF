@@ -1,8 +1,34 @@
-import pygame
-import time
+import pygame, random
 from Cars import *
+from Env import Environment
+# from AIModel import model1
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers import Dense
 
 window = pygame.display.set_mode((1050,844))
+
+env = Environment()
+
+model1 = Sequential([
+    Dense(20, activation = 'relu', input_shape = (13,)),
+    Dense(13, activation = 'relu'),
+    Dense(13, activation = 'relu'),
+    Dense(4, activation = 'sigmoid')
+])
+model1.compile(loss = 'binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+model1.load_weights('2.0\model_weights.h5')
+
+roadHitboxes = {
+    0 : pygame.Rect(252, 523, 86, 321),
+    1 : pygame.Rect(1, 325, 245, 96),
+    2 : pygame.Rect(357, 0, 87, 319),
+    "I1" : pygame.Rect(450, 432, 207, 84),
+    3 : pygame.Rect(768, 0, 87, 319),
+    4 : pygame.Rect(861, 431, 190, 86),
+    5 : pygame.Rect(662, 522, 86, 322),
+    "I2" : pygame.Rect(450, 324, 207, 88)
+}
 
 def genCars(num):
     if len(currentCars) < 100:
@@ -22,27 +48,9 @@ def genCars(num):
 
 background = pygame.image.load("Assets/background.png")
 
-crossroad1 = Crossroads[0]
-crossroad2 = Crossroads[1]
-
-currentSignalIndex = 0
-signalTimer = 0
-
-crossroad1[currentSignalIndex].signalState = True
-crossroad2[currentSignalIndex].signalState = True
-
-clock = pygame.time.Clock()
-
-startTime = time.time()
-
-score = 0
-
 running = True
 
-genCars(10)
-
-# for Road in SignalRoads.values():
-#     Road.signalState = True
+genCars(random.randint(8, 16))
 
 while running:
     window.blit(background,(0,0))
@@ -50,6 +58,32 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        
+        
+
+    for road_id, road in SignalRoads.items():
+            if road.signalState == False:
+                pygame.draw.rect(window, (255, 0, 0, 200), roadHitboxes[road_id])
+            else:
+                pygame.draw.rect(window, (0, 255, 0, 200), roadHitboxes[road_id])
+     
+    data1 = env.getData1()
+    data2 = env.getData2()
+
+    action1 = model1.predict(data1)
+    action2 = model1.predict(data2)
+
+    action1 = (action1 >= 0.5).astype(int)
+    action2 = (action2 >= 0.5).astype(int)
+
+    # print(action1)
+    # print(action2)
+
+    env.takeAction1(action1)
+    env.takeAction2(action2)
+
+    for car in currentCars:
+        car.render(window)
 
     for road in SignalRoads.values():
         if len(road.queue) != 0:
@@ -62,29 +96,15 @@ while running:
                     currentCars.append(road.spawnQ.pop(0))
                 else:
                     road.spawnQ[0].drive(-4)
-
-    signalTimer += clock.tick(60) / 1000
-
-    if signalTimer >= 2:
-        currentSignalIndex = (currentSignalIndex + 1) % 4
-        for index in range(4):
-            crossroad1[index].signalState = False
-            crossroad2[index].signalState = False
-        crossroad1[currentSignalIndex].signalState = True
-        crossroad2[currentSignalIndex].signalState = True
-        signalTimer = 0
+        
 
     for car in TurningCars:
         car.turn()
+        # if len(car.rect.collidelistall(TurningCars)) >0:
+        #     pass # Collision Detected
 
     for car in ExitingCars:
         car.drive()
-
-    for car in currentCars:
-        car.render(window)
-
-    for road in SignalRoads.values():
-        print(road.distanceToClosestCar < 0)
 
         # Deleting the cars
         if (car.rect.x < -150 or car.rect.x > 1200) or (car.rect.y < -150 or car.rect.y > 990):
@@ -92,31 +112,31 @@ while running:
                 currentCars.remove(car)
             except:
                 pass
-            try:  
+            try:
                 TurningCars.remove(car)
             except:
                 pass
             try:
+                T1Turners.remove(car)
+            except:
+                pass
+            try:
+                T2Turners.remove(car)
+            except:
+                pass
+            try:
                 ExitingCars.remove(car)
-                score += 1
             except:
                 pass
             # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
             genCars(1)
 
-    elapsedTime = time.time() - startTime
-    
-    if elapsedTime >= 60:
-        print(f"Score : {score}")
-        running = False
-
     for road in SignalRoads.values():
         pygame.draw.rect(window, (0,0,0,200), road.signal)
-        if not road.signalState:
-            pygame.draw.circle(window,(255,0,0), road.signal.center, 5)
-        else:
-            pygame.draw.circle(window,(0,255,0), road.signal.center, 5)
-
-
+    if not road.signalState:
+        pygame.draw.circle(window,(255,0,0), road.signal.center, 5)
+    else:
+        pygame.draw.circle(window,(0,255,0), road.signal.center, 5)
+            
     pygame.display.flip()
         

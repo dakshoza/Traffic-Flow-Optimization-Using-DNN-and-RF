@@ -33,11 +33,13 @@ class Environment:
 
         training_example = trafficStates + trafficDensities + distancesToClosestCars
 
-
         training_example = np.array([training_example])
         training_example = training_example.reshape(-1, 13)
 
         return training_example
+    
+    def getSignalState(self):
+        return np.array([Road.signalState for Road in list(SignalRoads.values())[:4]]).reshape(4,1)
     
     def append_to_csv(self, file_name, data):
         try:

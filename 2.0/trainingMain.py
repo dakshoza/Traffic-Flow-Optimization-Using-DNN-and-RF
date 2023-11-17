@@ -1,17 +1,19 @@
 import pygame, random
+import numpy as np
 from Cars import *
 from Env import Environment
-from AIModel import model1
+# from AIModel import model
 
 window = pygame.display.set_mode((1050,844))
 
 env = Environment()
+# model1 = model() 
 
 def genCars(num):
     if len(currentCars) < 100:
         for i in range(num):
-            spawnpoint = random.choice([0,1,1,1,2,2,3,4,4,4,5])
-            # spawnpoint = random.choice([2,3,0,5])
+            # spawnpoint = random.choice([0,1,1,1,2,2,3,4,4,4,5])
+            spawnpoint = random.choice([0,1,2,3,4,5])
             spawnRoad = SignalRoads[spawnpoint]
         
             newCar = Car(spawnpoint)
@@ -48,26 +50,27 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        
-        
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_p:  # Toggle pause on "P" key press
+                pauseSimulator = not pauseSimulator
+                if pauseSimulator == True:
+                    trainingdata = env.getData1()
+            if event.key == pygame.K_s:
+                labeldata = env.getSignalState()
+                trainingexample = np.append(trainingdata, labeldata).reshape(17,)
+                env.append_to_csv('2.0/testinfo.csv', trainingexample)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                mouse_pos = pygame.mouse.get_pos()
+                for road_id, rect in roadHitboxes.items():
+                    if rect.collidepoint(mouse_pos):
+                        SignalRoads[road_id].signalState = not SignalRoads[road_id].signalState        
 
     for road_id, road in SignalRoads.items():
             if road.signalState == False:
                 pygame.draw.rect(window, (255, 0, 0, 200), roadHitboxes[road_id])
             else:
                 pygame.draw.rect(window, (0, 255, 0, 200), roadHitboxes[road_id])
-     
-    data1 = env.getData1()
-    data2 = env.getData2()
-
-    action1 = model1.predict(data1)
-    action2 = model1.predict(data2)
-
-    action1 = (action1 >= 0.5).astype(int)
-    action2 = (action2 >= 0.5).astype(int)
-
-    env.takeAction1(action1)
-    env.takeAction2(action2)
 
     for car in currentCars:
         car.render(window)

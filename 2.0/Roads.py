@@ -1,7 +1,7 @@
 import pygame
 from pygame import Vector2 as v2
 
-speed = 4
+speed = 2
 TurningCars = []
 currentCars = []
 T1Turners = []
@@ -33,12 +33,14 @@ class Road:
     def popCar(self, Car):
         # Removing car from queue
         TurningCars.append(Car)
-        if self.name in [0,1,2,"I2"]:
+        if self.name in [0,1,2,"I1"]:
+            # pretty sure this was an error with I2 instead of I1, ask scott
             T1Turners.append(Car)
         else:
             T2Turners.append(Car)
         Car.rotate()
         self.queue.remove(Car)
+        self.distanceToClosestCar = 1000
         # Resorting queue
         if (self.orientation == 0) or (self.orientation == 1):
             self.queue = sorted(self.queue, key=lambda car: abs(self.IBoundary - car.rect.y))
@@ -96,19 +98,19 @@ class Road:
             try:
                 if (self.orientation == 0):
                     #for a car, its distance from the intersection is calculated to feed to the ai model
-                    self.distanceToClosestCar = self.queue[0].rect.top - self.IBoundary
+                    self.distanceToClosestCar = abs(self.queue[0].rect.top - self.IBoundary)
                     
                 elif (self.orientation == 1):
                     #for a car, its distance from the intersection is calculated to feed to the ai model
-                    self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.bottom 
+                    self.distanceToClosestCar = abs(self.IBoundary - self.queue[0].rect.bottom) 
                     
                 elif self.orientation == 2:
                     #for a car, its distance from the intersection is calculated to feed to the ai model
-                    self.distanceToClosestCar = self.queue[0].rect.left - self.IBoundary
+                    self.distanceToClosestCar = abs(self.queue[0].rect.left - self.IBoundary)
 
                 else:
                     #for a car, its distance from the intersection is calculated to feed to the ai model
-                    self.distanceToClosestCar = self.IBoundary - self.queue[0].rect.right
+                    self.distanceToClosestCar = abs(self.IBoundary - self.queue[0].rect.right)
             except:
                 pass
 
@@ -127,7 +129,7 @@ SignalRoads = {
 
 
 Crossroads = {
-    0 : [SignalRoads[0], SignalRoads[1], SignalRoads[2], SignalRoads['I1']],
+    0 : [SignalRoads[0], SignalRoads[1], SignalRoads[2], SignalRoads["I1"]],
     1 : [SignalRoads[3], SignalRoads[4], SignalRoads[5], SignalRoads["I2"]]
 }
 

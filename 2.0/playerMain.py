@@ -1,6 +1,9 @@
+import numpy as np
 import pygame, time
 from Cars import *
 from Env import Environment
+
+env = Environment()
 
 window = pygame.display.set_mode((1050,844))
 
@@ -58,6 +61,9 @@ while running:
                     if rect.collidepoint(mouse_pos):
                         SignalRoads[road_id].signalState = not SignalRoads[road_id].signalState
     
+    data2 = (env.getData2()).reshape(13,)
+    env.append_to_csv('2.0/testinfo.csv', data2)
+
     for road in SignalRoads.values():
         if len(road.queue) != 0:
             road.checkTurn()
@@ -98,8 +104,8 @@ while running:
                 score += 1
             except:
                 pass
-            genCars(random.choice([0,1,1,1,2,2,2,3,3]))
-            # genCars(1)
+            # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
+            genCars(1)
 
     elapsedTime = time.time() - startTime
     
