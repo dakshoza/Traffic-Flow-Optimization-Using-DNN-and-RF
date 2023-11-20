@@ -1,3 +1,5 @@
+# supervised
+
 import dataframe
 import tensorflow as tf
 import numpy as np
@@ -12,9 +14,9 @@ model1 = Sequential([
     Dense(4, activation = 'sigmoid')
 ])
 model1.compile(loss = 'binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-model1.fit(dataframe.X, dataframe.y, epochs = 20)
+# model1.fit(dataframe.X, dataframe.y, epochs = 20)
 
-model1.save_weights('2.0\model_weights.h5')
+# model1.save_weights('2.0\model_weights.h5')
 
 # model1.load_weights('2.0\model_weights.h5')
 

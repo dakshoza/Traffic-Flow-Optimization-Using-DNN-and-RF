@@ -87,7 +87,7 @@ class Road:
 
     def calculateRoadWaitingTime(self):
         self.roadWaitTime == 0
-        if len(self.queue)!=0:
+        if (len(self.queue)!=0) and (self.signalState == False):
             for car in self.queue:
                 self.roadWaitTime += car.waitTime
 

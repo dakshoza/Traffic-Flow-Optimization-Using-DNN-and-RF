@@ -60,9 +60,6 @@ while running:
                 for road_id, rect in roadHitboxes.items():
                     if rect.collidepoint(mouse_pos):
                         SignalRoads[road_id].signalState = not SignalRoads[road_id].signalState
-    
-    data2 = (env.getData2()).reshape(13,)
-    env.append_to_csv('2.0/testinfo.csv', data2)
 
     for road in SignalRoads.values():
         if len(road.queue) != 0:

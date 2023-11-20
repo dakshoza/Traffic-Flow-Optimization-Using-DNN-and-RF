@@ -1,6 +1,7 @@
 import csv
 import numpy as np
 from Roads import *
+from Cars import *
 
 class Environment:
     def __init__(self):
@@ -41,6 +42,12 @@ class Environment:
     def getSignalState(self):
         return np.array([Road.signalState for Road in list(SignalRoads.values())[:4]]).reshape(4,1)
     
+    def getSignalState1(self):
+        return np.array([Road.signalState for Road in list(SignalRoads.values())[:4]])
+
+    def getSignalState2(self):
+        return np.array([Road.signalState for Road in list(SignalRoads.values())[4:]])
+    
     def append_to_csv(self, file_name, data):
         try:
             with open(file_name, 'a', newline='') as file:
@@ -53,8 +60,28 @@ class Environment:
 
     def takeAction1(self, action):
         for index, Road in enumerate(list(SignalRoads.values())[:4]):
-            Road.signalState = action[0][index]
+            Road.signalState = action[index]
 
     def takeAction2(self, action):
         for index, Road in enumerate(list(SignalRoads.values())[4:]):
-            Road.signalState = action[0][index]
+            Road.signalState = action[index]
+
+    def getReward(self, action, oldstate):
+        reward = 0
+        values_list = list(SignalRoads.values())[:4]
+
+        for idx in range(len(action)):
+            if action[idx] == 1:
+                # toggling green on empty road
+                if len(values_list[idx].queue) <= 0:
+                    reward -= 100
+            else:
+                if oldstate[0][idx] == 1:
+                    # toggling green signal red even when cars are moving
+                    if len(values_list[idx].queue) >= 1:
+                        reward -= 500
+
+
+        return reward
+
+        

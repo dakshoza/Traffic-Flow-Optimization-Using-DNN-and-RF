@@ -76,11 +76,11 @@ while running:
     action1 = (action1 >= 0.5).astype(int)
     action2 = (action2 >= 0.5).astype(int)
 
-    # print(action1)
+    print(list(SignalRoads.values())[1].roadWaitTime)
     # print(action2)
 
-    env.takeAction1(action1)
-    env.takeAction2(action2)
+    env.takeAction1(action1[0])
+    env.takeAction2(action2[0])
 
     for car in currentCars:
         car.render(window)
