@@ -27,7 +27,7 @@ class DRLAgent:
             Dense(13, activation = 'relu'),
             Dense(self.actionSize, activation = 'sigmoid')
         ])
-        model1.compile(loss = 'binary_crossentropy', optimizer=Adam(lr = self.learningRate), metrics=['accuracy'])
+        model1.compile(loss = 'binary_crossentropy', optimizer=Adam(learning_rate= self.learningRate), metrics=['accuracy'])
         return model1
 
 
@@ -40,7 +40,7 @@ class DRLAgent:
     def chooseAction(self, inpdata):
         if np.random.rand() <= self.epsilon:
             # Random action selection
-            actionIndice = np.random.randint(0, self.n_actions)
+            actionIndice = np.random.randint(0, self.actionSize)
         else:
             # Exploitation: Select actions with highest Q-values
             qValues = self.model.predict(inpdata)

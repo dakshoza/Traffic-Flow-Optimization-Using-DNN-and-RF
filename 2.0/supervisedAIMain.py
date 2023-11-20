@@ -19,6 +19,8 @@ model1.compile(loss = 'binary_crossentropy', optimizer='adam', metrics=['accurac
 
 model1.load_weights('2.0\model_weights.h5')
 
+print(model1.summary())
+
 roadHitboxes = {
     0 : pygame.Rect(252, 523, 86, 321),
     1 : pygame.Rect(1, 325, 245, 96),
@@ -75,9 +77,6 @@ while running:
 
     action1 = (action1 >= 0.5).astype(int)
     action2 = (action2 >= 0.5).astype(int)
-
-    print(list(SignalRoads.values())[1].roadWaitTime)
-    # print(action2)
 
     env.takeAction1(action1[0])
     env.takeAction2(action2[0])

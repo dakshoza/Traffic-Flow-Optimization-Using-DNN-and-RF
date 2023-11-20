@@ -1,9 +1,8 @@
 import pygame, random
+import Roads, Cars
 from Cars import *
 from Env import Environment
 from DRLAgent import DRLAgent
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense
 
 window = pygame.display.set_mode((1050,844))
 
@@ -27,10 +26,10 @@ roadHitboxes = {
 }
 
 def genCars(num):
-    if len(currentCars) < 100:
+    if len(currentCars) < 20:
         for i in range(num):
-            spawnpoint = random.choice([0,1,1,1,2,2,3,4,4,4,5])
-            # spawnpoint = random.choice([2,3,0,5])
+            # spawnpoint = random.choice([0,1,1,1,2,2,3,4,4,4,5])
+            spawnpoint = random.choice([0,1,2])
             spawnRoad = SignalRoads[spawnpoint]
         
             newCar = Car(spawnpoint)
@@ -52,17 +51,19 @@ for roads in list(SignalRoads.values())[4:]:
 while running:
 
     for episode in range(episodes):
-        TurningCars = []
-        currentCars = []
-        T1Turners = []
-        T2Turners = []
-        ExitingCars = []
+        Roads.TurningCars = []
+        Roads.currentCars = []
+        Roads.T1Turners = []
+        Roads.T2Turners = []
+        Cars.ExitingCars = []
+
         for roads in list(SignalRoads.values())[:4]:
             roads.signalState = False
+
         score = 0
         genCars(random.randint(8, 16))
 
-        for time in range(4020):
+        for time in range(402):
 
             window.blit(background,(0,0))
             # Event Check
@@ -76,38 +77,18 @@ while running:
                     else:
                         pygame.draw.rect(window, (0, 255, 0, 200), roadHitboxes[road_id])
             
-            if time % 10 == 0:
+            if time % 30 == 0:
                 # every 10 steps a decision is made
-                state1 = env.getSignalState1()
+                state1 = env.getDataRL()
 
-                data1 = env.getData1()
-                
                 action1 = [0] * 4
 
                 for road in list(SignalRoads.values())[:4]:
                     if road.distanceToClosestCar <= 130:
-                        action1 = agent.chooseAction(data1)
+                        action1 = agent.chooseAction(state1)
                         break
 
                 env.takeAction1(action1)
-                
-                nextState1 = env.getSignalState1()
-
-                reward = env.getReward(action1, state1)
-
-                if time >= 4020:
-                    done = True
-                    print("Episode: {}/{}, Score: {}".format(episode, episodes, score))
-                else:
-                    done = False
-
-                agent.remember(state1, action1, reward, nextState1, done)
-
-                if len(agent.memory) > batchSize:
-                    for road in list(SignalRoads.values())[:4]:
-                        if road.distanceToClosestCar <= 130:
-                            agent.train(batchSize)
-                            break
 
             for car in currentCars:
                 car.render(window)
@@ -123,7 +104,6 @@ while running:
                             currentCars.append(road.spawnQ.pop(0))
                         else:
                             road.spawnQ[0].drive(-4)
-                
 
             for car in TurningCars:
                 car.turn()
@@ -157,6 +137,7 @@ while running:
                         pass
                     # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
                     genCars(1)
+                    score += 50
 
             for road in SignalRoads.values():
                 pygame.draw.rect(window, (0,0,0,200), road.signal)
@@ -165,6 +146,28 @@ while running:
             else:
                 pygame.draw.circle(window,(0,255,0), road.signal.center, 5)
                     
+            if time % 30 == 0:
+
+                nextState1 = env.getDataRL()
+
+                signalstate = env.getSignalState1()
+
+                reward = env.getReward(action1, signalstate, score)
+
+                if time >= 4020:
+                    done = True
+                    print("Episode: {}/{}, Score: {}".format(episode, episodes, score))
+                else:
+                    done = False
+
+                agent.remember(state1, action1, reward, nextState1, done)
+
+                # if len(agent.memory) > batchSize:
+                #     for road in list(SignalRoads.values())[:4]:
+                #         if road.distanceToClosestCar <= 130:
+                #             agent.train(batchSize)
+                #             break
+
             pygame.display.flip()
 
         print(f"Score: {score}")

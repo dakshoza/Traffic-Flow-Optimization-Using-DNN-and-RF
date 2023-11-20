@@ -72,7 +72,7 @@ class Road:
         else:
             for car in self.queue:
                 #If next won't move will exit/collide:
-                car.waitTime *= 1.15
+                car.waitTime *= 1.01
                 car.drive(5)
                 if self.orientation in [2,3]:
                     if (len(car.rect.clipline((self.IBoundary,0),(self.IBoundary,844))) == 0) and (len(car.rect.collidelistall([a.rect for a in self.queue])) <=1):
@@ -86,7 +86,7 @@ class Road:
         self.calculateRoadWaitingTime()
 
     def calculateRoadWaitingTime(self):
-        self.roadWaitTime == 0
+        self.roadWaitTime = 0
         if (len(self.queue)!=0) and (self.signalState == False):
             for car in self.queue:
                 self.roadWaitTime += car.waitTime

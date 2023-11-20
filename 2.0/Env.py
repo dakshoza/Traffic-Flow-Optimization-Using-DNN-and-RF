@@ -7,6 +7,22 @@ class Environment:
     def __init__(self):
         pass
 
+    def getDataRL(self):
+        trafficStates = [Road.signalState for Road in list(SignalRoads.values())[:4]]
+        queueLengths = [len(Road.queue) for Road in list(SignalRoads.values())[:4]]
+        queueLengths.append(len(T1Turners))
+        distancesToClosestCars = [Road.distanceToClosestCar for Road in list(SignalRoads.values())[:4]]
+        # waitTimes = np.array([Road.roadWaitTime for Road in list(SignalRoads.values())[:4]])
+
+        trafficDensities = [queueLengths[index] / sum(queueLengths) for index in range(len(queueLengths))]
+
+        training_example = trafficStates + trafficDensities + distancesToClosestCars
+
+        training_example = np.array([training_example])
+        training_example = training_example.reshape(-1, 13)
+
+        return training_example
+
     def getData1(self):
         trafficStates = [Road.signalState for Road in list(SignalRoads.values())[:4]]
         queueLengths = [len(Road.queue) for Road in list(SignalRoads.values())[:4]]
@@ -66,7 +82,7 @@ class Environment:
         for index, Road in enumerate(list(SignalRoads.values())[4:]):
             Road.signalState = action[index]
 
-    def getReward(self, action, oldstate):
+    def getReward(self, action, signalstate, score):
         reward = 0
         values_list = list(SignalRoads.values())[:4]
 
@@ -75,12 +91,14 @@ class Environment:
                 # toggling green on empty road
                 if len(values_list[idx].queue) <= 0:
                     reward -= 100
+                if values_list[idx].roadWaitTime >= 8:
+                    reward -= 40
             else:
-                if oldstate[0][idx] == 1:
+                if signalstate[idx] == 1:
                     # toggling green signal red even when cars are moving
                     if len(values_list[idx].queue) >= 1:
                         reward -= 500
-
+            reward += score
 
         return reward
 
