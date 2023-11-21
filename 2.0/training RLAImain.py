@@ -51,10 +51,17 @@ for roads in list(SignalRoads.values())[4:]:
 while running:
 
     for episode in range(episodes):
-        
+        if episode != 0:
+            Roads.TurningCars = []
+            Roads.currentCars = []
+            Roads.T1Turners = []
+            Roads.T2Turners = []
+            Cars.ExitingCars = []
+            for road in SignalRoads.values():
+                road.queue = []
+                road.spawnQ = []
         for roads in list(SignalRoads.values())[:4]:
             roads.signalState = False
-
         score = 0
         genCars(random.randint(8, 16))
 
@@ -165,12 +172,6 @@ while running:
 
             pygame.display.flip()
 
-        if episode != 0:
-            Roads.TurningCars = []
-            Roads.currentCars = []
-            Roads.T1Turners = []
-            Roads.T2Turners = []
-            Cars.ExitingCars = []
         
         print(f"Score: {score}")
 

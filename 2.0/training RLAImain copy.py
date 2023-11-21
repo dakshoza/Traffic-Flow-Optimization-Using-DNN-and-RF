@@ -1,23 +1,17 @@
 import pygame, random
+import Cars
 from Cars import *
 from Env import Environment
-# from AIModel import model1
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense
+from DRLAgent import DRLAgent
 
 window = pygame.display.set_mode((1050,844))
 
 env = Environment()
+agent = DRLAgent()
 
-model1 = Sequential([
-    Dense(20, activation = 'relu', input_shape = (13,)),
-    Dense(13, activation = 'relu'),
-    Dense(13, activation = 'relu'),
-    Dense(4, activation = 'sigmoid')
-])
-model1.compile(loss = 'binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+agent.loadWeights('2.0\model_weights.h5')
 
-model1.load_weights('2.0\model_weights.h5')
+batchSize = 2
 
 roadHitboxes = {
     0 : pygame.Rect(252, 523, 86, 321),
@@ -31,10 +25,10 @@ roadHitboxes = {
 }
 
 def genCars(num):
-    if len(currentCars) < 100:
+    if len(currentCars) < 20:
         for i in range(num):
-            spawnpoint = random.choice([0,1,1,1,2,2,3,4,4,4,5])
-            # spawnpoint = random.choice([2,3,0,5])
+            # spawnpoint = random.choice([0,1,1,1,2,2,3,4,4,4,5])
+            spawnpoint = random.choice([0,1,2,3,4,5])
             spawnRoad = SignalRoads[spawnpoint]
         
             newCar = Car(spawnpoint)
@@ -50,38 +44,40 @@ background = pygame.image.load("Assets/background.png")
 
 running = True
 
-time = 0
+for roads in list(SignalRoads.values())[4:]:
+            roads.signalState = True
+
+time = 1
 
 genCars(random.randint(8, 16))
 
 while running:
+
     window.blit(background,(0,0))
     # Event Check
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            print(f"Score: {Cars.scoret1}")
             running = False
 
-    for road_id, road in SignalRoads.items():
+    for road_id, road in list(SignalRoads.items())[:4]:
             if road.signalState == False:
                 pygame.draw.rect(window, (255, 0, 0, 200), roadHitboxes[road_id])
             else:
                 pygame.draw.rect(window, (0, 255, 0, 200), roadHitboxes[road_id])
     
-    if time % 30 == 0: 
-        data1 = env.getData1()
-        data2 = env.getData2()
+    if time % 50 == 0:
+        # every 10 steps a decision is made
+        state1 = env.getData1()
 
-        action1 = model1.predict(data1)
-        action2 = model1.predict(data2)
+        action1 = [0] * 4
 
-        action1 = (action1 >= 0.5).astype(int)
-        action2 = (action2 >= 0.5).astype(int)
+        for road in list(SignalRoads.values())[:4]:
+            if road.distanceToClosestCar <= 130:
+                action1 = agent.chooseAction(state1)
+                break
 
-        print(action1)
-        print(action2)
-
-        env.takeAction1(action1[0])
-        env.takeAction2(action2[0])
+        env.takeAction1(action1)
 
     for car in currentCars:
         car.render(window)
@@ -97,7 +93,6 @@ while running:
                     currentCars.append(road.spawnQ.pop(0))
                 else:
                     road.spawnQ[0].drive(-4)
-        
 
     for car in TurningCars:
         car.turn()
@@ -138,8 +133,34 @@ while running:
         pygame.draw.circle(window,(255,0,0), road.signal.center, 5)
     else:
         pygame.draw.circle(window,(0,255,0), road.signal.center, 5)
+            
+    if time % 50 == 0:
 
-    time += 1 
+        nextState1 = env.getData1()
+
+        signalstate = env.getSignalState1()
+
+        reward = env.getReward(action1, signalstate, Cars.scoret1)
+        
+        agent.remember(state1, action1, reward, nextState1, done = False)
+
+        if len(agent.memory) > batchSize:
+            for road in list(SignalRoads.values())[:4]:
+                if road.distanceToClosestCar <= 130:
+                    agent.train(batchSize)
+                    break
+
+        print("Score: {}".format(Cars.scoret1))
+
+    time += 1
+
+    if Cars.scoret1 >= 1000:
+        print("Achieved Score: {}".format(Cars.scoret1))
+        agent.saveWeights('RLmodel_weights.h5')
+        agent.loadWeights('RLmodel_weights.h5')
+        Cars.scoret1 = 0
 
     pygame.display.flip()
-        
+
+agent.saveWeights('final_RLmodel_weights.h5')
+

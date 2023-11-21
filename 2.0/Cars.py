@@ -4,9 +4,10 @@ from math import sqrt
 from Roads import *
 from pygame import Vector2
 
-
+scoret1 = 0
 ExitingCars = []
 class Car():
+
     def __init__(self, spawnpoint):
     #Sprite Loading
         self.waypoint = []
@@ -111,6 +112,7 @@ class Car():
         self.rect.y += times*self.dy
 
     def turn(self):
+        global scoret1
         pos = Vector2(self.rect.centerx, self.rect.centery)
         waypoint = Vector2(self.waypoint[0])
         direction = waypoint - pos
@@ -167,6 +169,7 @@ class Car():
             TurningCars.remove(self)
             try:
                 T1Turners.remove(self)
+                scoret1 += 50
             except:
                 pass
             try:
