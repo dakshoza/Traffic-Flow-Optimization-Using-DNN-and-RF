@@ -51,12 +51,7 @@ for roads in list(SignalRoads.values())[4:]:
 while running:
 
     for episode in range(episodes):
-        Roads.TurningCars = []
-        Roads.currentCars = []
-        Roads.T1Turners = []
-        Roads.T2Turners = []
-        Cars.ExitingCars = []
-
+        
         for roads in list(SignalRoads.values())[:4]:
             roads.signalState = False
 
@@ -79,7 +74,7 @@ while running:
             
             if time % 30 == 0:
                 # every 10 steps a decision is made
-                state1 = env.getDataRL()
+                state1 = env.getData1()
 
                 action1 = [0] * 4
 
@@ -148,7 +143,7 @@ while running:
                     
             if time % 30 == 0:
 
-                nextState1 = env.getDataRL()
+                nextState1 = env.getData1()
 
                 signalstate = env.getSignalState1()
 
@@ -170,6 +165,13 @@ while running:
 
             pygame.display.flip()
 
+        if episode != 0:
+            Roads.TurningCars = []
+            Roads.currentCars = []
+            Roads.T1Turners = []
+            Roads.T2Turners = []
+            Cars.ExitingCars = []
+        
         print(f"Score: {score}")
 
         if episode % 5 == 0:       

@@ -7,22 +7,6 @@ class Environment:
     def __init__(self):
         pass
 
-    def getDataRL(self):
-        trafficStates = [Road.signalState for Road in list(SignalRoads.values())[:4]]
-        queueLengths = [len(Road.queue) for Road in list(SignalRoads.values())[:4]]
-        queueLengths.append(len(T1Turners))
-        distancesToClosestCars = [Road.distanceToClosestCar for Road in list(SignalRoads.values())[:4]]
-        # waitTimes = np.array([Road.roadWaitTime for Road in list(SignalRoads.values())[:4]])
-
-        trafficDensities = [queueLengths[index] / sum(queueLengths) for index in range(len(queueLengths))]
-
-        training_example = trafficStates + trafficDensities + distancesToClosestCars
-
-        training_example = np.array([training_example])
-        training_example = training_example.reshape(-1, 13)
-
-        return training_example
-
     def getData1(self):
         trafficStates = [Road.signalState for Road in list(SignalRoads.values())[:4]]
         queueLengths = [len(Road.queue) for Road in list(SignalRoads.values())[:4]]
@@ -30,7 +14,10 @@ class Environment:
         distancesToClosestCars = [Road.distanceToClosestCar for Road in list(SignalRoads.values())[:4]]
         # waitTimes = np.array([Road.roadWaitTime for Road in list(SignalRoads.values())[:4]])
 
-        trafficDensities = [queueLengths[index] / sum(queueLengths) for index in range(len(queueLengths))]
+        try:
+            trafficDensities = [queueLengths[index] / sum(queueLengths) for index in range(len(queueLengths))]
+        except ZeroDivisionError:
+            trafficDensities = [0] * len(queueLengths)
 
         training_example = trafficStates + trafficDensities + distancesToClosestCars
 
@@ -46,7 +33,10 @@ class Environment:
         distancesToClosestCars = [Road.distanceToClosestCar for Road in list(SignalRoads.values())[4:]]
         # waitTimes = np.array([Road.roadWaitTime for Road in list(SignalRoads.values())[:4]])
 
-        trafficDensities = [queueLengths[index] / sum(queueLengths) for index in range(len(queueLengths))]
+        try:
+            trafficDensities = [queueLengths[index] / sum(queueLengths) for index in range(len(queueLengths))]
+        except ZeroDivisionError:
+            trafficDensities = [0] * len(queueLengths)
 
         training_example = trafficStates + trafficDensities + distancesToClosestCars
 
