@@ -63,6 +63,8 @@ while running:
                 else:
                     road.spawnQ[0].drive(-4)
 
+            print(road.distanceToClosestCar)
+
     signalTimer += clock.tick(60) / 1000
 
     if signalTimer >= 2:
