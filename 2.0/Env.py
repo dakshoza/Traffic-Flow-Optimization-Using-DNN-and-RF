@@ -1,4 +1,4 @@
-import csv
+import csv,dataframe
 import numpy as np
 from Roads import *
 from Cars import *
@@ -23,6 +23,7 @@ class Environment:
 
         training_example = np.array([training_example])
         training_example = training_example.reshape(-1, 13)
+        training_example = dataframe.scaler.transform(training_example)
 
         return training_example
     
@@ -42,6 +43,7 @@ class Environment:
 
         training_example = np.array([training_example])
         training_example = training_example.reshape(-1, 13)
+        training_example = dataframe.scaler.transform(training_example)
 
         return training_example
     

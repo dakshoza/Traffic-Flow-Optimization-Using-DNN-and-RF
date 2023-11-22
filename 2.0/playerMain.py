@@ -41,8 +41,8 @@ roadHitboxes = {
 }
 
 running = True
-tick = 100
-genCars(10)
+# tick = 100
+genCars(16)
 
 while running:
     window.blit(background,(0,0))
@@ -72,10 +72,10 @@ while running:
                     currentCars.append(road.spawnQ.pop(0))
                 else:
                     road.spawnQ[0].drive(-4)
-    tick -= 1
-    if tick ==0:
-        tick = 100
-        genCars(random.choice([0,1,1,1,2,2,2,3,3]))
+    # tick -= 1
+    # if tick ==0:
+    #     tick = 100
+    #     genCars(random.choice([0,1,1,1,2,2,2,3,3]))
 
     for car in TurningCars:
         car.turn()
@@ -116,7 +116,6 @@ while running:
             pygame.draw.circle(window,(255,0,0), road.signal.center, 5)
         else:
             pygame.draw.circle(window,(0,255,0), road.signal.center, 5)
-
 
     pygame.display.flip()
     

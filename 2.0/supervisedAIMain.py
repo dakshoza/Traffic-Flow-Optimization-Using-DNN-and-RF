@@ -1,4 +1,4 @@
-import pygame, random
+import pygame, random, time
 from Cars import *
 from Env import Environment
 # from AIModel import model1
@@ -8,6 +8,8 @@ from tensorflow.python.keras.layers import Dense
 window = pygame.display.set_mode((1050,844))
 
 env = Environment()
+
+score = 0
 
 model1 = Sequential([
     Dense(20, activation = 'relu', input_shape = (13,)),
@@ -50,9 +52,11 @@ background = pygame.image.load("Assets/background.png")
 
 running = True
 
-time = 0
+startTime = time.time()
 
-genCars(random.randint(8, 16))
+timeframe = 0
+
+genCars(16)
 
 while running:
     window.blit(background,(0,0))
@@ -67,7 +71,7 @@ while running:
             else:
                 pygame.draw.rect(window, (0, 255, 0, 200), roadHitboxes[road_id])
     
-    if time % 30 == 0: 
+    if timeframe % 30 == 0: 
         data1 = env.getData1()
         data2 = env.getData2()
 
@@ -76,9 +80,6 @@ while running:
 
         action1 = (action1 >= 0.5).astype(int)
         action2 = (action2 >= 0.5).astype(int)
-
-        print(action1)
-        print(action2)
 
         env.takeAction1(action1[0])
         env.takeAction2(action2[0])
@@ -97,7 +98,6 @@ while running:
                     currentCars.append(road.spawnQ.pop(0))
                 else:
                     road.spawnQ[0].drive(-4)
-        
 
     for car in TurningCars:
         car.turn()
@@ -127,10 +127,13 @@ while running:
                 pass
             try:
                 ExitingCars.remove(car)
+                score += 1
             except:
                 pass
             # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
             genCars(1)
+
+    elapsedTime = time.time() - startTime
 
     for road in SignalRoads.values():
         pygame.draw.rect(window, (0,0,0,200), road.signal)
@@ -139,7 +142,11 @@ while running:
     else:
         pygame.draw.circle(window,(0,255,0), road.signal.center, 5)
 
-    time += 1 
+    if elapsedTime >= 60:
+        print(f"Score : {score}")
+        running = False
+
+    timeframe += 1 
 
     pygame.display.flip()
         

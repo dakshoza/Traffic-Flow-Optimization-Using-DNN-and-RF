@@ -39,7 +39,7 @@ score = 0
 
 running = True
 
-genCars(10)
+genCars(16)
 
 # for Road in SignalRoads.values():
 #     Road.signalState = True
@@ -63,7 +63,7 @@ while running:
                 else:
                     road.spawnQ[0].drive(-4)
 
-            print(road.distanceToClosestCar)
+            # print(road.distanceToClosestCar)
 
     signalTimer += clock.tick(60) / 1000
 
@@ -86,7 +86,7 @@ while running:
         car.render(window)
 
     for road in SignalRoads.values():
-        print(road.distanceToClosestCar < 0)
+        # print(road.distanceToClosestCar < 0)
 
         # Deleting the cars
         if (car.rect.x < -150 or car.rect.x > 1200) or (car.rect.y < -150 or car.rect.y > 990):
@@ -95,6 +95,10 @@ while running:
             except:
                 pass
             try:  
+                TurningCars.remove(car)
+            except:
+                pass
+            try:
                 TurningCars.remove(car)
             except:
                 pass

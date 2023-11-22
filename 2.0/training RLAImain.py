@@ -11,7 +11,7 @@ agent = DRLAgent()
 
 agent.loadWeights('2.0\model_weights.h5')
 
-episodes = 50
+episodes = 1
 batchSize = 2
 
 roadHitboxes = {
@@ -29,7 +29,7 @@ def genCars(num):
     if len(currentCars) < 20:
         for i in range(num):
             # spawnpoint = random.choice([0,1,1,1,2,2,3,4,4,4,5])
-            spawnpoint = random.choice([0,1,2])
+            spawnpoint = random.choice([0,1,2,3,4])
             spawnRoad = SignalRoads[spawnpoint]
         
             newCar = Car(spawnpoint)
@@ -52,25 +52,25 @@ while running:
 
     for episode in range(episodes):
         if episode != 0:
-            Roads.TurningCars = []
-            Roads.currentCars = []
-            Roads.T1Turners = []
-            Roads.T2Turners = []
-            Cars.ExitingCars = []
+            TurningCars = []
+            currentCars = []
+            T1Turners = []
+            T2Turners = []
+            ExitingCars = []
             for road in SignalRoads.values():
                 road.queue = []
                 road.spawnQ = []
         for roads in list(SignalRoads.values())[:4]:
             roads.signalState = False
-        score = 0
         genCars(random.randint(8, 16))
 
-        for time in range(402):
+        for time in range(4020000):
 
             window.blit(background,(0,0))
             # Event Check
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    print(f"Score: {Cars.scoret1}")
                     running = False
 
             for road_id, road in list(SignalRoads.items())[:4]:
@@ -139,7 +139,6 @@ while running:
                         pass
                     # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
                     genCars(1)
-                    score += 50
 
             for road in SignalRoads.values():
                 pygame.draw.rect(window, (0,0,0,200), road.signal)
@@ -154,32 +153,38 @@ while running:
 
                 signalstate = env.getSignalState1()
 
-                reward = env.getReward(action1, signalstate, score)
+                reward = env.getReward(action1, signalstate, Cars.scoret1)
 
                 if time >= 4020:
                     done = True
-                    print("Episode: {}/{}, Score: {}".format(episode, episodes, score))
+                    print("Episode: {}/{}, Score: {}".format(episode, episodes, Cars.scoret1))
                 else:
                     done = False
 
                 agent.remember(state1, action1, reward, nextState1, done)
 
-                # if len(agent.memory) > batchSize:
-                #     for road in list(SignalRoads.values())[:4]:
-                #         if road.distanceToClosestCar <= 130:
-                #             agent.train(batchSize)
-                #             break
+                if len(agent.memory) > batchSize:
+                    for road in list(SignalRoads.values())[:4]:
+                        if road.distanceToClosestCar <= 130:
+                            agent.train(batchSize)
+                            break
+
+                if Cars.scoret1 >= 1000:
+                    print("Achieved Score: {}".format(Cars.scoret1))
+                    agent.saveWeights('RLmodel_weights.h5')
+                    agent.loadWeights('RLmodel_weights.h5')
+                    Cars.scoret1 = 0
 
             pygame.display.flip()
-
         
-        print(f"Score: {score}")
+        print(f"Final Score: {Cars.scoret1}")
 
-        if episode % 5 == 0:       
-            agent.saveWeights('RLmodel_weights.h5')
+
+        # if episode % 5 == 0:       
+        #     agent.saveWeights('RLmodel_weights.h5')
         
-        if episode == 49:
-            running = False
+        # if episode == 49:
+        #     running = False
 
 agent.saveWeights('final_RLmodel_weights.h5')
 
