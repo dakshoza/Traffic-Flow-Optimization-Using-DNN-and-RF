@@ -104,9 +104,9 @@ while running:
                 pass
             try:
                 ExitingCars.remove(car)
-                score += 1
             except:
                 pass
+            score += 1
             # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
             genCars(1)
 
