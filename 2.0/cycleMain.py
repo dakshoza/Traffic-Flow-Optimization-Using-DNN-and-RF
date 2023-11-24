@@ -109,6 +109,7 @@ while running:
             score += 1
             # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
             genCars(1)
+            score += 1
 
     elapsedTime = time.time() - startTime
     
