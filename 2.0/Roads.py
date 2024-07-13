@@ -1,4 +1,5 @@
 import pygame
+import random
 from pygame import Vector2 as v2
 
 speed = 2

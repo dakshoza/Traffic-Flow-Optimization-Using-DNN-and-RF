@@ -1,7 +1,3 @@
 import numpy as np
-import random
-from Roads import SignalRoads
-
-print(np.array([Road.signalState for Road in list(SignalRoads.values())[:4]]))
-    
-                
+list1 = np.array([1, 2, 3, 4, 5])
+print(list1.argmax())

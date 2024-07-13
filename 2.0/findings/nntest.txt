@@ -1,0 +1,53 @@
+Architecture: 3 layers, 20 neurons
+Train Accuracy: 0.8744
+Test Accuracy: 0.8512
+Train F1 Score: 0.9123
+Test F1 Score: 0.8901
+
+Architecture: 4 layers, 20 neurons
+Train Accuracy: 0.8705
+Test Accuracy: 0.8140
+Train F1 Score: 0.9129
+Test F1 Score: 0.8702
+
+Architecture: 5 layers, 20 neurons
+Train Accuracy: 0.8912
+Test Accuracy: 0.8306
+Train F1 Score: 0.9267
+Test F1 Score: 0.8782
+
+Architecture: 3 layers, 35 neurons
+Train Accuracy: 0.9016
+Test Accuracy: 0.8595
+Train F1 Score: 0.9326
+Test F1 Score: 0.8906
+
+Architecture: 4 layers, 35 neurons
+Train Accuracy: 0.9054
+Test Accuracy: 0.8512
+Train F1 Score: 0.9358
+Test F1 Score: 0.8844
+
+Architecture: 5 layers, 35 neurons
+Train Accuracy: 0.9003
+Test Accuracy: 0.8471
+Train F1 Score: 0.9314
+Test F1 Score: 0.8854
+
+Architecture: 3 layers, 50 neurons
+Train Accuracy: 0.9119
+Test Accuracy: 0.8471
+Train F1 Score: 0.9377
+Test F1 Score: 0.8789
+
+Architecture: 4 layers, 50 neurons
+Train Accuracy: 0.9275
+Test Accuracy: 0.8471
+Train F1 Score: 0.9483
+Test F1 Score: 0.8817
+
+Architecture: 5 layers, 50 neurons
+Train Accuracy: 0.9223
+Test Accuracy: 0.8430
+Train F1 Score: 0.9484
+Test F1 Score: 0.8782

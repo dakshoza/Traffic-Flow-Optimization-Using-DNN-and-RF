@@ -1,9 +1,11 @@
 import pygame, random, time
 from Cars import *
 from Env import Environment
-from tensorflow.python.keras.models import load_model
-import tensorflow as tf
+# from AIModel import model1
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers import Dense
 import numpy as np
+import pickle
 
 window = pygame.display.set_mode((1050,844))
 
@@ -11,24 +13,8 @@ env = Environment()
 
 score = 0
 
-# model1 = Sequential([
-#     Dense(20, activation = 'relu', input_shape = (13,)),
-#     Dense(13, activation = 'relu'),
-#     Dense(13, activation = 'relu'),
-#     Dense(4, activation = 'sigmoid')
-# ])
-# model1.compile(loss = 'binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-# model1.load_weights(r"./model_weights.h5")
-
-# model1 = load_model('deepnn_model.h5')
-
-interpreter = tf.lite.Interpreter(model_path="deepnn.tflite")
-interpreter.allocate_tensors()
-
-# Get input and output tensors
-input_details = interpreter.get_input_details()
-output_details = interpreter.get_output_details()
+with open('random_forest_model.pkl', 'rb') as file:
+    loaded_model = pickle.load(file)
 
 roadHitboxes = {
     0 : pygame.Rect(252, 523, 86, 321),
@@ -84,26 +70,11 @@ while running:
         data1 = env.getData1()
         data2 = env.getData2()
 
-        data1 = np.array(data1, dtype=np.float32)
-        data2 = np.array(data2, dtype=np.float32)
+        action1 = loaded_model.predict(data1)[0]
+        action2 = loaded_model.predict(data2)[0]
 
-        # Ensure the input data has the correct shape
-        data1 = data1.reshape((1, -1))  # Reshape to (1, num_features)
-        data2 = data2.reshape((1, -1))  # Reshape to (1, num_features)
-
-        # action1 = model1.predict(data1)
-        # action2 = model1.predict(data2)
-
-        interpreter.set_tensor(input_details[0]['index'], data1)
-        interpreter.invoke()
-        action1 = interpreter.get_tensor(output_details[0]['index'])
-
-        interpreter.set_tensor(input_details[0]['index'], data2)
-        interpreter.invoke()
-        action2 = interpreter.get_tensor(output_details[0]['index'])
-
-        action1 = list((action1[0] >= 0.5).astype(int))
-        action2 = list((action2[0] >= 0.5).astype(int))
+        # action1 = list((action1[0] >= 0.5).astype(int))
+        # action2 = list((action2[0] >= 0.5).astype(int))
 
         # if action1 == [0,0,0,0]:
         #     traf_dens = data1[0][4:9]
@@ -179,6 +150,7 @@ while running:
 
     if elapsedTime >= 60:
         print(f"Score : {score}")
+        print(timeframe)
         running = False
 
     timeframe += 1 

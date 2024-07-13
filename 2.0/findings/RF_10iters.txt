@@ -1,0 +1,18 @@
+Score
+106
+97
+94
+90
+100
+95
+95
+96
+93
+92
+
+avg = 95.8
+
+Train Accuracy: 0.9793
+Test Accuracy: 0.8182
+Train F1 Score: 0.9864
+Test F1 Score: 0.8617

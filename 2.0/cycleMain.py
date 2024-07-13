@@ -39,7 +39,9 @@ score = 0
 
 running = True
 
-genCars(16)
+timeframe = 0
+
+genCars(21)
 
 # for Road in SignalRoads.values():
 #     Road.signalState = True
@@ -67,7 +69,7 @@ while running:
 
     signalTimer += clock.tick(60) / 1000
 
-    if signalTimer >= 2:
+    if signalTimer >= 3.5:
         currentSignalIndex = (currentSignalIndex + 1) % 4
         for index in range(4):
             crossroad1[index].signalState = False
@@ -85,17 +87,10 @@ while running:
     for car in currentCars:
         car.render(window)
 
-    for road in SignalRoads.values():
-        # print(road.distanceToClosestCar < 0)
-
         # Deleting the cars
         if (car.rect.x < -150 or car.rect.x > 1200) or (car.rect.y < -150 or car.rect.y > 990):
             try:
                 currentCars.remove(car)
-            except:
-                pass
-            try:  
-                TurningCars.remove(car)
             except:
                 pass
             try:
@@ -104,17 +99,17 @@ while running:
                 pass
             try:
                 ExitingCars.remove(car)
+                score += 1
             except:
                 pass
-            score += 1
             # genCars(random.choice([0,1,1,1,2,2,2,3,3]))
             genCars(1)
-            score += 1
 
     elapsedTime = time.time() - startTime
     
     if elapsedTime >= 60:
         print(f"Score : {score}")
+        print(timeframe)
         running = False
 
     for road in SignalRoads.values():
@@ -123,6 +118,8 @@ while running:
             pygame.draw.circle(window,(255,0,0), road.signal.center, 5)
         else:
             pygame.draw.circle(window,(0,255,0), road.signal.center, 5)
+
+    timeframe += 1
 
 
     pygame.display.flip()

@@ -42,7 +42,7 @@ roadHitboxes = {
 
 running = True
 # tick = 100
-genCars(16)
+genCars(21)
 
 while running:
     window.blit(background,(0,0))
