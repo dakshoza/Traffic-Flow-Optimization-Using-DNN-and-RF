@@ -11,18 +11,6 @@ env = Environment()
 
 score = 0
 
-# model1 = Sequential([
-#     Dense(20, activation = 'relu', input_shape = (13,)),
-#     Dense(13, activation = 'relu'),
-#     Dense(13, activation = 'relu'),
-#     Dense(4, activation = 'sigmoid')
-# ])
-# model1.compile(loss = 'binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-# model1.load_weights(r"./model_weights.h5")
-
-# model1 = load_model('deepnn_model.h5')
-
 interpreter = tf.lite.Interpreter(model_path="deepnn.tflite")
 interpreter.allocate_tensors()
 

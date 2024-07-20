@@ -21,7 +21,7 @@ def build_and_train_model(hidden_layers, neurons_per_layer, epochs=40):
     for _ in range(hidden_layers - 1):
         model.add(Dense(neurons_per_layer, activation='relu'))
     
-    model.add(Dense(4, activation='sigmoid')
+    model.add(Dense(4, activation='sigmoid'))
     
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     
@@ -49,7 +49,7 @@ results = []
 for hidden_layers, neurons in architectures:
     print(f"\nTraining model with {hidden_layers} hidden layers and {neurons} neurons per layer")
     model, history = build_and_train_model(hidden_layers, neurons)
-    if hidden_layers == 3 and neurons == 35:
+    if hidden_layers == 3 and neurons == 35: # change with config of whicever model performs best to be saved
         model.save('deepnn_model.h5')
                 # Plot training history
         plt.figure(figsize=(12, 4))
